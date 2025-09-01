@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, ReactNode } from 'react';
 import { User as FirebaseUser } from 'firebase/auth';
-import GoogleAuthService from '../services/googleAuth.ts';
+import GoogleAuthService from '../services/googleAuth';
 import { useAuthStore } from '../store/authStore';
 
 interface AuthContextType {

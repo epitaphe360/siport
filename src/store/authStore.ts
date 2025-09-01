@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { User } from '../types';
-import GoogleAuthService from '../services/googleAuth.ts';
+import GoogleAuthService from '../services/googleAuth';
 
 interface AuthState {
   user: User | null;
