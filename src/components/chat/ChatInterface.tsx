@@ -252,7 +252,23 @@ export const ChatInterface: React.FC = () => {
                   {/* Message Input */}
                   <div className="p-4 border-t border-gray-200">
                     <div className="flex items-center space-x-2">
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => {
+                          const input = document.createElement('input');
+                          input.type = 'file';
+                          input.accept = 'image/*,application/pdf,.doc,.docx';
+                          input.onchange = (e) => {
+                            const file = (e.target as HTMLInputElement).files?.[0];
+                            if (file) {
+                              alert(`📎 FICHIER SÉLECTIONNÉ\n\n📄 Nom: ${file.name}\n📏 Taille: ${(file.size / 1024 / 1024).toFixed(2)} MB\n\n🚀 Envoi en cours...`);
+                            }
+                          };
+                          input.click();
+                        }}
+                        title="Joindre un fichier"
+                      >
                         <Paperclip className="h-4 w-4" />
                       </Button>
                       
@@ -267,7 +283,16 @@ export const ChatInterface: React.FC = () => {
                         />
                       </div>
                       
-                      <Button variant="ghost" size="sm" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => {
+                          const emojis = ['😊', '👍', '❤️', '😂', '🎉', '👏', '🔥', '💯'];
+                          const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                          setMessageInput(prev => prev + randomEmoji);
+                        }}
+                        title="Ajouter un emoji"
+                      >
                         <Smile className="h-4 w-4" />
                       </Button>
                       

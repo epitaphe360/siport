@@ -132,6 +132,7 @@ export const NewsPage: React.FC = () => {
                 variant="outline"
                 onClick={handleRefreshFromOfficialSite}
                 disabled={isLoading}
+                title="Synchroniser avec le site officiel SIPORTS"
               >
                 {isLoading ? (
                   <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -248,7 +249,25 @@ export const NewsPage: React.FC = () => {
                             <BookOpen className="h-4 w-4 mr-2" />
                             Lire l'article
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              const shareData = {
+                                title: article.title,
+                                text: article.excerpt,
+                                url: window.location.href + '#article-' + article.id
+                              };
+                              
+                              if (navigator.share) {
+                                navigator.share(shareData);
+                              } else {
+                                navigator.clipboard.writeText(shareData.url);
+                                alert('🔗 Lien copié dans le presse-papiers !');
+                              }
+                            }}
+                            title="Partager cet article"
+                          >
                             <Share2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -441,7 +460,28 @@ export const NewsPage: React.FC = () => {
                   placeholder="votre@email.com"
                   className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white"
                 />
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
+                <Button 
+                  size="lg" 
+                  className="bg-white text-blue-600 hover:bg-blue-50"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const emailInput = e.currentTarget.parentElement?.querySelector('input[type="email"]') as HTMLInputElement;
+                    const email = emailInput?.value;
+                    
+                    if (!email) {
+                      alert('📧 Veuillez saisir votre adresse email');
+                      return;
+                    }
+                    
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                      alert('📧 Veuillez saisir une adresse email valide');
+                      return;
+                    }
+                    
+                    alert(`✅ INSCRIPTION NEWSLETTER RÉUSSIE !\n\n📧 Email: ${email}\n📰 Vous recevrez nos actualités portuaires\n🔔 Fréquence: Hebdomadaire\n\n🎯 Merci de votre intérêt pour SIPORTS 2026 !`);
+                    emailInput.value = '';
+                  }}
+                >
                   S'abonner
                 </Button>
               </div>

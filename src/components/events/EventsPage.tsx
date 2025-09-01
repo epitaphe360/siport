@@ -8,7 +8,9 @@ import {
   Filter,
   Search,
   Star,
-  ExternalLink
+  ExternalLink,
+  BookOpen,
+  Share2
 } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';

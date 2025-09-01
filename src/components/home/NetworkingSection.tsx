@@ -118,6 +118,17 @@ export const NetworkingSection: React.FC = () => {
                   Devenir Membre
                 </Button>
               </Link>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="w-full sm:w-auto"
+                onClick={() => {
+                  alert('🤖 ASSISTANT IA SIPORTS\n\n💡 Fonctionnalités:\n• Recommandations de contacts intelligentes\n• Matching par secteur d\'activité\n• Suggestions de rendez-vous\n• Analyse de compatibilité\n\n🚀 Connectez-vous pour accéder à l\'IA !');
+                }}
+              >
+                <Brain className="mr-2 h-5 w-5" />
+                Assistant IA
+              </Button>
             </div>
           </motion.div>
 

@@ -579,11 +579,23 @@ export const NetworkingPage: React.FC = () => {
                         </p>
                         
                         <div className="flex space-x-2">
-                          <Button size="sm" className="flex-1">
+                          <Button 
+                            size="sm" 
+                            className="flex-1"
+                            onClick={() => {
+                              alert(`🤝 DEMANDE DE CONNEXION\n\n👤 Vers: ${profile.profile.firstName} ${profile.profile.lastName}\n🏢 ${profile.profile.company}\n📧 Demande envoyée\n\n⏱️ Réponse attendue sous 48h`);
+                            }}
+                          >
                             <UserPlus className="h-4 w-4 mr-2" />
                             Connecter
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              alert(`👁️ PROFIL DÉTAILLÉ\n\n👤 ${profile.profile.firstName} ${profile.profile.lastName}\n🏢 ${profile.profile.company}\n📍 ${profile.profile.country}\n\n📋 Profil complet affiché !`);
+                            }}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
                         </div>

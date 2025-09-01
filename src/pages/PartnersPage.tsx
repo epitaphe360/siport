@@ -14,7 +14,8 @@ import {
   Globe,
   Building2,
   Crown,
-  Handshake
+  Handshake,
+  MessageCircle
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';

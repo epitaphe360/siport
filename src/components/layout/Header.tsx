@@ -81,9 +81,21 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Language Selector */}
-            <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+            <div className="relative">
+              <button 
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                onClick={() => {
+                  const currentLang = localStorage.getItem('siports-language') || 'fr';
+                  const newLang = currentLang === 'fr' ? 'en' : currentLang === 'en' ? 'ar' : 'fr';
+                  localStorage.setItem('siports-language', newLang);
+                  alert(`🌐 Langue changée vers: ${newLang === 'fr' ? 'Français' : newLang === 'en' ? 'English' : 'العربية'}\n\n🔄 Rechargement de la page...`);
+                  setTimeout(() => window.location.reload(), 1000);
+                }}
+                title="Changer de langue"
+              >
               <Globe className="h-5 w-5" />
-            </button>
+              </button>
+            </div>
 
             {isAuthenticated ? (
               <>

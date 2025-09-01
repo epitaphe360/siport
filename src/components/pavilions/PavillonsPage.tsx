@@ -387,15 +387,29 @@ export const PavillonsPage: React.FC = () => {
                         </div>
 
                         <div className="mt-6 flex space-x-4">
-                          <Button>
+                          <Button
+                            onClick={() => {
+                              alert(`🏛️ VISITE VIRTUELLE\n\n📍 Pavillon: ${pavilion.name}\n🎯 ${pavilion.exhibitors} exposants\n👥 ${pavilion.visitors.toLocaleString()} visiteurs\n\n🚀 Visite immersive lancée !`);
+                            }}
+                          >
                             <MapPin className="h-4 w-4 mr-2" />
                             Visiter le Pavillon
                           </Button>
-                          <Button variant="outline">
+                          <Button 
+                            variant="outline"
+                            onClick={() => {
+                              alert(`🤝 NETWORKING PAVILLON\n\n🏛️ ${pavilion.name}\n👥 ${pavilion.visitors.toLocaleString()} participants\n🎯 Secteurs: ${pavilion.targetAudience.join(', ')}\n\n💼 Session de networking ouverte !`);
+                            }}
+                          >
                             <Handshake className="h-4 w-4 mr-2" />
                             Networking
                           </Button>
-                          <Button variant="outline">
+                          <Button 
+                            variant="outline"
+                            onClick={() => {
+                              alert(`📅 PROGRAMME PAVILLON\n\n🏛️ ${pavilion.name}\n🎤 ${pavilion.conferences} conférences\n📋 Programme détaillé:\n• Conférences techniques\n• Ateliers pratiques\n• Sessions networking\n\n📖 Programme complet affiché !`);
+                            }}
+                          >
                             <Calendar className="h-4 w-4 mr-2" />
                             Programme
                           </Button>

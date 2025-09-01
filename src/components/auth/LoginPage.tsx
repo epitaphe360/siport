@@ -170,18 +170,64 @@ export const LoginPage: React.FC = () => {
             </Button>
           </form>
 
-          {/* Demo Credentials */}
+          {/* Quick Login Buttons */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <h4 className="text-sm font-medium text-blue-900 mb-2">
-              Comptes de démonstration :
+            <h4 className="text-sm font-medium text-blue-900 mb-3">
+              Connexion rapide - Comptes de démonstration :
             </h4>
-            <div className="space-y-1 text-xs text-blue-700">
-              <p><strong>Admin :</strong> admin@siports.com / demo123</p>
-              <p><strong>Exposant :</strong> exposant@siports.com / demo123</p>
-              <p><strong>Visiteur :</strong> visiteur@siports.com / demo123</p>
-              <p><strong>Partenaire :</strong> partenaire@siports.com / demo123</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setEmail('admin@siports.com');
+                  setPassword('demo123');
+                }}
+                className="text-xs"
+              >
+                👑 Admin
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setEmail('exposant@siports.com');
+                  setPassword('demo123');
+                }}
+                className="text-xs"
+              >
+                🏢 Exposant
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setEmail('visiteur@siports.com');
+                  setPassword('demo123');
+                }}
+                className="text-xs"
+              >
+                👥 Visiteur
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setEmail('partenaire@siports.com');
+                  setPassword('demo123');
+                }}
+                className="text-xs"
+              >
+                🤝 Partenaire
+              </Button>
             </div>
           </div>
+
+          {/* Demo Credentials */}
 
           {/* Sign Up Link */}
           <div className="mt-6 text-center">
@@ -231,7 +277,8 @@ export const LoginPage: React.FC = () => {
                 variant="outline" 
                 className="w-full"
                 onClick={() => {
-                  alert('🔗 Connexion LinkedIn\n\n✅ Connexion Google maintenant disponible !\n💡 LinkedIn sera ajouté prochainement.\n\n🎯 Utilisez Google ou les comptes de démonstration.');
+                  window.open('https://linkedin.com/oauth/v2/authorization?response_type=code&client_id=demo&redirect_uri=' + encodeURIComponent(window.location.origin + '/auth/linkedin/callback') + '&scope=r_liteprofile%20r_emailaddress', '_blank', 'width=500,height=600');
+                  alert('🔗 Connexion LinkedIn\n\n🚧 Fonctionnalité en développement\n📧 Utilisez votre email ou Google pour vous connecter\n\n💡 LinkedIn sera disponible dans une prochaine version.');
                 }}
               >
                 <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24">

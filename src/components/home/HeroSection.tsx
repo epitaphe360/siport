@@ -82,6 +82,22 @@ export const HeroSection: React.FC = () => {
                   Découvrir les Exposants
                 </Button>
               </Link>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-white text-white hover:bg-white hover:text-blue-900 w-full sm:w-auto"
+                onClick={() => {
+                  const salonDate = new Date('2026-02-05T09:30:00');
+                  const now = new Date();
+                  const diffTime = salonDate.getTime() - now.getTime();
+                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                  
+                  alert(`⏰ COMPTE À REBOURS SIPORTS 2026\n\n📅 Ouverture: 5 février 2026 à 9h30\n⏳ Dans ${diffDays} jours\n📍 El Jadida, Maroc\n\n🎯 Préparez-vous pour le plus grand salon portuaire !`);
+                }}
+              >
+                <Calendar className="mr-2 h-5 w-5" />
+                Compte à Rebours
+              </Button>
             </div>
           </motion.div>
 

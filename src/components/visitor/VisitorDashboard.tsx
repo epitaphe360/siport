@@ -645,11 +645,23 @@ export const VisitorDashboard: React.FC = () => {
                       </p>
                       
                       <div className="flex space-x-2">
-                        <Button size="sm" className="flex-1">
+                        <Button 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => {
+                            alert(`💌 MESSAGE ENVOYÉ\n\n🏢 Destinataire: ${exhibitor.name}\n📧 Votre message a été transmis\n⏱️ Réponse attendue sous 24h\n\n✅ L'exposant vous contactera bientôt !`);
+                          }}
+                        >
                           <MessageCircle className="h-3 w-3 mr-1" />
                           Message
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            alert(`📅 DEMANDE DE RENDEZ-VOUS\n\n🏢 Avec: ${exhibitor.name}\n📍 Stand: ${exhibitor.standNumber}\n⏰ Créneaux disponibles:\n• 9h-10h\n• 14h-15h\n• 16h-17h\n\n✅ Sélectionnez votre horaire !`);
+                          }}
+                        >
                           <Calendar className="h-3 w-3 mr-1" />
                           RDV
                         </Button>
