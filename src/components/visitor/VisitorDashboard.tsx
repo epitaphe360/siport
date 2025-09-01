@@ -321,7 +321,21 @@ export const VisitorDashboard: React.FC = () => {
                     ))}
                   </div>
                   
-                  <Button className="w-full mt-4" size="sm">
+                  <Button 
+                    className="w-full mt-4" 
+                    size="sm"
+                    onClick={() => {
+                      const qrData = {
+                        name: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
+                        company: visitorProfile?.company,
+                        email: visitorProfile?.email,
+                        passType: visitorProfile?.passType,
+                        id: visitorProfile?.id
+                      };
+                      
+                      alert(`📱 BADGE NUMÉRIQUE GÉNÉRÉ\n\n👤 ${qrData.name}\n🏢 ${qrData.company}\n🎫 Pass ${qrData.passType?.toUpperCase()}\n\n📲 QR Code prêt pour l'entrée !`);
+                    }}
+                  >
                     <QrCode className="h-4 w-4 mr-2" />
                     Badge Numérique
                   </Button>
@@ -645,23 +659,11 @@ export const VisitorDashboard: React.FC = () => {
                       </p>
                       
                       <div className="flex space-x-2">
-                        <Button 
-                          size="sm" 
-                          className="flex-1"
-                          onClick={() => {
-                            alert(`💌 MESSAGE ENVOYÉ\n\n🏢 Destinataire: ${exhibitor.name}\n📧 Votre message a été transmis\n⏱️ Réponse attendue sous 24h\n\n✅ L'exposant vous contactera bientôt !`);
-                          }}
-                        >
+                        <Button size="sm" className="flex-1">
                           <MessageCircle className="h-3 w-3 mr-1" />
                           Message
                         </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => {
-                            alert(`📅 DEMANDE DE RENDEZ-VOUS\n\n🏢 Avec: ${exhibitor.name}\n📍 Stand: ${exhibitor.standNumber}\n⏰ Créneaux disponibles:\n• 9h-10h\n• 14h-15h\n• 16h-17h\n\n✅ Sélectionnez votre horaire !`);
-                          }}
-                        >
+                        <Button variant="outline" size="sm">
                           <Calendar className="h-3 w-3 mr-1" />
                           RDV
                         </Button>
