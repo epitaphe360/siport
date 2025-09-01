@@ -32,6 +32,7 @@ class SiportsIntegration {
         add_shortcode('siports_exhibitors', array($this, 'exhibitors_shortcode'));
         add_shortcode('siports_events', array($this, 'events_shortcode'));
         add_shortcode('siports_networking', array($this, 'networking_shortcode'));
+        add_shortcode('siports_auth_links', array($this, 'auth_links_shortcode'));
         add_shortcode('siports_news', array($this, 'news_shortcode'));
         add_shortcode('siports_partners', array($this, 'partners_shortcode'));
         add_shortcode('siports_pavilions', array($this, 'pavilions_shortcode'));
@@ -525,6 +526,100 @@ class SiportsIntegration {
             </div>
         </div>
         <?php
+        return ob_get_clean();
+    }
+    
+    // Shortcode pour les liens d'inscription et connexion
+    public function auth_links_shortcode($atts) {
+        $atts = shortcode_atts(array(
+            'style' => 'buttons', // buttons, links, banner
+            'show_register' => 'true',
+            'show_login' => 'true',
+            'register_text' => 'Devenir Exposant',
+            'login_text' => 'Connexion',
+            'register_url' => 'https://siports.com/register',
+            'login_url' => 'https://siports.com/login',
+            'target' => '_blank',
+            'class' => ''
+        ), $atts);
+        
+        ob_start();
+        
+        if ($atts['style'] === 'banner') {
+            ?>
+            <div class="siports-auth-banner <?php echo esc_attr($atts['class']); ?>">
+                <div class="auth-banner-content">
+                    <div class="auth-banner-text">
+                        <h3>Rejoignez SIPORTS 2026</h3>
+                        <p>Connectez-vous avec plus de 6,000 professionnels portuaires</p>
+                    </div>
+                    <div class="auth-banner-actions">
+                        <?php if ($atts['show_register'] === 'true'): ?>
+                            <a href="<?php echo esc_url($atts['register_url']); ?>" 
+                               target="<?php echo esc_attr($atts['target']); ?>"
+                               class="siports-btn siports-btn-primary">
+                                <?php echo esc_html($atts['register_text']); ?>
+                            </a>
+                        <?php endif; ?>
+                        
+                        <?php if ($atts['show_login'] === 'true'): ?>
+                            <a href="<?php echo esc_url($atts['login_url']); ?>" 
+                               target="<?php echo esc_attr($atts['target']); ?>"
+                               class="siports-btn siports-btn-outline">
+                                <?php echo esc_html($atts['login_text']); ?>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php
+        } elseif ($atts['style'] === 'links') {
+            ?>
+            <div class="siports-auth-links <?php echo esc_attr($atts['class']); ?>">
+                <?php if ($atts['show_register'] === 'true'): ?>
+                    <a href="<?php echo esc_url($atts['register_url']); ?>" 
+                       target="<?php echo esc_attr($atts['target']); ?>"
+                       class="siports-auth-link register-link">
+                        <?php echo esc_html($atts['register_text']); ?>
+                    </a>
+                <?php endif; ?>
+                
+                <?php if ($atts['show_login'] === 'true' && $atts['show_register'] === 'true'): ?>
+                    <span class="auth-separator">|</span>
+                <?php endif; ?>
+                
+                <?php if ($atts['show_login'] === 'true'): ?>
+                    <a href="<?php echo esc_url($atts['login_url']); ?>" 
+                       target="<?php echo esc_attr($atts['target']); ?>"
+                       class="siports-auth-link login-link">
+                        <?php echo esc_html($atts['login_text']); ?>
+                    </a>
+                <?php endif; ?>
+            </div>
+            <?php
+        } else {
+            // Style buttons par défaut
+            ?>
+            <div class="siports-auth-buttons <?php echo esc_attr($atts['class']); ?>">
+                <?php if ($atts['show_register'] === 'true'): ?>
+                    <a href="<?php echo esc_url($atts['register_url']); ?>" 
+                       target="<?php echo esc_attr($atts['target']); ?>"
+                       class="siports-btn siports-btn-primary">
+                        <?php echo esc_html($atts['register_text']); ?>
+                    </a>
+                <?php endif; ?>
+                
+                <?php if ($atts['show_login'] === 'true'): ?>
+                    <a href="<?php echo esc_url($atts['login_url']); ?>" 
+                       target="<?php echo esc_attr($atts['target']); ?>"
+                       class="siports-btn siports-btn-outline">
+                        <?php echo esc_html($atts['login_text']); ?>
+                    </a>
+                <?php endif; ?>
+            </div>
+            <?php
+        }
+        
         return ob_get_clean();
     }
     

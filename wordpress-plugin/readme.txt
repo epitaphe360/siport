@@ -34,6 +34,7 @@ Le plugin SIPORTS 2026 Integration permet d'intégrer facilement la plateforme d
 6. `[siports_pavilions]` - Pavillons thématiques
 7. `[siports_stats]` - Statistiques du salon
 8. `[siports_countdown]` - Compte à rebours
+9. `[siports_auth_links]` - Liens inscription/connexion
 
 **API REST complète :**
 
@@ -95,6 +96,14 @@ Le plugin SIPORTS 2026 Integration permet d'intégrer facilement la plateforme d
 ```
 [siports_countdown show_days="true" show_hours="true"]
 [siports_countdown style="compact"]
+```
+
+**Liens d'authentification :**
+```
+[siports_auth_links] 
+[siports_auth_links style="banner"]
+[siports_auth_links style="links" register_text="Inscription Gratuite"]
+[siports_auth_links show_register="true" show_login="false"]
 ```
 
 == Paramètres Disponibles ==

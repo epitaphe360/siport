@@ -450,6 +450,130 @@
     text-decoration: none;
 }
 
+/* Liens d'authentification */
+.siports-auth-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.siports-auth-links {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.siports-auth-link {
+    color: #1e40af;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.siports-auth-link:hover {
+    background: #f3f4f6;
+    text-decoration: none;
+}
+
+.siports-auth-link.register-link {
+    color: #059669;
+}
+
+.siports-auth-link.register-link:hover {
+    background: #ecfdf5;
+}
+
+.auth-separator {
+    margin: 0 10px;
+    color: #d1d5db;
+}
+
+.siports-auth-banner {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    color: white;
+    padding: 30px 20px;
+    border-radius: 12px;
+    margin: 30px 0;
+}
+
+.auth-banner-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.auth-banner-text h3 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.auth-banner-text p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 16px;
+}
+
+.auth-banner-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.auth-banner-actions .siports-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+}
+
+.auth-banner-actions .siports-btn-primary {
+    background: white;
+    color: #1e40af;
+}
+
+.auth-banner-actions .siports-btn-primary:hover {
+    background: #f8fafc;
+    color: #1e40af;
+}
+
+.auth-banner-actions .siports-btn-outline {
+    border-color: white;
+    color: white;
+}
+
+.auth-banner-actions .siports-btn-outline:hover {
+    background: white;
+    color: #1e40af;
+}
+
+@media (max-width: 768px) {
+    .auth-banner-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .auth-banner-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .auth-banner-actions .siports-btn {
+        width: 100%;
+    }
+    
+    .siports-auth-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .siports-auth-buttons .siports-btn {
+        width: 100%;
+    }
+}
 /* Messages d'état */
 .siports-no-results {
     text-align: center;

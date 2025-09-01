@@ -167,6 +167,15 @@
 
 <?php
 /*
+NOUVEAU SHORTCODE - LIENS D'AUTHENTIFICATION :
+
+[siports_auth_links] - Boutons par défaut
+[siports_auth_links style="links"] - Liens simples
+[siports_auth_links style="banner"] - Bannière complète
+[siports_auth_links register_text="Inscription Gratuite" login_text="Se Connecter"]
+[siports_auth_links show_register="true" show_login="false"] - Inscription uniquement
+[siports_auth_links register_url="https://votre-site.com/register" login_url="https://votre-site.com/login"]
+
 NOTES D'UTILISATION :
 
 1. Copiez le code HTML/shortcode souhaité
