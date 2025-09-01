@@ -420,7 +420,11 @@ export const PavillonsPage: React.FC = () => {
                     {/* CTA si non sélectionné */}
                     {!isSelected && (
                       <div className="flex justify-between items-center">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setSelectedPavilion(pavilion.id)}
+                        >
                           Découvrir
                         </Button>
                         <div className="text-xs text-gray-500">

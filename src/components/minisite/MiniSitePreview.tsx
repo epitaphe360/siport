@@ -524,7 +524,10 @@ export const MiniSitePreview: React.FC = () => {
                         </label>
                         <input
                           type="text"
+                          name="nom"
+                          required
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Votre nom complet"
                         />
                       </div>
                       
@@ -534,7 +537,10 @@ export const MiniSitePreview: React.FC = () => {
                         </label>
                         <input
                           type="email"
+                          name="email"
+                          required
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="votre@email.com"
                         />
                       </div>
                     </div>
@@ -545,7 +551,9 @@ export const MiniSitePreview: React.FC = () => {
                       </label>
                       <input
                         type="text"
+                        name="sujet"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Objet de votre message"
                       />
                     </div>
                     
@@ -555,7 +563,10 @@ export const MiniSitePreview: React.FC = () => {
                       </label>
                       <textarea
                         rows={4}
+                        name="message"
+                        required
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Votre message..."
                       />
                     </div>
                     

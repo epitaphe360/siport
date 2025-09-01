@@ -143,7 +143,20 @@ export const ProfilePage: React.FC = () => {
                   <div className="relative">
                     <div className="h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-lg">
                       <User className="h-12 w-12 text-gray-400" />
+                      onClick={() => {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'image/*';
+                        input.onchange = (e) => {
+                          const file = (e.target as HTMLInputElement).files?.[0];
+                          if (file) {
+                            alert(`📸 PHOTO SÉLECTIONNÉE\n\n📄 Fichier: ${file.name}\n📏 Taille: ${(file.size / 1024 / 1024).toFixed(2)} MB\n\n🔄 Upload en cours...`);
+                          }
+                        };
+                        input.click();
+                      }}
                     </div>
+                      title="Changer la photo de profil"
                     <button className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors">
                       <Camera className="h-4 w-4" />
                     </button>

@@ -173,6 +173,8 @@ export const AppointmentCalendar: React.FC = () => {
             </h2>
             <p className="text-gray-600">Gérez vos créneaux et rendez-vous</p>
           </div>
+            onClick={() => setShowCreateSlotModal(true)}
+            title="Créer un nouveau créneau de rendez-vous"
           <Button onClick={() => setShowCreateSlotModal(true)}>
             <Plus className="h-4 w-4 mr-2" />
             Nouveau Créneau

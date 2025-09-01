@@ -959,13 +959,40 @@ export const PartnerDetailPage: React.FC = () => {
       {/* Floating Action Button */}
       <div className="fixed bottom-6 right-6 z-50">
         <div className="flex flex-col space-y-3">
-          <Button className="rounded-full w-12 h-12 shadow-lg bg-purple-600 hover:bg-purple-700">
+          <Button 
+            className="rounded-full w-12 h-12 shadow-lg bg-purple-600 hover:bg-purple-700"
+            onClick={() => {
+              alert(`💌 CONTACT PARTENAIRE VIP\n\n🏢 ${partner.name}\n👑 Statut: ${partner.sponsorshipLevel}\n📧 Messagerie VIP ouverte\n\n✅ Réponse prioritaire garantie !`);
+            }}
+            title="Contact VIP direct"
+          >
             <MessageCircle className="h-5 w-5" />
           </Button>
-          <Button variant="outline" className="rounded-full w-12 h-12 shadow-lg bg-white">
+          <Button 
+            variant="outline" 
+            className="rounded-full w-12 h-12 shadow-lg bg-white"
+            onClick={() => {
+              alert(`📅 RENDEZ-VOUS PARTENAIRE\n\n🏢 ${partner.name}\n⏰ Créneaux VIP disponibles\n📍 Espace partenaire dédié\n\n🎯 Planification prioritaire !`);
+            }}
+            title="Planifier un rendez-vous VIP"
+          >
             <Calendar className="h-5 w-5" />
           </Button>
-          <Button variant="outline" className="rounded-full w-12 h-12 shadow-lg bg-white">
+          <Button 
+            variant="outline" 
+            className="rounded-full w-12 h-12 shadow-lg bg-white"
+            onClick={() => {
+              const mediaKit = {
+                logos: partner.mediaKit.logos.length,
+                photos: partner.mediaKit.photos.length,
+                videos: partner.mediaKit.videos.length,
+                pressReleases: partner.mediaKit.pressReleases.length
+              };
+              
+              alert(`📦 KIT MÉDIA PARTENAIRE\n\n🏢 ${partner.name}\n🖼️ ${mediaKit.logos} logos\n📸 ${mediaKit.photos} photos\n🎥 ${mediaKit.videos} vidéos\n📰 ${mediaKit.pressReleases} communiqués\n\n⬇️ Téléchargement démarré !`);
+            }}
+            title="Télécharger le kit média"
+          >
             <Download className="h-5 w-5" />
           </Button>
         </div>

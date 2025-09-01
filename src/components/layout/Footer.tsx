@@ -33,16 +33,40 @@ export const Footer: React.FC = () => {
               Salon International des Ports - La plateforme de référence pour l'écosystème portuaire mondial.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a 
+                href="https://facebook.com/siports2026" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+                title="Suivez-nous sur Facebook"
+              >
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a 
+                href="https://twitter.com/siports2026" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+                title="Suivez-nous sur Twitter"
+              >
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a 
+                href="https://linkedin.com/company/siports2026" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+                title="Suivez-nous sur LinkedIn"
+              >
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a 
+                href="https://youtube.com/@siports2026" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+                title="Chaîne YouTube SIPORTS"
+              >
                 <Youtube className="h-5 w-5" />
               </a>
             </div>

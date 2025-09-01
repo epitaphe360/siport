@@ -273,8 +273,13 @@ export const MiniSiteEditor: React.FC = () => {
               </Button>
               
               <Button 
+                onClick={() => {
+                  const previewUrl = `/minisite/${siteSettings.companyName.toLowerCase().replace(/\s+/g, '-')}`;
+                  window.open(previewUrl, '_blank');
+                }}
                 onClick={handleSaveChanges}
                 disabled={pendingChanges}
+                title="Ouvrir l'aperçu dans un nouvel onglet"
               >
                 {pendingChanges ? (
                   <>

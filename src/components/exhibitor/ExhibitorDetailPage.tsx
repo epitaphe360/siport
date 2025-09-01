@@ -844,15 +844,38 @@ export const ExhibitorDetailPage: React.FC = () => {
               const contactSection = document.getElementById('contact');
               contactSection?.scrollIntoView({ behavior: 'smooth' });
             }}
+            title="Aller à la section contact"
           >
             <MessageCircle className="h-5 w-5" />
           </Button>
           <Link to={`/appointments?exhibitor=${selectedExhibitor.id}`}>
-            <Button variant="outline" className="rounded-full w-12 h-12 shadow-lg bg-white">
+            <Button 
+              variant="outline" 
+              className="rounded-full w-12 h-12 shadow-lg bg-white"
+              title="Prendre rendez-vous"
+            >
               <Calendar className="h-5 w-5" />
             </Button>
           </Link>
-          <Button variant="outline" className="rounded-full w-12 h-12 shadow-lg bg-white">
+          <Button 
+            variant="outline" 
+            className="rounded-full w-12 h-12 shadow-lg bg-white"
+            onClick={() => {
+              const favorites = JSON.parse(localStorage.getItem('siports-favorites') || '[]');
+              const isFavorite = favorites.includes(selectedExhibitor.id);
+              
+              if (isFavorite) {
+                const newFavorites = favorites.filter((id: string) => id !== selectedExhibitor.id);
+                localStorage.setItem('siports-favorites', JSON.stringify(newFavorites));
+                alert(`💔 RETIRÉ DES FAVORIS\n\n🏢 ${selectedExhibitor.companyName}\n📝 Supprimé de votre liste\n\n✅ Favoris mis à jour !`);
+              } else {
+                favorites.push(selectedExhibitor.id);
+                localStorage.setItem('siports-favorites', JSON.stringify(favorites));
+                alert(`❤️ AJOUTÉ AUX FAVORIS\n\n🏢 ${selectedExhibitor.companyName}\n📝 Ajouté à votre liste\n\n✅ Favoris mis à jour !`);
+              }
+            }}
+            title="Ajouter/Retirer des favoris"
+          >
             <Heart className="h-5 w-5" />
           </Button>
         </div>
