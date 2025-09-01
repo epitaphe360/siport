@@ -1,11 +1,14 @@
 import { create } from 'zustand';
 import { User } from '../types';
+import GoogleAuthService from '../services/googleAuth';
 
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isGoogleLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   logout: () => void;
   register: (userData: any) => Promise<void>;
   updateProfile: (profileData: any) => Promise<void>;
@@ -15,6 +18,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isAuthenticated: false,
   isLoading: false,
+  isGoogleLoading: false,
 
   login: async (email: string, password: string) => {
     set({ isLoading: true });
@@ -118,7 +122,26 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
+  loginWithGoogle: async () => {
+    set({ isGoogleLoading: true });
+    try {
+      const user = await GoogleAuthService.signInWithGoogle();
+      set({ 
+        user, 
+        isAuthenticated: true, 
+        isGoogleLoading: false 
+      });
+    } catch (error: any) {
+      set({ isGoogleLoading: false });
+      throw new Error(error.message || 'Erreur lors de la connexion Google');
+    }
+  },
+
   logout: () => {
+    // Déconnexion Google si connecté via Google
+    if (GoogleAuthService.isAuthenticated()) {
+      GoogleAuthService.signOut();
+    }
     set({ user: null, isAuthenticated: false });
   },
 

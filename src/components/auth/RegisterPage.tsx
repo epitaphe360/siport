@@ -22,6 +22,7 @@ import {
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
+import { GoogleAuthButton } from './GoogleAuthButton';
 import { useAuthStore } from '../../store/authStore';
 import { motion } from 'framer-motion';
 
@@ -687,6 +688,25 @@ export const RegisterPage: React.FC = () => {
                   Se connecter
                 </Link>
               </p>
+            </div>
+
+            {/* Google Registration */}
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Ou s'inscrire avec</span>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <GoogleAuthButton 
+                  onSuccess={() => navigate('/dashboard')}
+                  onError={(error) => alert(`❌ ${error}`)}
+                />
+              </div>
             </div>
           </Card>
         </motion.div>
