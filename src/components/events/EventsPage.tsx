@@ -8,9 +8,7 @@ import {
   Filter,
   Search,
   Star,
-  ExternalLink,
-  BookOpen,
-  Share2
+  ExternalLink
 } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -308,11 +306,27 @@ export const EventsPage: React.FC = () => {
                               {isRegistered ? 'Se désinscrire' : 'S\'inscrire'}
                             </Button>
                             
-                            {event.meetingLink && (
-                              <Button variant="outline" size="sm">
-                                <ExternalLink className="h-4 w-4" />
-                              </Button>
-                            )}
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                const shareData = {
+                                  title: event.title,
+                                  text: event.description,
+                                  url: window.location.href + '#event-' + event.id
+                                };
+                                
+                                if (navigator.share) {
+                                  navigator.share(shareData);
+                                } else {
+                                  navigator.clipboard.writeText(shareData.url);
+                                  alert('🔗 Lien de l\'événement copié !');
+                                }
+                              }}
+                              title="Partager cet événement"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                            </Button>
                           </div>
                         </div>
                       </div>
