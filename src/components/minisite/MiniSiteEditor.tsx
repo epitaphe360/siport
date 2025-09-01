@@ -499,7 +499,6 @@ export const MiniSiteEditor: React.FC = () => {
       
       setSubmittingForApproval(false);
     } catch (error) {
-      setSubmittingForApproval(false);
       alert('❌ Erreur lors de la soumission');
   return (
     <div className="min-h-screen bg-gray-50">
