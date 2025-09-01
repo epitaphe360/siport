@@ -373,8 +373,12 @@ export const AdminDashboard: React.FC = () => {
                   </Link>
                   
                   <Button className="w-full justify-start" variant="outline">
-                    <Users className="h-4 w-4 mr-3" />
-                    Gestion Utilisateurs ({adminMetrics.totalUsers.toLocaleString()})
+                    <Link to="/admin/users" className="w-full">
+                      <Button className="w-full justify-start" variant="outline">
+                        <Users className="h-4 w-4 mr-3" />
+                        Gestion Utilisateurs ({adminMetrics.totalUsers.toLocaleString()})
+                      </Button>
+                    </Link>
                   </Button>
                   
                   <Button className="w-full justify-start" variant="outline">

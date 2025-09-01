@@ -30,6 +30,7 @@ import { ModerationPanel } from './components/admin/ModerationPanel';
 import { MiniSiteEditor } from './components/minisite/MiniSiteEditor';
 import { NewsPage } from './pages/NewsPage';
 import { ExhibitorCreationSimulator } from './components/admin/ExhibitorCreationSimulator';
+import { UserManagementPage } from './pages/UserManagementPage';
 
 function App() {
   return (
@@ -68,6 +69,7 @@ function App() {
             <Route path="/admin/moderation" element={<ModerationPanel />} />
             <Route path="/news" element={<NewsPage />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={<UserManagementPage />} />
           </Routes>
         </main>
         <Footer />
