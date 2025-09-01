@@ -1,15 +1,11 @@
 import React, { createContext, useContext, useEffect, ReactNode } from 'react';
-import { User as FirebaseUser } from 'firebase/auth';
-import GoogleAuthService from '../services/googleAuth';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../../store/authStore';
 
 interface AuthContextType {
-  firebaseUser: FirebaseUser | null;
   isInitialized: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  firebaseUser: null,
   isInitialized: false
 });
 
@@ -18,27 +14,15 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [firebaseUser, setFirebaseUser] = React.useState<FirebaseUser | null>(null);
   const [isInitialized, setIsInitialized] = React.useState(false);
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
 
   useEffect(() => {
-    // Écouter les changements d'état Firebase
-    const unsubscribe = GoogleAuthService.onAuthStateChanged((firebaseUser) => {
-      setFirebaseUser(firebaseUser);
-      setIsInitialized(true);
-
-      // Si l'utilisateur Firebase est déconnecté mais qu'on a encore un utilisateur local
-      if (!firebaseUser && user) {
-        logout();
-      }
-    });
-
-    return () => unsubscribe();
-  }, [user, logout]);
+    // Marquer comme initialisé après le premier rendu
+    setIsInitialized(true);
+  }, []);
 
   const value = {
-    firebaseUser,
     isInitialized
   };
 
