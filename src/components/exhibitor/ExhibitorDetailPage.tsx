@@ -997,6 +997,10 @@ export const ExhibitorDetailPage: React.FC = () => {
               variant="outline" 
               className="rounded-full w-12 h-12 shadow-lg bg-white"
               title="Prendre rendez-vous"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = `/networking?action=schedule&exhibitor=${selectedExhibitor.id}&source=exhibitor-detail`;
+              }}
             >
               <Calendar className="h-5 w-5" />
             </Button>
