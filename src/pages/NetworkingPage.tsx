@@ -990,6 +990,289 @@ export const NetworkingPage: React.FC = () => {
           </Button>
         </div>
       </div>
+
+      {/* Modal de Prise de RDV avec Calendrier */}
+      {showAppointmentModal && selectedExhibitorForRDV && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+          >
+            {/* Header Modal */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-t-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="h-12 w-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                    <Calendar className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">Prendre Rendez-vous</h3>
+                    <p className="text-blue-100">
+                      {selectedExhibitorForRDV.profile.firstName} {selectedExhibitorForRDV.profile.lastName} - {selectedExhibitorForRDV.profile.company}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowAppointmentModal(false);
+                    setSelectedExhibitorForRDV(null);
+                    setSelectedTimeSlot('');
+                    setAppointmentMessage('');
+                  }}
+                  className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              {/* Informations Forfait */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Award className="h-5 w-5 text-blue-600" />
+                  <span className="font-medium text-blue-900">
+                    Votre forfait {user?.profile?.passType?.toUpperCase() || 'GRATUIT'}
+                  </span>
+                </div>
+                <p className="text-blue-700 text-sm">
+                  {user?.profile?.passType === 'vip' ? '10 RDV garantis' :
+                   user?.profile?.passType === 'premium' ? '5 RDV garantis' :
+                   user?.profile?.passType === 'basic' ? '3 RDV garantis' :
+                   '1 RDV gratuit'} • 
+                  Il vous reste <strong>3 RDV</strong> disponibles
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Calendrier des Disponibilités */}
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+                    <Calendar className="h-5 w-5 mr-2 text-blue-600" />
+                    Créneaux Disponibles
+                  </h4>
+                  
+                  <div className="space-y-3">
+                    {[
+                      { id: 'slot1', date: '5 Février 2026', time: '14:00 - 14:30', type: 'Présentiel', location: 'Stand A-12', available: true },
+                      { id: 'slot2', date: '5 Février 2026', time: '15:00 - 15:30', type: 'Virtuel', location: 'Zoom', available: true },
+                      { id: 'slot3', date: '6 Février 2026', time: '10:00 - 10:30', type: 'Hybride', location: 'Stand A-12 + Zoom', available: true },
+                      { id: 'slot4', date: '6 Février 2026', time: '14:00 - 14:30', type: 'Présentiel', location: 'Stand A-12', available: false },
+                      { id: 'slot5', date: '7 Février 2026', time: '09:00 - 09:30', type: 'Présentiel', location: 'Stand A-12', available: true },
+                      { id: 'slot6', date: '7 Février 2026', time: '16:00 - 16:30', type: 'Virtuel', location: 'Teams', available: true }
+                    ].map((slot) => (
+                      <div
+                        key={slot.id}
+                        className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                          !slot.available 
+                            ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed' 
+                            : selectedTimeSlot === slot.id
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                        }`}
+                        onClick={() => {
+                          if (slot.available) {
+                            setSelectedTimeSlot(slot.id);
+                          }
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-medium text-gray-900">{slot.date}</div>
+                            <div className="text-sm text-gray-600">{slot.time}</div>
+                            <div className="flex items-center space-x-2 mt-1">
+                              <Badge 
+                                variant={slot.type === 'Virtuel' ? 'info' : slot.type === 'Hybride' ? 'warning' : 'default'}
+                                size="sm"
+                              >
+                                {slot.type}
+                              </Badge>
+                              <span className="text-xs text-gray-500">{slot.location}</span>
+                            </div>
+                          </div>
+                          <div>
+                            {slot.available ? (
+                              <Badge variant="success" size="sm">Disponible</Badge>
+                            ) : (
+                              <Badge variant="error" size="sm">Occupé</Badge>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Formulaire de Demande */}
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+                    <User className="h-5 w-5 mr-2 text-blue-600" />
+                    Informations de Contact
+                  </h4>
+                  
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Nom et Prénom *
+                        </label>
+                        <input
+                          type="text"
+                          value={`${user?.profile.firstName || ''} ${user?.profile.lastName || ''}`}
+                          readOnly
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email *
+                        </label>
+                        <input
+                          type="email"
+                          value={user?.email || ''}
+                          readOnly
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Société *
+                        </label>
+                        <input
+                          type="text"
+                          value={user?.profile.company || ''}
+                          readOnly
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Téléphone *
+                        </label>
+                        <input
+                          type="tel"
+                          value={user?.profile.phone || ''}
+                          readOnly
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Objet du rendez-vous *
+                      </label>
+                      <select 
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onChange={(e) => {
+                          const selectedOption = e.target.value;
+                          if (selectedOption) {
+                            const messages = {
+                              'product_demo': `Bonjour,\n\nJe souhaiterais une démonstration de vos produits et solutions.\n\nMon secteur d'activité : ${user?.profile.sectors?.[0] || 'À préciser'}\nMes objectifs : ${user?.profile.objectives?.[0] || 'À préciser'}\n\nCordialement,\n${user?.profile.firstName} ${user?.profile.lastName}`,
+                              'partnership': `Bonjour,\n\nJe suis intéressé(e) par des opportunités de partenariat avec votre entreprise.\n\nNotre société : ${user?.profile.company}\nNotre secteur : ${user?.profile.sectors?.[0] || 'À préciser'}\n\nJ'aimerais discuter des synergies possibles entre nos activités.\n\nCordialement,\n${user?.profile.firstName} ${user?.profile.lastName}`,
+                              'technical_discussion': `Bonjour,\n\nJe souhaiterais échanger sur les aspects techniques de vos solutions.\n\nMon expertise : ${user?.profile.competencies?.[0] || 'À préciser'}\nMes intérêts : ${user?.profile.thematicInterests?.[0] || 'À préciser'}\n\nCordialement,\n${user?.profile.firstName} ${user?.profile.lastName}`,
+                              'commercial_quote': `Bonjour,\n\nJe souhaiterais obtenir un devis pour vos produits/services.\n\nNotre projet : ${user?.profile.objectives?.[0] || 'À préciser'}\nBudget estimé : À discuter\n\nMerci de me faire parvenir une proposition commerciale.\n\nCordialement,\n${user?.profile.firstName} ${user?.profile.lastName}`,
+                              'investment': `Bonjour,\n\nJe suis intéressé(e) par des opportunités d'investissement ou de financement.\n\nNotre profil : ${user?.profile.company}\nSecteurs d'intérêt : ${user?.profile.sectors?.join(', ') || 'À préciser'}\n\nCordialement,\n${user?.profile.firstName} ${user?.profile.lastName}`,
+                              'other': ''
+                            };
+                            setAppointmentMessage(messages[selectedOption as keyof typeof messages] || '');
+                          }
+                        }}
+                      >
+                        <option value="">Sélectionnez l'objet du RDV</option>
+                        <option value="product_demo">Démonstration produit</option>
+                        <option value="partnership">Opportunité de partenariat</option>
+                        <option value="technical_discussion">Discussion technique</option>
+                        <option value="commercial_quote">Demande de devis</option>
+                        <option value="investment">Opportunité d'investissement</option>
+                        <option value="other">Autre (à préciser)</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Message personnalisé
+                      </label>
+                      <textarea
+                        value={appointmentMessage}
+                        onChange={(e) => setAppointmentMessage(e.target.value)}
+                        placeholder="Décrivez brièvement l'objet de votre rendez-vous, vos besoins spécifiques..."
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={4}
+                      />
+                    </div>
+                    
+                    {/* Résumé de la Demande */}
+                    {selectedTimeSlot && (
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <h5 className="font-medium text-green-900 mb-2">Résumé de votre demande :</h5>
+                        <div className="text-sm text-green-800 space-y-1">
+                          <div>📅 <strong>Créneau :</strong> {
+                            [
+                              { id: 'slot1', date: '5 Février 2026', time: '14:00 - 14:30', type: 'Présentiel', location: 'Stand A-12' },
+                              { id: 'slot2', date: '5 Février 2026', time: '15:00 - 15:30', type: 'Virtuel', location: 'Zoom' },
+                              { id: 'slot3', date: '6 Février 2026', time: '10:00 - 10:30', type: 'Hybride', location: 'Stand A-12 + Zoom' },
+                              { id: 'slot5', date: '7 Février 2026', time: '09:00 - 09:30', type: 'Présentiel', location: 'Stand A-12' },
+                              { id: 'slot6', date: '7 Février 2026', time: '16:00 - 16:30', type: 'Virtuel', location: 'Teams' }
+                            ].find(s => s.id === selectedTimeSlot)?.date
+                          } à {
+                            [
+                              { id: 'slot1', time: '14:00 - 14:30' },
+                              { id: 'slot2', time: '15:00 - 15:30' },
+                              { id: 'slot3', time: '10:00 - 10:30' },
+                              { id: 'slot5', time: '09:00 - 09:30' },
+                              { id: 'slot6', time: '16:00 - 16:30' }
+                            ].find(s => s.id === selectedTimeSlot)?.time
+                          }</div>
+                          <div>🏢 <strong>Exposant :</strong> {selectedExhibitorForRDV.profile.company}</div>
+                          <div>👤 <strong>Contact :</strong> {selectedExhibitorForRDV.profile.firstName} {selectedExhibitorForRDV.profile.lastName}</div>
+                          <div>📍 <strong>Type :</strong> {
+                            [
+                              { id: 'slot1', type: 'Présentiel' },
+                              { id: 'slot2', type: 'Virtuel' },
+                              { id: 'slot3', type: 'Hybride' },
+                              { id: 'slot5', type: 'Présentiel' },
+                              { id: 'slot6', type: 'Virtuel' }
+                            ].find(s => s.id === selectedTimeSlot)?.type
+                          }</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Actions */}
+              <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    setShowAppointmentModal(false);
+                    setSelectedExhibitorForRDV(null);
+                    setSelectedTimeSlot('');
+                    setAppointmentMessage('');
+                  }}
+                >
+                  Annuler
+                </Button>
+                <Button 
+                  onClick={handleConfirmAppointment}
+                  disabled={!selectedTimeSlot}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Confirmer la Demande de RDV
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
