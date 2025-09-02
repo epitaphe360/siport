@@ -467,21 +467,23 @@ export const NetworkingPage: React.FC = () => {
                                 En attente
                               </Button>
                             ) : (
-                              <Button 
-                                size="sm"
-                                onClick={() => handleConnect(profile.id, `${profile.profile.firstName} ${profile.profile.lastName}`)}
-                              >
-                                <Handshake className="h-3 w-3 mr-1" />
-                                Connecter
-                              </Button>
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                onClick={() => handleBookAppointment(profile)}
-                              >
-                                <Calendar className="h-3 w-3 mr-1" />
-                                RDV
-                              </Button>
+                              <>
+                                <Button 
+                                  size="sm"
+                                  onClick={() => handleConnect(profile.id, `${profile.profile.firstName} ${profile.profile.lastName}`)}
+                                >
+                                  <Handshake className="h-3 w-3 mr-1" />
+                                  Connecter
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => handleBookAppointment(profile)}
+                                >
+                                  <Calendar className="h-3 w-3 mr-1" />
+                                  RDV
+                                </Button>
+                              </>
                             )}
                             
                             <Button 
