@@ -335,10 +335,8 @@ export const VisitorDashboard: React.FC = () => {
                         country: visitorProfile?.country,
                         passType: visitorProfile?.passType || 'free',
                         registrationDate: new Date().toLocaleDateString('fr-FR'),
-                  >
                         qrCode: `SIPORTS2026-${visitorProfile?.id}-${Date.now()}`,
                         accessRights: getPassBenefits(visitorProfile?.passType || 'free'),
-                  >
                       };
                       
                       // Simulation de génération PDF du badge
