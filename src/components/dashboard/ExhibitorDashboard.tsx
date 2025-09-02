@@ -341,6 +341,16 @@ export const ExhibitorDashboard: React.FC = () => {
                   <Button 
                     className="w-full justify-start"
                     onClick={() => {
+                      const campaignData = {
+                        contacts: 2156,
+                        openRate: '24%',
+                        leads: 47,
+                        templates: ['Présentation produits', 'Invitation salon', 'Suivi post-salon']
+                      };
+                      
+                      alert(`📧 CAMPAGNE EMAIL MARKETING\n\n👥 ${campaignData.contacts} contacts dans votre base\n📊 Taux d'ouverture: ${campaignData.openRate}\n🎯 Leads générés: ${campaignData.leads}\n\n📝 Templates disponibles:\n${campaignData.templates.map(t => `• ${t}`).join('\n')}\n\n🚀 Campagne prête à envoyer !`);
+                    }}
+                    onClick={() => {
                       alert('📧 CAMPAGNE EMAIL\n\n👥 2,156 contacts dans votre base\n📊 Taux d\'ouverture: 24%\n📈 Leads générés: 47\n\n📬 Nouvelle campagne prête !');
                     }}
                   >
@@ -380,7 +390,15 @@ export const ExhibitorDashboard: React.FC = () => {
                     className="w-full justify-start" 
                     variant="outline"
                     onClick={() => {
-                      alert('🏆 CONCOURS INNOVATION\n\n🎯 Participez au concours SIPORTS\n🏅 Prix: 50,000€ + visibilité\n📅 Date limite: 15 janvier\n📋 Dossier: 80% complété\n\n🚀 Finalisez votre candidature !');
+                      const innovationData = {
+                        prize: '50,000€',
+                        visibility: 'Médias internationaux',
+                        deadline: '15 janvier 2026',
+                        completion: '80%',
+                        categories: ['Innovation Digitale', 'Développement Durable', 'Efficacité Opérationnelle']
+                      };
+                      
+                      alert(`🏆 CONCOURS INNOVATION SIPORTS\n\n💰 Prix: ${innovationData.prize} + ${innovationData.visibility}\n📅 Date limite: ${innovationData.deadline}\n📋 Dossier: ${innovationData.completion} complété\n\n🎯 Catégories:\n${innovationData.categories.map(c => `• ${c}`).join('\n')}\n\n🚀 Finalisez votre candidature !`);
                     }}
                   >
                     <Award className="h-4 w-4 mr-3" />

@@ -383,10 +383,37 @@ export const ExhibitorDetailPage: React.FC = () => {
                     
                     <div className="flex space-x-3">
                       <Button size="sm" className="flex-1">
+                        onClick={() => {
+                          const quoteData = {
+                            product: product.name,
+                            company: selectedExhibitor?.companyName,
+                            category: product.category,
+                            specifications: product.specifications
+                          };
+                          
+                          alert(`💰 DEMANDE DE DEVIS\n\n📦 Produit: ${quoteData.product}\n🏢 Fournisseur: ${quoteData.company}\n📋 Catégorie: ${quoteData.category}\n\n📧 Demande envoyée au service commercial\n⏱️ Réponse sous 24h\n\n✅ Devis en préparation !`);
+                        }}
                         <Target className="h-4 w-4 mr-2" />
                         Demander un devis
                       </Button>
                       <Button variant="outline" size="sm">
+                        onClick={() => {
+                          const docData = {
+                            product: product.name,
+                            type: 'Fiche technique PDF',
+                            size: '1.2 MB'
+                          };
+                          
+                          // Simulation téléchargement
+                          const link = document.createElement('a');
+                          link.href = 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEK';
+                          link.download = `fiche-${docData.product.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                          
+                          alert(`📄 FICHE TECHNIQUE\n\n📦 ${docData.product}\n📋 ${docData.type}\n💾 ${docData.size}\n\n⬇️ Téléchargement démarré !`);
+                        }}
                         <Download className="h-4 w-4" />
                       </Button>
                     </div>
@@ -453,8 +480,59 @@ export const ExhibitorDetailPage: React.FC = () => {
                     </p>
                     
                     <Button variant="outline" size="sm">
-                      <Eye className="h-4 w-4 mr-2" />
-                      Lire la suite
+                      onClick={() => {
+                        const articleData = {
+                          title: article.title,
+                          category: article.category,
+                          date: article.date,
+                          company: selectedExhibitor?.companyName
+                        };
+                        
+                        alert(`📰 ARTICLE COMPLET\n\n📝 ${articleData.title}\n🏷️ ${articleData.category}\n📅 ${formatDate(articleData.date)}\n🏢 ${articleData.company}\n\n📖 Article affiché en mode lecture !`);
+                      }}
+                      <Download 
+                        className="h-4 w-4 mr-2" 
+                        onClick={() => {
+                          const catalogData = {
+                            company: selectedExhibitor?.companyName,
+                            products: selectedExhibitor?.products.length || 0,
+                            pages: 24,
+                            size: '2.4 MB'
+                          };
+                          
+                          // Simulation du téléchargement
+                          const link = document.createElement('a');
+                          link.href = 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKMiAwIG9iago8PAovVHlwZSAvUGFnZXMKL0tpZHMgWzMgMCBSXQovQ291bnQgMQo+PgplbmRvYmoKMyAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCi9NZWRpYUJveCBbMCAwIDYxMiA3OTJdCj4+CmVuZG9iago=';
+                          link.download = `catalogue-${catalogData.company?.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                          
+                          alert(`📥 TÉLÉCHARGEMENT DÉMARRÉ\n\n📋 Catalogue: ${catalogData.company}\n📦 ${catalogData.products} produits\n📄 ${catalogData.pages} pages\n💾 Taille: ${catalogData.size}\n\n✅ Téléchargement en cours...`);
+                        }}
+                      />
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const formData = new FormData(e.target.closest('form'));
+                        const messageData = {
+                          nom: formData.get('nom'),
+                          email: formData.get('email'),
+                          sujet: formData.get('sujet'),
+                          message: formData.get('message'),
+                          company: selectedExhibitor?.companyName
+                        };
+                        
+                        if (!messageData.nom || !messageData.email || !messageData.message) {
+                          alert('❌ Veuillez remplir tous les champs obligatoires');
+                          return;
+                        }
+                        
+                        alert(`📧 MESSAGE ENVOYÉ\n\n👤 De: ${messageData.nom}\n📧 Email: ${messageData.email}\n📝 Sujet: ${messageData.sujet}\n🏢 À: ${messageData.company}\n\n✅ Message transmis au service commercial\n⏱️ Réponse sous 24h !`);
+                        
+                        // Reset form
+                        e.target.closest('form').reset();
+                      }}
+                      Télécharger catalogue
                     </Button>
                   </div>
                 </Card>
@@ -728,6 +806,16 @@ export const ExhibitorDetailPage: React.FC = () => {
                         Envoyer le message
                       </Button>
                       <Button variant="outline">
+                        onClick={() => {
+                          const appointmentData = {
+                            company: selectedExhibitor?.companyName,
+                            availableSlots: ['Demain 14h-14h30', 'Jeudi 10h-10h30', 'Vendredi 16h-16h30'],
+                            contact: 'Sarah Johnson',
+                            email: 'sarah.johnson@portsolutions.com'
+                          };
+                          
+                          alert(`📅 PRISE DE RENDEZ-VOUS\n\n🏢 Avec: ${appointmentData.company}\n👤 Contact: ${appointmentData.contact}\n📧 ${appointmentData.email}\n\n⏰ Créneaux disponibles:\n${appointmentData.availableSlots.map(slot => `• ${slot}`).join('\n')}\n\n📞 Choisissez votre créneau !`);
+                        }}
                         <Calendar className="h-4 w-4 mr-2" />
                         Prendre RDV
                       </Button>
@@ -756,10 +844,39 @@ export const ExhibitorDetailPage: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
+                onClick={() => {
+                  const demoData = {
+                    company: selectedExhibitor?.companyName,
+                    products: selectedExhibitor?.products.length || 0,
+                    duration: '30 minutes',
+                    format: 'Démonstration interactive'
+                  };
+                  
+                  alert(`🎯 DÉMONSTRATION PROGRAMMÉE\n\n🏢 ${demoData.company}\n📦 ${demoData.products} solutions à découvrir\n⏱️ Durée: ${demoData.duration}\n🎥 ${demoData.format}\n\n📅 Rendez-vous confirmé !\n📧 Lien de connexion envoyé par email`);
+                }}
                 <Target className="h-5 w-5 mr-2" />
                 Demander une démonstration
               </Button>
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
+                onClick={() => {
+                  const catalogData = {
+                    company: selectedExhibitor?.companyName,
+                    products: selectedExhibitor?.products.length || 0,
+                    pages: 48,
+                    size: '5.2 MB',
+                    format: 'PDF Haute Qualité'
+                  };
+                  
+                  // Simulation téléchargement
+                  const link = document.createElement('a');
+                  link.href = 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEK';
+                  link.download = `catalogue-complet-${catalogData.company?.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  
+                  alert(`📋 CATALOGUE COMPLET\n\n🏢 ${catalogData.company}\n📦 ${catalogData.products} produits détaillés\n📄 ${catalogData.pages} pages\n💾 ${catalogData.size} - ${catalogData.format}\n\n⬇️ Téléchargement démarré !`);
+                }}
                 <Download className="h-5 w-5 mr-2" />
                 Télécharger notre catalogue
               </Button>
