@@ -489,35 +489,6 @@ export const ExhibitorDetailPage: React.FC = () => {
                         <Clock className="h-4 w-4 mr-1" />
                         {formatDate(article.date)}
                       </span>
-                      onClick={(e) => {
-                        e.preventDefault();
-                        const form = e.currentTarget.closest('form');
-                        if (!form) {
-                          alert('❌ Formulaire non trouvé');
-                          return;
-                        }
-                        
-                        const formData = new FormData(form);
-                        const messageData = {
-                          nom: formData.get('nom') as string,
-                          email: formData.get('email') as string,
-                          sujet: formData.get('sujet') as string,
-                          message: formData.get('message') as string,
-                          company: selectedExhibitor?.companyName
-                        };
-                        
-                        if (!messageData.nom || !messageData.email || !messageData.message) {
-                          alert('❌ Veuillez remplir tous les champs obligatoires');
-                          return;
-                        }
-                        
-                        alert(`📧 MESSAGE ENVOYÉ\n\n👤 De: ${messageData.nom}\n📧 Email: ${messageData.email}\n📝 Sujet: ${messageData.sujet}\n🏢 À: ${messageData.company}\n\n✅ Message transmis au service commercial\n⏱️ Réponse sous 24h !`);
-                        
-                        // Reset form
-                        form.reset();
-                      }}
-                      Lire la suite
-                    </Button>
                   </div>
                 </Card>
               </motion.div>
