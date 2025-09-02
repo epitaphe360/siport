@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Users, 
   MessageCircle, 
@@ -25,11 +26,16 @@ import {
   Handshake,
   Mail,
   Phone,
-  Linkedin
+  Linkedin,
+  Lock,
+  Crown,
+  Shield,
+  ArrowRight
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
+import { useAuthStore } from '../store/authStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface NetworkingProfile {
@@ -212,6 +218,7 @@ const demoProfiles: NetworkingProfile[] = [
 ];
 
 export const NetworkingPage: React.FC = () => {
+  const { user, isAuthenticated } = useAuthStore();
   const [profiles, setProfiles] = useState<NetworkingProfile[]>(demoProfiles);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSector, setSelectedSector] = useState('');
@@ -222,12 +229,145 @@ export const NetworkingPage: React.FC = () => {
   const [showContactModal, setShowContactModal] = useState(false);
   const [contactMessage, setContactMessage] = useState('');
   const [sortBy, setSortBy] = useState<'match' | 'online' | 'recent'>('match');
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  // Vérification de l'authentification
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center"
+          >
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <div className="bg-blue-100 p-4 rounded-full w-20 h-20 mx-auto mb-6">
+                <Lock className="h-12 w-12 text-blue-600" />
+              </div>
+              
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                Connexion Requise pour le Réseautage
+              </h1>
+              
+              <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                Pour accéder aux fonctionnalités de réseautage intelligent et vous connecter 
+                avec plus de 6,000 professionnels du secteur portuaire, vous devez être connecté.
+              </p>
+              
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+                <h3 className="font-semibold text-blue-900 mb-4">🤖 Fonctionnalités de Réseautage IA :</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
+                  <div className="flex items-center space-x-2">
+                    <Brain className="h-4 w-4" />
+                    <span>Matching intelligent par IA</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Target className="h-4 w-4" />
+                    <span>Recommandations personnalisées</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <MessageCircle className="h-4 w-4" />
+                    <span>Messagerie instantanée</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Calendar className="h-4 w-4" />
+                    <span>Planification de rendez-vous</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/login">
+                  <Button size="lg" className="w-full sm:w-auto">
+                    <Users className="h-5 w-5 mr-2" />
+                    Se Connecter
+                  </Button>
+                </Link>
+                <Link to="/register">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                    <UserPlus className="h-5 w-5 mr-2" />
+                    Créer un Compte
+                  </Button>
+                </Link>
+              </div>
+              
+              <p className="text-sm text-gray-500 mt-6">
+                Déjà inscrit ? Utilisez les comptes de démonstration pour tester les fonctionnalités
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  // Définir les limites selon le type d'utilisateur et le forfait
+  const getUserLimits = () => {
+    const userType = user.type;
+    
+    switch (userType) {
+      case 'admin':
+        return {
+          maxConnections: 1000,
+          maxMessages: 1000,
+          maxRecommendations: 50,
+          canViewAllProfiles: true,
+          canUseAI: true,
+          canScheduleMeetings: true,
+          planName: 'Administrateur',
+          planColor: 'bg-red-100 text-red-800'
+        };
+      case 'partner':
+        return {
+          maxConnections: 200,
+          maxMessages: 500,
+          maxRecommendations: 30,
+          canViewAllProfiles: true,
+          canUseAI: true,
+          canScheduleMeetings: true,
+          planName: 'Partenaire VIP',
+          planColor: 'bg-purple-100 text-purple-800'
+        };
+      case 'exhibitor':
+        return {
+          maxConnections: 100,
+          maxMessages: 200,
+          maxRecommendations: 20,
+          canViewAllProfiles: true,
+          canUseAI: true,
+          canScheduleMeetings: true,
+          planName: 'Exposant Premium',
+          planColor: 'bg-blue-100 text-blue-800'
+        };
+      case 'visitor':
+      default:
+        return {
+          maxConnections: 20,
+          maxMessages: 50,
+          maxRecommendations: 10,
+          canViewAllProfiles: false,
+          canUseAI: false,
+          canScheduleMeetings: false,
+          planName: 'Visiteur Basic',
+          planColor: 'bg-gray-100 text-gray-800'
+        };
+    }
+  };
+
+  const userLimits = getUserLimits();
+  
+  // Statistiques utilisateur actuelles (simulation)
+  const userStats = {
+    connectionsUsed: user.type === 'visitor' ? 18 : user.type === 'exhibitor' ? 45 : user.type === 'partner' ? 89 : 156,
+    messagesUsed: user.type === 'visitor' ? 32 : user.type === 'exhibitor' ? 87 : user.type === 'partner' ? 234 : 445
+  };
 
   // Statistiques du réseautage
   const networkingStats = {
     totalProfiles: profiles.length,
     onlineNow: profiles.filter(p => p.isOnline).length,
-    myConnections: profiles.filter(p => p.isConnected).length,
+    myConnections: userStats.connectionsUsed,
     pendingRequests: profiles.filter(p => p.connectionRequested).length,
     favorites: profiles.filter(p => p.isFavorite).length,
     averageMatch: Math.round(profiles.reduce((sum, p) => sum + p.matchScore, 0) / profiles.length)
@@ -264,6 +404,12 @@ export const NetworkingPage: React.FC = () => {
   const countries = [...new Set(profiles.map(p => p.country))];
 
   const handleConnect = (profileId: string) => {
+    // Vérifier les limites du forfait
+    if (userStats.connectionsUsed >= userLimits.maxConnections) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    
     setProfiles(prev => prev.map(p => 
       p.id === profileId ? { ...p, connectionRequested: true } : p
     ));
@@ -280,6 +426,12 @@ export const NetworkingPage: React.FC = () => {
 
   const handleSendMessage = () => {
     if (!selectedProfile || !contactMessage.trim()) return;
+    
+    // Vérifier les limites du forfait
+    if (userStats.messagesUsed >= userLimits.maxMessages) {
+      setShowUpgradeModal(true);
+      return;
+    }
     
     alert(`📧 MESSAGE ENVOYÉ\n\n👤 À: ${selectedProfile.name}\n🏢 ${selectedProfile.company}\n💬 Message: "${contactMessage}"\n\n✅ Votre message a été envoyé avec succès !`);
     
@@ -344,14 +496,95 @@ export const NetworkingPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-8"
           >
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className="bg-blue-600 p-3 rounded-lg">
-                <Brain className="h-8 w-8 text-white" />
+            {/* Informations du forfait utilisateur */}
+            <div className="mb-6">
+              <div className="flex items-center justify-center space-x-3 mb-4">
+                <div className="bg-blue-600 p-3 rounded-lg">
+                  <Brain className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900">
+                    Réseautage Intelligent SIPORTS
+                  </h1>
+                  <div className="flex items-center justify-center space-x-2 mt-2">
+                    <Badge className={userLimits.planColor} size="sm">
+                      {userLimits.planName}
+                    </Badge>
+                    <span className="text-sm text-gray-600">
+                      Connecté en tant que {user.profile.firstName} {user.profile.lastName}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Réseautage Intelligent SIPORTS
-              </h1>
+              
+              {/* Limites du forfait */}
+              <div className="bg-white border border-gray-200 rounded-lg p-4 max-w-4xl mx-auto mb-6">
+                <h3 className="font-semibold text-gray-900 mb-3">Votre Forfait {userLimits.planName}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600 mb-1">
+                      {userStats.connectionsUsed}/{userLimits.maxConnections}
+                    </div>
+                    <div className="text-sm text-gray-600">Connexions</div>
+                    <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          (userStats.connectionsUsed / userLimits.maxConnections) > 0.8 ? 'bg-red-500' : 'bg-blue-500'
+                        }`}
+                        style={{ width: `${Math.min((userStats.connectionsUsed / userLimits.maxConnections) * 100, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600 mb-1">
+                      {userStats.messagesUsed}/{userLimits.maxMessages}
+                    </div>
+                    <div className="text-sm text-gray-600">Messages</div>
+                    <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          (userStats.messagesUsed / userLimits.maxMessages) > 0.8 ? 'bg-red-500' : 'bg-green-500'
+                        }`}
+                        style={{ width: `${Math.min((userStats.messagesUsed / userLimits.maxMessages) * 100, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-600 mb-1">
+                      {userLimits.maxRecommendations}
+                    </div>
+                    <div className="text-sm text-gray-600">Recommandations IA</div>
+                    <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                      <div className="bg-purple-500 h-2 rounded-full w-full" />
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Upgrade CTA pour visiteurs */}
+                {user.type === 'visitor' && (
+                  <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Crown className="h-4 w-4 text-yellow-600" />
+                        <span className="text-sm font-medium text-yellow-800">
+                          Débloquez plus de fonctionnalités
+                        </span>
+                      </div>
+                      <Button 
+                        size="sm" 
+                        className="bg-yellow-600 hover:bg-yellow-700"
+                        onClick={() => setShowUpgradeModal(true)}
+                      >
+                        Upgrade
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
+            
             <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
               Connectez-vous avec les professionnels les plus pertinents grâce à notre système de matching intelligent. 
               Plus votre score de compatibilité est élevé, plus vous avez de chances de créer des partenariats fructueux.
@@ -688,9 +921,19 @@ export const NetworkingPage: React.FC = () => {
                             size="sm" 
                             className="w-full"
                             onClick={() => handleConnect(profile.id)}
+                            disabled={userStats.connectionsUsed >= userLimits.maxConnections}
                           >
-                            <UserPlus className="h-4 w-4 mr-2" />
-                            Se connecter
+                            {userStats.connectionsUsed >= userLimits.maxConnections ? (
+                              <>
+                                <Lock className="h-4 w-4 mr-2" />
+                                Limite atteinte
+                              </>
+                            ) : (
+                              <>
+                                <UserPlus className="h-4 w-4 mr-2" />
+                                Se connecter
+                              </>
+                            )}
                           </Button>
                         )}
                         
@@ -700,12 +943,26 @@ export const NetworkingPage: React.FC = () => {
                             size="sm" 
                             className="flex-1"
                             onClick={() => {
+                              if (!userLimits.canUseAI) {
+                                setShowUpgradeModal(true);
+                                return;
+                              }
                               setSelectedProfile(profile);
                               setShowContactModal(true);
                             }}
+                            disabled={userStats.messagesUsed >= userLimits.maxMessages}
                           >
-                            <MessageCircle className="h-4 w-4 mr-1" />
-                            Message
+                            {userStats.messagesUsed >= userLimits.maxMessages ? (
+                              <>
+                                <Lock className="h-4 w-4 mr-1" />
+                                Limite
+                              </>
+                            ) : (
+                              <>
+                                <MessageCircle className="h-4 w-4 mr-1" />
+                                Message
+                              </>
+                            )}
                           </Button>
                           
                           <Button 
@@ -713,22 +970,43 @@ export const NetworkingPage: React.FC = () => {
                             size="sm" 
                             className="flex-1"
                             onClick={() => {
+                              if (!userLimits.canScheduleMeetings) {
+                                setShowUpgradeModal(true);
+                                return;
+                              }
                               alert(`📅 DEMANDE DE RENDEZ-VOUS\n\n👤 Avec: ${profile.name}\n🏢 ${profile.company}\n📍 ${profile.country}\n\n⏰ Créneaux disponibles proposés !`);
                             }}
                           >
-                            <Calendar className="h-4 w-4 mr-1" />
-                            RDV
+                            {!userLimits.canScheduleMeetings ? (
+                              <>
+                                <Lock className="h-4 w-4 mr-1" />
+                                RDV
+                              </>
+                            ) : (
+                              <>
+                                <Calendar className="h-4 w-4 mr-1" />
+                                RDV
+                              </>
+                            )}
                           </Button>
                           
                           <Button 
                             variant="outline" 
                             size="sm"
                             onClick={() => {
+                              if (!userLimits.canViewAllProfiles) {
+                                setShowUpgradeModal(true);
+                                return;
+                              }
                               alert(`👁️ PROFIL DÉTAILLÉ\n\n👤 ${profile.name}\n🏢 ${profile.company}\n📧 ${profile.email}\n📞 ${profile.phone}\n🌐 ${profile.linkedin || 'Non renseigné'}\n\n📋 Profil complet affiché !`);
                             }}
                             title="Voir le profil complet"
                           >
-                            <Eye className="h-4 w-4" />
+                            {!userLimits.canViewAllProfiles ? (
+                              <Lock className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
                           </Button>
                         </div>
                       </div>
@@ -741,6 +1019,7 @@ export const NetworkingPage: React.FC = () => {
         )}
 
         {/* Conseils IA */}
+        {userLimits.canUseAI && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -776,6 +1055,7 @@ export const NetworkingPage: React.FC = () => {
             </div>
           </Card>
         </motion.div>
+        )}
       </div>
 
       {/* Modal de contact */}
@@ -842,6 +1122,77 @@ export const NetworkingPage: React.FC = () => {
                   <Send className="h-4 w-4 mr-2" />
                   Envoyer
                 </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal d'upgrade */}
+      <AnimatePresence>
+        {showUpgradeModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white rounded-lg p-6 w-full max-w-lg mx-4"
+            >
+              <div className="text-center">
+                <div className="bg-yellow-100 p-4 rounded-full w-16 h-16 mx-auto mb-4">
+                  <Crown className="h-8 w-8 text-yellow-600" />
+                </div>
+                
+                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                  Limite de Forfait Atteinte
+                </h3>
+                
+                <p className="text-gray-600 mb-6">
+                  Vous avez atteint les limites de votre forfait {userLimits.planName}. 
+                  Passez à un forfait supérieur pour débloquer plus de fonctionnalités.
+                </p>
+                
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                  <h4 className="font-semibold text-blue-900 mb-3">Avantages des forfaits supérieurs :</h4>
+                  <div className="text-left space-y-2 text-sm text-blue-800">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="h-4 w-4" />
+                      <span>Plus de connexions autorisées</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="h-4 w-4" />
+                      <span>Messages illimités</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="h-4 w-4" />
+                      <span>Recommandations IA avancées</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="h-4 w-4" />
+                      <span>Planification de rendez-vous</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex space-x-3">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowUpgradeModal(false)}
+                    className="flex-1"
+                  >
+                    Fermer
+                  </Button>
+                  <Button 
+                    className="flex-1 bg-yellow-600 hover:bg-yellow-700"
+                    onClick={() => {
+                      alert(`🚀 UPGRADE DE FORFAIT\n\n📈 Forfait actuel: ${userLimits.planName}\n⬆️ Upgrade vers: ${user.type === 'visitor' ? 'Exposant Premium' : 'Partenaire VIP'}\n\n💰 Contactez notre équipe commerciale:\n📧 commercial@siportevent.com\n📞 +212 5 23 45 67 89`);
+                      setShowUpgradeModal(false);
+                    }}
+                  >
+                    <Crown className="h-4 w-4 mr-2" />
+                    Upgrader Maintenant
+                  </Button>
+                </div>
               </div>
             </motion.div>
           </div>
