@@ -769,7 +769,7 @@ export const NetworkingPage: React.FC = () => {
                     🎯 Stratégie de Contact
                   </h4>
                   <p className="text-sm text-purple-700">
-                    Les profils avec un score >85% ont 3x plus de chances de répondre positivement
+                    Les profils avec un score &gt;85% ont 3x plus de chances de répondre positivement
                   </p>
                 </div>
               </div>
