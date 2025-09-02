@@ -390,6 +390,13 @@ export const AdminDashboard: React.FC = () => {
                     <Calendar className="h-4 w-4 mr-3" />
                     Gestion Événements ({adminMetrics.totalEvents})
                   </Button>
+                  
+                  <Link to="/networking" className="block">
+                    <Button className="w-full justify-start" variant="outline">
+                      <Users className="h-4 w-4 mr-3" />
+                      Supervision Réseautage
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </Card>

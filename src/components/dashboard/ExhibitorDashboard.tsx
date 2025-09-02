@@ -278,6 +278,13 @@ export const ExhibitorDashboard: React.FC = () => {
                     </Button>
                   </Link>
                   
+                  <Link to="/networking" className="block">
+                    <Button className="w-full justify-start" variant="outline">
+                      <Users className="h-4 w-4 mr-3" />
+                      Réseautage & Contacts
+                    </Button>
+                  </Link>
+                  
                   <Link to="/minisite/editor" className="block">
                     <Button className="w-full justify-start" variant="outline">
                       <Package className="h-4 w-4 mr-3" />

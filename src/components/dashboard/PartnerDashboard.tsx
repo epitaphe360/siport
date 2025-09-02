@@ -271,6 +271,13 @@ export const PartnerDashboard: React.FC = () => {
                     ROI & Analytics
                   </Button>
                   
+                  <Link to="/networking" className="block">
+                    <Button className="w-full justify-start" variant="outline">
+                      <Users className="h-4 w-4 mr-3" />
+                      Réseautage VIP
+                    </Button>
+                  </Link>
+                  
                   <Button className="w-full justify-start" variant="outline">
                     <Target className="h-4 w-4 mr-3" />
                     Leads & Prospects
