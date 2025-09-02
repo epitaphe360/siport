@@ -150,7 +150,15 @@ export const FeaturedExhibitors: React.FC = () => {
                       </Button>
                     </Link>
                     <Link to={`/appointments?exhibitor=${exhibitor.id}`}>
-                      <Button size="sm" className="ml-2">
+                      <Button 
+                        size="sm" 
+                        className="ml-2"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          // Rediriger vers réseautage pour connexion selon forfait
+                          window.location.href = `/networking?action=connect&exhibitor=${exhibitor.id}&source=homepage`;
+                        }}
+                      >
                         <Calendar className="h-4 w-4 mr-1" />
                         RDV
                       </Button>
