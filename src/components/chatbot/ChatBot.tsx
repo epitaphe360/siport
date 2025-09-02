@@ -234,24 +234,28 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
     }
 
     if (message.includes('rendez-vous') || message.includes('rdv') || message.includes('appointment')) {
+      const rdvText = userType === 'visitor' 
+        ? `Avec votre pass ${user?.profile.passType || 'basic'}, vous pouvez programmer des RDV B2B garantis avec les exposants`
+        : "En tant qu'exposant, vous pouvez créer des créneaux pour recevoir des visiteurs";
+
       return {
         id: Date.now().toString(),
-        content: `📅 ${firstName}, le programme SIPORTS comprend 40+ conférences, ateliers et sessions de networking. Quel type d'événement vous intéresse ?`,
+        content: `📅 ${firstName}, ${rdvText}. Je peux vous aider à optimiser votre planning !`,
         isBot: true,
         timestamp,
         type: 'suggestion',
         suggestions: [
           {
-        content: `📅 ${firstName}, ${rdvText}. Je peux vous aider à optimiser votre planning !`,
-            description: "Voir mes rendez-vous",
-            action: "/appointments",
-            icon: Calendar
-        ? `Avec votre pass ${user?.profile.passType || 'basic'}, vous pouvez programmer des RDV B2B garantis avec les exposants`
-        : "En tant qu'exposant, vous pouvez créer des créneaux pour recevoir des visiteurs";
             title: userType === 'visitor' ? "Demander un RDV" : "Créer un créneau",
             description: userType === 'visitor' ? "Avec un exposant" : "Pour recevoir des visiteurs",
             action: "/appointments",
-            icon: Users
+            icon: Calendar
+          },
+          {
+            title: "Mes rendez-vous",
+            description: "Voir mon planning",
+            action: "/appointments",
+            icon: Calendar
           }
         ]
       };
