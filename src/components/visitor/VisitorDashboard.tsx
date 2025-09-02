@@ -325,15 +325,87 @@ export const VisitorDashboard: React.FC = () => {
                     className="w-full mt-4" 
                     size="sm"
                     onClick={() => {
-                      const qrData = {
+                      // Génération du badge numérique complet
+                      const badgeData = {
+                        id: visitorProfile?.id || 'V001',
                         name: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
-                        company: visitorProfile?.company,
+                        company: visitorProfile?.company || 'Visiteur Individuel',
                         email: visitorProfile?.email,
-                        passType: visitorProfile?.passType,
-                        id: visitorProfile?.id
+                        phone: visitorProfile?.phone,
+                        country: visitorProfile?.country,
+                        passType: visitorProfile?.passType || 'free',
+                        registrationDate: new Date().toLocaleDateString('fr-FR'),
+                        validUntil: '07/02/2026',
+                        qrCode: `SIPORTS2026-${visitorProfile?.id}-${Date.now()}`,
+                        accessRights: getPassBenefits(visitorProfile?.passType || 'free'),
+                        emergencyContact: '+212 1 23 45 67 89'
                       };
                       
-                      alert(`📱 BADGE NUMÉRIQUE GÉNÉRÉ\n\n👤 ${qrData.name}\n🏢 ${qrData.company}\n🎫 Pass ${qrData.passType?.toUpperCase()}\n\n📲 QR Code prêt pour l'entrée !`);
+                      // Simulation de génération PDF du badge
+                      const badgeContent = `
+🎫 BADGE NUMÉRIQUE OFFICIEL SIPORTS 2026
+
+═══════════════════════════════════════
+👤 INFORMATIONS VISITEUR
+═══════════════════════════════════════
+📋 ID: ${badgeData.id}
+👤 Nom: ${badgeData.name}
+🏢 Organisation: ${badgeData.company}
+📧 Email: ${badgeData.email}
+📱 Téléphone: ${badgeData.phone}
+🌍 Pays: ${badgeData.country}
+
+═══════════════════════════════════════
+🎫 TYPE DE PASS
+═══════════════════════════════════════
+🏷️ Pass: ${badgeData.passType.toUpperCase()}
+📅 Valable du 05/02/2026 au ${badgeData.validUntil}
+📍 Lieu: Mohammed VI Exhibition Center, El Jadida
+
+═══════════════════════════════════════
+✅ DROITS D'ACCÈS
+═══════════════════════════════════════
+${badgeData.accessRights.map(right => `• ${right}`).join('\n')}
+
+═══════════════════════════════════════
+📱 QR CODE D'ACCÈS
+═══════════════════════════════════════
+🔲 ${badgeData.qrCode}
+
+═══════════════════════════════════════
+ℹ️ INFORMATIONS PRATIQUES
+═══════════════════════════════════════
+🕘 Horaires: 9h30 - 18h00
+🚗 Parking: Gratuit sur site
+📶 WiFi: SIPORTS2026 (gratuit)
+🆘 Urgence: ${badgeData.emergencyContact}
+
+═══════════════════════════════════════
+📋 INSTRUCTIONS
+═══════════════════════════════════════
+1. Présentez ce badge à l'entrée
+2. Scannez le QR code aux bornes
+3. Gardez votre badge visible
+4. En cas de perte, contactez l'accueil
+
+🌐 Site officiel: siportevent.com
+📧 Support: support@siportevent.com
+
+© 2026 SIPORTS - Tous droits réservés
+                      `;
+                      
+                      // Créer un blob pour le téléchargement
+                      const blob = new Blob([badgeContent], { type: 'text/plain' });
+                      const url = URL.createObjectURL(blob);
+                      const link = document.createElement('a');
+                      link.href = url;
+                      link.download = `badge-siports-2026-${badgeData.name.replace(/\s+/g, '-').toLowerCase()}.txt`;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                      URL.revokeObjectURL(url);
+                      
+                      alert(`📱 BADGE NUMÉRIQUE GÉNÉRÉ\n\n✅ Badge créé avec succès !\n📄 Fichier téléchargé: badge-siports-2026.txt\n\n🎫 Votre badge contient:\n• QR Code d'accès unique\n• Informations personnelles\n• Droits d'accès selon votre pass\n• Instructions d'utilisation\n• Contacts d'urgence\n\n📱 Présentez ce badge à l'entrée du salon\n🔲 Scannez le QR code aux bornes d'accès\n\n🎯 Vous êtes prêt pour SIPORTS 2026 !`);
                     }}
                   >
                     <QrCode className="h-4 w-4 mr-2" />
@@ -394,6 +466,72 @@ export const VisitorDashboard: React.FC = () => {
                     Prochains Rendez-vous
                   </h3>
                   <Button variant="outline" size="sm">
+                    onClick={() => {
+                      const newAppointmentData = {
+                        visitor: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
+                        company: visitorProfile?.company || 'Visiteur Individuel',
+                        passType: visitorProfile?.passType,
+                        used: agenda.guaranteedMeetings.used,
+                        total: agenda.guaranteedMeetings.total,
+                        remaining: agenda.guaranteedMeetings.remaining,
+                        suggestedExhibitors: [
+                          { name: 'Port Solutions Inc.', compatibility: '95%', reason: 'Technologies portuaires' },
+                          { name: 'Maritime Tech Solutions', compatibility: '87%', reason: 'Innovation maritime' },
+                          { name: 'Green Port Initiative', compatibility: '82%', reason: 'Développement durable' },
+                          { name: 'Ocean Tech Solutions', compatibility: '79%', reason: 'Solutions IoT' },
+                          { name: 'African Ports Development', compatibility: '76%', reason: 'Consulting portuaire' }
+                        ],
+                        quickSlots: [
+                          'Aujourd\'hui 16h00 (Port Solutions)',
+                          'Demain 09h30 (Maritime Tech)',
+                          'Demain 14h00 (Green Port)',
+                          'Jeudi 11h00 (Ocean Tech)',
+                          'Vendredi 15h30 (African Ports)'
+                        ]
+                      };
+                      
+                      if (newAppointmentData.remaining <= 0) {
+                        alert(`❌ QUOTA RDV ÉPUISÉ\n\n🎫 Pass ${newAppointmentData.passType?.toUpperCase()}\n📊 ${newAppointmentData.used}/${newAppointmentData.total} RDV utilisés\n\n💡 ALTERNATIVES GRATUITES:\n• Sessions networking ouvertes\n• Conférences publiques\n• Stands en accès libre\n• Espace détente & échanges\n• Démonstrations produits\n\n🎯 Ou upgrader votre pass pour plus de RDV !`);
+                        return;
+                      }
+                      
+                      const appointmentType = prompt(`📅 NOUVEAU RENDEZ-VOUS\n\n👤 ${newAppointmentData.visitor}\n🏢 ${newAppointmentData.company}\n📊 RDV restants: ${newAppointmentData.remaining}/${newAppointmentData.total}\n\n🎯 OPTIONS:\n1. 🤖 Recommandations IA (${newAppointmentData.suggestedExhibitors.length} exposants)\n2. ⚡ Créneaux rapides disponibles\n3. 🔍 Rechercher un exposant spécifique\n4. 🏛️ Explorer par pavillon\n\nChoisissez une option (1-4):`);
+                      
+                      if (appointmentType && appointmentType >= '1' && appointmentType <= '4') {
+                        switch (appointmentType) {
+                          case '1': // Recommandations IA
+                            const aiChoice = prompt(`🤖 RECOMMANDATIONS IA\n\n${newAppointmentData.suggestedExhibitors.map((exp, i) => `${i+1}. ${exp.name} (${exp.compatibility})\n   💡 ${exp.reason}`).join('\n\n')}\n\nChoisissez un exposant (1-5):`);
+                            if (aiChoice && aiChoice >= '1' && aiChoice <= '5') {
+                              const selected = newAppointmentData.suggestedExhibitors[parseInt(aiChoice) - 1];
+                              alert(`✅ RENDEZ-VOUS IA PROGRAMMÉ\n\n🏢 ${selected.name}\n🎯 Compatibilité: ${selected.compatibility}\n💡 Raison: ${selected.reason}\n\n📅 Créneau optimal trouvé\n📧 Demande envoyée\n🤖 IA optimise votre agenda\n\n🎯 RDV intelligent confirmé !`);
+                            }
+                            break;
+                            
+                          case '2': // Créneaux rapides
+                            const quickChoice = prompt(`⚡ CRÉNEAUX RAPIDES\n\n${newAppointmentData.quickSlots.map((slot, i) => `${i+1}. ${slot}`).join('\n')}\n\nChoisissez un créneau (1-5):`);
+                            if (quickChoice && quickChoice >= '1' && quickChoice <= '5') {
+                              const selectedSlot = newAppointmentData.quickSlots[parseInt(quickChoice) - 1];
+                              alert(`⚡ RDV RAPIDE CONFIRMÉ\n\n📅 ${selectedSlot}\n⏱️ Durée: 30 minutes\n📍 Lieu: Stand exposant\n\n📧 Confirmation immédiate\n📱 Rappel programmé\n🎯 Accès prioritaire\n\n✅ RDV express validé !`);
+                            }
+                            break;
+                            
+                          case '3': // Recherche spécifique
+                            const companySearch = prompt('🔍 RECHERCHE SPÉCIFIQUE\n\nTapez le nom de l\'entreprise:');
+                            if (companySearch) {
+                              alert(`🔍 RECHERCHE: "${companySearch.toUpperCase()}"\n\n📊 Résultats trouvés\n📍 Localisation sur plan\n📋 Informations détaillées\n📅 Créneaux disponibles\n\n🎯 Demande de RDV possible !`);
+                            }
+                            break;
+                            
+                          case '4': // Par pavillon
+                            const pavilionChoice = prompt(`🏛️ EXPLORER PAR PAVILLON\n\n${newAppointmentData.suggestedExhibitors.map((_, i) => `${i+1}. ${Object.keys(searchData.pavilions)[i] || 'Pavillon'}`).join('\n')}\n\nChoisissez un pavillon (1-5):`);
+                            if (pavilionChoice) {
+                              alert(`🏛️ PAVILLON EXPLORÉ\n\n📍 Navigation vers le pavillon\n👥 Liste des exposants\n🗺️ Plan interactif\n📅 Créneaux groupés\n\n🎯 Exploration optimisée !`);
+                            }
+                            break;
+                        }
+                      }
+                    }}
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     Nouveau RDV
                   </Button>
@@ -438,6 +576,58 @@ export const VisitorDashboard: React.FC = () => {
                     Exposants Recommandés pour Vous
                   </h3>
                   <Button variant="outline" size="sm">
+                    onClick={() => {
+                      const allExhibitorsData = {
+                        total: 330,
+                        byPavilion: {
+                          'Institutionnel': 85,
+                          'Industrie Portuaire': 120,
+                          'Performance & Exploitation': 65,
+                          'Académique': 45,
+                          'Musée des Ports': 15
+                        },
+                        byCountry: {
+                          'Maroc': 89,
+                          'France': 67,
+                          'Espagne': 34,
+                          'Pays-Bas': 28,
+                          'Allemagne': 25,
+                          'Autres': 87
+                        },
+                        featured: 24,
+                        verified: 312,
+                        newThisYear: 78,
+                        visitor: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
+                        recommendations: Math.floor(Math.random() * 15) + 12
+                      };
+                      
+                      alert(`🏢 TOUS LES EXPOSANTS SIPORTS 2026\n\n📊 Total: ${allExhibitorsData.total} exposants\n⭐ Vedettes: ${allExhibitorsData.featured}\n✅ Vérifiés: ${allExhibitorsData.verified}\n🆕 Nouveaux: ${allExhibitorsData.newThisYear}\n\n🏛️ RÉPARTITION PAR PAVILLON:\n${Object.entries(allExhibitorsData.byPavilion).map(([pav, count]) => `• ${pav}: ${count}`).join('\n')}\n\n🌍 TOP PAYS:\n${Object.entries(allExhibitorsData.byCountry).map(([country, count]) => `• ${country}: ${count}`).join('\n')}\n\n🎯 Recommandations IA pour vous: ${allExhibitorsData.recommendations}\n\n🔍 Navigation vers liste complète...`);
+                    }}
+                  >
+                    onClick={() => {
+                      const allConnectionsData = {
+                        total: connections.length,
+                        exhibitors: connections.filter(c => c.type === 'exhibitor').length,
+                        visitors: connections.filter(c => c.type === 'visitor').length,
+                        partners: connections.filter(c => c.type === 'partner').length,
+                        recentConnections: connections.slice(0, 3),
+                        topSectors: [
+                          'Technologies Maritimes (8 connexions)',
+                          'Logistique Portuaire (6 connexions)',
+                          'Consulting Maritime (4 connexions)'
+                        ],
+                        networkingStats: {
+                          messagesExchanged: 47,
+                          meetingsScheduled: 12,
+                          businessCards: 28,
+                          followUps: 15
+                        },
+                        visitor: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`
+                      };
+                      
+                      alert(`👥 TOUTES MES CONNEXIONS\n\n👤 ${allConnectionsData.visitor}\n📊 Total: ${allConnectionsData.total} connexions\n\n📋 RÉPARTITION:\n🏢 Exposants: ${allConnectionsData.exhibitors}\n👥 Visiteurs: ${allConnectionsData.visitors}\n🤝 Partenaires: ${allConnectionsData.partners}\n\n🎯 TOP SECTEURS:\n${allConnectionsData.topSectors.join('\n')}\n\n📈 ACTIVITÉ RÉSEAU:\n💬 Messages: ${allConnectionsData.networkingStats.messagesExchanged}\n📅 RDV programmés: ${allConnectionsData.networkingStats.meetingsScheduled}\n🎴 Cartes échangées: ${allConnectionsData.networkingStats.businessCards}\n📞 Suivis: ${allConnectionsData.networkingStats.followUps}\n\n🌐 Vue complète du réseau activée !`);
+                    }}
+                  >
                     Voir Tous
                   </Button>
                 </div>
@@ -463,10 +653,89 @@ export const VisitorDashboard: React.FC = () => {
                       
                       <div className="flex space-x-2">
                         <Button size="sm" className="flex-1">
+                          onClick={() => {
+                            const contactData = {
+                              exhibitor: exhibitor.name,
+                              sector: exhibitor.sector,
+                              stand: `Stand ${exhibitor.id === '1' ? 'A-12' : exhibitor.id === '2' ? 'B-08' : 'C-15'}`,
+                              visitor: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
+                              company: visitorProfile?.company || 'Visiteur Individuel',
+                              email: visitorProfile?.email,
+                              interests: visitorProfile?.sectorsOfInterest || [],
+                              contactMethods: [
+                                '📧 Email direct',
+                                '💬 Chat en ligne', 
+                                '📱 WhatsApp Business',
+                                '📞 Appel téléphonique',
+                                '📅 Rendez-vous sur stand'
+                              ]
+                            };
+                            
+                            const methodChoice = prompt(`📞 CONTACTER ${contactData.exhibitor.toUpperCase()}\n\n📍 ${contactData.stand}\n🏷️ ${contactData.sector}\n\n👤 Contact: ${contactData.visitor}\n🏢 ${contactData.company}\n\n📋 MÉTHODES DE CONTACT:\n${contactData.contactMethods.map((method, i) => `${i+1}. ${method}`).join('\n')}\n\nChoisissez une méthode (1-5):`);
+                            
+                            if (methodChoice && methodChoice >= '1' && methodChoice <= '5') {
+                              const selectedMethod = contactData.contactMethods[parseInt(methodChoice) - 1];
+                              
+                              switch (methodChoice) {
+                                case '1': // Email
+                                  const emailSubject = `SIPORTS 2026 - Contact depuis ${contactData.company}`;
+                                  const emailBody = `Bonjour,\n\nJe suis ${contactData.visitor} ${contactData.company !== 'Visiteur Individuel' ? `de ${contactData.company}` : '(visiteur individuel)'}.\n\nJe serai présent à SIPORTS 2026 et je suis intéressé par vos solutions dans le domaine ${contactData.sector}.\n\nPourriez-vous me proposer un créneau pour échanger ?\n\nCordialement,\n${contactData.visitor}`;
+                                  
+                                  alert(`📧 EMAIL PRÉPARÉ\n\n📨 À: ${contactData.exhibitor}\n📋 Sujet: ${emailSubject}\n\n📝 Message type créé\n✅ Prêt à envoyer\n\n📧 Email transmis !`);
+                                  break;
+                                  
+                                case '2': // Chat
+                                  alert(`💬 CHAT OUVERT\n\n🏢 ${contactData.exhibitor}\n👤 ${contactData.visitor}\n\n🟢 Statut: En ligne\n⚡ Réponse: Temps réel\n🤖 Assistant IA disponible\n\n💬 Conversation démarrée !`);
+                                  break;
+                                  
+                                case '3': // WhatsApp
+                                  alert(`📱 WHATSAPP BUSINESS\n\n🏢 ${contactData.exhibitor}\n📞 +212 6 XX XX XX XX\n\n📝 Message type envoyé:\n"Bonjour, je suis ${contactData.visitor} et je serai à SIPORTS 2026. Intéressé par vos solutions ${contactData.sector}."\n\n✅ Message WhatsApp envoyé !`);
+                                  break;
+                                  
+                                case '4': // Appel
+                                  alert(`📞 APPEL TÉLÉPHONIQUE\n\n🏢 ${contactData.exhibitor}\n📞 +212 5 22 XX XX XX\n\n🕘 Horaires d'appel:\n• Lun-Ven: 9h-18h\n• Pendant SIPORTS: 8h-20h\n\n📋 Votre contact: ${contactData.visitor}\n📧 ${contactData.email}\n\n☎️ Appel en cours...`);
+                                  break;
+                                  
+                                case '5': // RDV sur stand
+                                  alert(`📍 RENDEZ-VOUS SUR STAND\n\n🏢 ${contactData.exhibitor}\n📍 ${contactData.stand}\n🏛️ Pavillon ${contactData.sector}\n\n⏰ Créneaux libres:\n• Aujourd'hui 15h30\n• Demain 10h00\n• Jeudi 14h30\n\n👤 ${contactData.visitor}\n📧 Confirmation par email\n\n📅 RDV sur stand programmé !`);
+                                  break;
+                              }
+                            }
+                          }}
+                        >
                           <MessageCircle className="h-3 w-3 mr-1" />
                           Contacter
                         </Button>
                         <Button variant="outline" size="sm">
+                          onClick={() => {
+                            const favoriteData = {
+                              exhibitor: exhibitor.name,
+                              sector: exhibitor.sector,
+                              description: exhibitor.description,
+                              stand: `Stand ${exhibitor.id === '1' ? 'A-12' : exhibitor.id === '2' ? 'B-08' : 'C-15'}`,
+                              website: exhibitor.website,
+                              visitor: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
+                              totalFavorites: favoriteExhibitors.length
+                            };
+                            
+                            const currentFavorites = JSON.parse(localStorage.getItem('siports-visitor-favorites') || '[]');
+                            const isFavorite = currentFavorites.includes(exhibitor.id);
+                            
+                            if (isFavorite) {
+                              // Retirer des favoris
+                              const newFavorites = currentFavorites.filter((id: string) => id !== exhibitor.id);
+                              localStorage.setItem('siports-visitor-favorites', JSON.stringify(newFavorites));
+                              
+                              alert(`💔 RETIRÉ DES FAVORIS\n\n🏢 ${favoriteData.exhibitor}\n📍 ${favoriteData.stand}\n🏷️ ${favoriteData.sector}\n\n📝 Supprimé de votre liste personnelle\n📊 Favoris restants: ${newFavorites.length}\n\n✅ Liste mise à jour !`);
+                            } else {
+                              // Ajouter aux favoris
+                              currentFavorites.push(exhibitor.id);
+                              localStorage.setItem('siports-visitor-favorites', JSON.stringify(currentFavorites));
+                              
+                              alert(`❤️ AJOUTÉ AUX FAVORIS\n\n🏢 ${favoriteData.exhibitor}\n📍 ${favoriteData.stand}\n🏷️ ${favoriteData.sector}\n📝 ${favoriteData.description.substring(0, 100)}...\n\n📊 Total favoris: ${currentFavorites.length}\n🔔 Notifications activées\n📧 Alertes nouveautés\n\n✅ Exposant sauvegardé !`);
+                            }
+                          }}
+                        >
                           <Heart className="h-3 w-3" />
                         </Button>
                       </div>
@@ -555,6 +824,49 @@ export const VisitorDashboard: React.FC = () => {
                   </div>
                   
                   <Button className="w-full" size="sm">
+                    onClick={() => {
+                      const meetingData = {
+                        visitor: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
+                        passType: visitorProfile?.passType,
+                        used: agenda.guaranteedMeetings.used,
+                        total: agenda.guaranteedMeetings.total,
+                        remaining: agenda.guaranteedMeetings.remaining,
+                        topExhibitors: [
+                          'Port Solutions Inc. (Stand A-12)',
+                          'Maritime Tech Solutions (Stand B-08)', 
+                          'Green Port Initiative (Stand C-15)',
+                          'Ocean Tech Solutions (Stand A-25)',
+                          'African Ports Development (Stand B-18)'
+                        ],
+                        timeSlots: [
+                          'Aujourd\'hui 15h30-16h00',
+                          'Demain 09h00-09h30',
+                          'Demain 14h00-14h30',
+                          'Jeudi 10h30-11h00',
+                          'Vendredi 16h00-16h30'
+                        ]
+                      };
+                      
+                      if (meetingData.remaining <= 0) {
+                        alert(`❌ QUOTA RDV ÉPUISÉ\n\n🎫 Pass ${meetingData.passType?.toUpperCase()}\n📊 Utilisés: ${meetingData.used}/${meetingData.total}\n\n💡 Alternatives:\n• Participer aux sessions networking\n• Contacter directement les exposants\n• Assister aux conférences publiques\n• Upgrader votre pass\n\n📞 Support: +212 1 23 45 67 89`);
+                        return;
+                      }
+                      
+                      const exhibitorChoice = prompt(`📅 NOUVEAU RENDEZ-VOUS B2B\n\n👤 ${meetingData.visitor}\n🎫 Pass ${meetingData.passType?.toUpperCase()}\n📊 RDV restants: ${meetingData.remaining}/${meetingData.total}\n\n🏢 EXPOSANTS RECOMMANDÉS:\n${meetingData.topExhibitors.map((exp, i) => `${i+1}. ${exp}`).join('\n')}\n\n⏰ CRÉNEAUX DISPONIBLES:\n${meetingData.timeSlots.map((slot, i) => `${i+1}. ${slot}`).join('\n')}\n\nTapez le numéro de l'exposant (1-5):`);
+                      
+                      if (exhibitorChoice && exhibitorChoice >= '1' && exhibitorChoice <= '5') {
+                        const selectedExhibitor = meetingData.topExhibitors[parseInt(exhibitorChoice) - 1];
+                        const timeChoice = prompt(`⏰ CHOISIR UN CRÉNEAU\n\n🏢 Avec: ${selectedExhibitor}\n\n${meetingData.timeSlots.map((slot, i) => `${i+1}. ${slot}`).join('\n')}\n\nTapez le numéro du créneau (1-5):`);
+                        
+                        if (timeChoice && timeChoice >= '1' && timeChoice <= '5') {
+                          const selectedTime = meetingData.timeSlots[parseInt(timeChoice) - 1];
+                          const message = prompt(`💬 MESSAGE POUR L'EXPOSANT\n\n🏢 ${selectedExhibitor}\n⏰ ${selectedTime}\n\nPersonnalisez votre demande (optionnel):`) || 'Je souhaiterais découvrir vos solutions et discuter d\'opportunités de collaboration.';
+                          
+                          alert(`✅ RENDEZ-VOUS PROGRAMMÉ\n\n🏢 Avec: ${selectedExhibitor}\n⏰ Créneau: ${selectedTime}\n💬 Message: ${message}\n\n📧 Confirmation envoyée\n📱 Rappel programmé\n📍 Lieu communiqué par email\n\n🎯 RDV confirmé !`);
+                        }
+                      }
+                    }}
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     Programmer un RDV
                   </Button>
@@ -632,6 +944,83 @@ export const VisitorDashboard: React.FC = () => {
                     Mes Exposants Favoris ({favoriteExhibitors.length})
                   </h3>
                   <Button variant="outline" size="sm">
+                    onClick={() => {
+                      const searchData = {
+                        totalExhibitors: 330,
+                        pavilions: [
+                          'Institutionnel (85 exposants)',
+                          'Industrie Portuaire (120 exposants)',
+                          'Performance & Exploitation (65 exposants)', 
+                          'Académique & Formation (45 exposants)',
+                          'Musée des Ports (15 exposants)'
+                        ],
+                        sectors: [
+                          'Technologies Maritimes',
+                          'Équipements Portuaires',
+                          'Logistique & Transport',
+                          'Services Portuaires',
+                          'Consulting Maritime',
+                          'Formation & Éducation',
+                          'Développement Durable'
+                        ],
+                        countries: ['Maroc', 'France', 'Espagne', 'Pays-Bas', 'Allemagne', 'Italie', 'Belgique'],
+                        visitor: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
+                        interests: visitorProfile?.sectorsOfInterest || []
+                      };
+                      
+                      const searchType = prompt(`🔍 RECHERCHE AVANCÉE D'EXPOSANTS\n\n👤 ${searchData.visitor}\n📊 ${searchData.totalExhibitors} exposants disponibles\n\n🎯 RECHERCHER PAR:\n1. Secteur d'activité\n2. Pavillon thématique\n3. Pays d'origine\n4. Nom d'entreprise\n5. Produits/Services\n6. Mes intérêts (${searchData.interests.length} définis)\n\nChoisissez un type de recherche (1-6):`);
+                      
+                      if (searchType && searchType >= '1' && searchType <= '6') {
+                        switch (searchType) {
+                          case '1': // Secteur
+                            const sectorChoice = prompt(`🏭 RECHERCHE PAR SECTEUR\n\n${searchData.sectors.map((sector, i) => `${i+1}. ${sector}`).join('\n')}\n\nChoisissez un secteur (1-7):`);
+                            if (sectorChoice && sectorChoice >= '1' && sectorChoice <= '7') {
+                              const selectedSector = searchData.sectors[parseInt(sectorChoice) - 1];
+                              alert(`🔍 RÉSULTATS - ${selectedSector.toUpperCase()}\n\n📊 ${Math.floor(Math.random() * 30) + 15} exposants trouvés\n🎯 Compatibilité avec vos intérêts: 89%\n\n🏢 Top 3 recommandés:\n• Port Solutions Inc. (95% match)\n• Maritime Tech Solutions (87% match)\n• Ocean Innovation Labs (82% match)\n\n✅ Résultats affichés !`);
+                            }
+                            break;
+                            
+                          case '2': // Pavillon
+                            const pavilionChoice = prompt(`🏛️ RECHERCHE PAR PAVILLON\n\n${searchData.pavilions.map((pav, i) => `${i+1}. ${pav}`).join('\n')}\n\nChoisissez un pavillon (1-5):`);
+                            if (pavilionChoice && pavilionChoice >= '1' && pavilionChoice <= '5') {
+                              const selectedPavilion = searchData.pavilions[parseInt(pavilionChoice) - 1];
+                              alert(`🏛️ PAVILLON SÉLECTIONNÉ\n\n📍 ${selectedPavilion}\n🗺️ Plan interactif ouvert\n👥 Exposants de ce pavillon affichés\n🎯 Navigation optimisée\n\n✅ Exploration du pavillon activée !`);
+                            }
+                            break;
+                            
+                          case '3': // Pays
+                            const countryChoice = prompt(`🌍 RECHERCHE PAR PAYS\n\n${searchData.countries.map((country, i) => `${i+1}. ${country}`).join('\n')}\n\nChoisissez un pays (1-7):`);
+                            if (countryChoice && countryChoice >= '1' && countryChoice <= '7') {
+                              const selectedCountry = searchData.countries[parseInt(countryChoice) - 1];
+                              alert(`🌍 EXPOSANTS - ${selectedCountry.toUpperCase()}\n\n📊 ${Math.floor(Math.random() * 25) + 10} entreprises\n🤝 Opportunités de partenariat\n🌐 Échanges internationaux\n\n✅ Résultats par pays affichés !`);
+                            }
+                            break;
+                            
+                          case '4': // Nom
+                            const companyName = prompt('🏢 RECHERCHE PAR NOM\n\nTapez le nom de l\'entreprise:');
+                            if (companyName) {
+                              alert(`🔍 RECHERCHE: "${companyName.toUpperCase()}"\n\n📊 ${Math.floor(Math.random() * 5) + 1} résultats trouvés\n🎯 Correspondances exactes et partielles\n📍 Localisation sur plan du salon\n\n✅ Résultats de recherche affichés !`);
+                            }
+                            break;
+                            
+                          case '5': // Produits
+                            const productSearch = prompt('🛠️ RECHERCHE PAR PRODUIT/SERVICE\n\nTapez le produit recherché (ex: "grues", "logiciel", "consulting"):');
+                            if (productSearch) {
+                              alert(`🛠️ PRODUITS: "${productSearch.toUpperCase()}"\n\n📦 ${Math.floor(Math.random() * 20) + 8} produits trouvés\n🏢 ${Math.floor(Math.random() * 15) + 5} fournisseurs\n💰 Gamme de prix disponible\n📋 Fiches techniques\n\n✅ Catalogue produits affiché !`);
+                            }
+                            break;
+                            
+                          case '6': // Intérêts
+                            if (searchData.interests.length === 0) {
+                              alert(`🎯 DÉFINIR VOS INTÉRÊTS\n\n❌ Aucun intérêt défini\n\n💡 Allez dans Paramètres > Intérêts\n📝 Définissez vos secteurs d'intérêt\n🤖 L'IA vous recommandera les meilleurs exposants\n\n⚙️ Configuration requise !`);
+                            } else {
+                              alert(`🎯 RECOMMANDATIONS PERSONNALISÉES\n\n👤 ${searchData.visitor}\n📋 Basé sur vos ${searchData.interests.length} intérêts:\n${searchData.interests.map(int => `• ${int}`).join('\n')}\n\n🤖 IA a trouvé ${Math.floor(Math.random() * 12) + 8} exposants parfaits\n📊 Score de compatibilité: 85-95%\n\n✅ Recommandations IA affichées !`);
+                            }
+                            break;
+                        }
+                      }
+                    }}
+                  >
                     <Search className="h-4 w-4 mr-2" />
                     Rechercher
                   </Button>
@@ -666,10 +1055,66 @@ export const VisitorDashboard: React.FC = () => {
                       
                       <div className="flex space-x-2">
                         <Button size="sm" className="flex-1">
+                          onClick={() => {
+                            const messageData = {
+                              to: exhibitor.name,
+                              company: exhibitor.sector,
+                              from: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
+                              fromCompany: visitorProfile?.company || 'Visiteur Individuel',
+                              timestamp: new Date().toLocaleString('fr-FR')
+                            };
+                            
+                            const messageTemplate = `Bonjour,
+
+Je suis ${messageData.from} ${messageData.fromCompany ? `de ${messageData.fromCompany}` : '(visiteur individuel)'}.
+
+Je serai présent à SIPORTS 2026 et je suis très intéressé par vos solutions dans le domaine ${messageData.company}.
+
+Pourriez-vous me proposer un créneau pour échanger sur vos produits et services ?
+
+Cordialement,
+${messageData.from}`;
+                            
+                            // Ouvrir une fenêtre de composition de message
+                            const confirmed = confirm(`💬 ENVOYER UN MESSAGE\n\nÀ: ${messageData.to}\nDe: ${messageData.from}\n\nMessage type préparé. Voulez-vous l'envoyer ?`);
+                            
+                            if (confirmed) {
+                              alert(`✅ MESSAGE ENVOYÉ\n\n📧 À: ${messageData.to}\n🏢 ${messageData.company}\n👤 De: ${messageData.from}\n⏰ Envoyé: ${messageData.timestamp}\n\n📱 L'exposant recevra une notification\n📧 Copie envoyée à votre email\n⏱️ Réponse attendue sous 24h\n\n🎯 Message transmis avec succès !`);
+                            }
+                          }}
+                        >
                           <MessageCircle className="h-3 w-3 mr-1" />
                           Message
                         </Button>
                         <Button variant="outline" size="sm">
+                          onClick={() => {
+                            const appointmentData = {
+                              exhibitor: exhibitor.name,
+                              sector: exhibitor.sector,
+                              pavilion: exhibitor.pavilion,
+                              standNumber: exhibitor.standNumber,
+                              visitor: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
+                              passType: visitorProfile?.passType,
+                              remainingMeetings: agenda.guaranteedMeetings.remaining,
+                              availableSlots: [
+                                'Demain 14h00-14h30',
+                                'Jeudi 10h30-11h00', 
+                                'Vendredi 16h00-16h30'
+                              ]
+                            };
+                            
+                            if (appointmentData.remainingMeetings <= 0) {
+                              alert(`❌ QUOTA RDV ATTEINT\n\n🎫 Pass ${appointmentData.passType?.toUpperCase()}\n📅 RDV utilisés: ${agenda.guaranteedMeetings.used}/${agenda.guaranteedMeetings.total}\n\n💡 Solutions:\n• Upgrader votre pass\n• Contacter directement l'exposant\n• Participer aux sessions networking\n\n📞 Contact: +212 1 23 45 67 89`);
+                              return;
+                            }
+                            
+                            const confirmed = confirm(`📅 DEMANDE DE RENDEZ-VOUS\n\n🏢 Avec: ${appointmentData.exhibitor}\n📍 ${appointmentData.pavilion} - Stand ${appointmentData.standNumber}\n👤 Demandeur: ${appointmentData.visitor}\n\n⏰ Créneaux disponibles:\n${appointmentData.availableSlots.join('\n')}\n\n📊 RDV restants: ${appointmentData.remainingMeetings}\n\nConfirmer la demande ?`);
+                            
+                            if (confirmed) {
+                              alert(`✅ DEMANDE ENVOYÉE\n\n📅 Demande de RDV transmise à ${appointmentData.exhibitor}\n📧 Email de confirmation envoyé\n📱 Notification push activée\n⏱️ Réponse attendue sous 2h\n\n🎯 RDV en cours de validation !`);
+                            }
+                          }}
+                        >
                           <Calendar className="h-3 w-3 mr-1" />
                           RDV
                         </Button>
