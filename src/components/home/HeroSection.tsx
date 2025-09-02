@@ -38,6 +38,10 @@ export const HeroSection: React.FC = () => {
     return num.toString().padStart(2, '0');
   };
 
+  const easeOutQuart = (t: number) => {
+    return 1 - Math.pow(1 - t, 4);
+  };
+
   return (
     <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white overflow-hidden">
       {/* Background Pattern */}
