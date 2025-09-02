@@ -86,7 +86,7 @@ export const HeroSection: React.FC = () => {
                   Le plus grand salon portuaire international
                 </p>
                 
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <motion.div
                     key={timeLeft.days}
                     initial={{ scale: 1.1 }}
