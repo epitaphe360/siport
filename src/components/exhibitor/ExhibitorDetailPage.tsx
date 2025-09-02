@@ -30,10 +30,12 @@ import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { useExhibitorStore } from '../../store/exhibitorStore';
 import { motion } from 'framer-motion';
+import { useAuthStore } from '../../store/authStore';
 
 export const ExhibitorDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { exhibitors, selectExhibitor, selectedExhibitor, fetchExhibitors } = useExhibitorStore();
+  const { user } = useAuthStore();
   const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'news' | 'gallery' | 'contact'>('overview');
 
   useEffect(() => {
@@ -404,14 +406,28 @@ export const ExhibitorDetailPage: React.FC = () => {
                     <div className="flex space-x-3">
                       <Button size="sm" className="flex-1"
                         onClick={() => {
-                          const quoteData = {
-                            product: product.name,
-                            company: selectedExhibitor?.companyName,
-                            category: product.category,
-                            specifications: product.specifications
-                          };
-                          
-                          alert(`💰 DEMANDE DE DEVIS\n\n📦 Produit: ${quoteData.product}\n🏢 Fournisseur: ${quoteData.company}\n📋 Catégorie: ${quoteData.category}\n\n📧 Demande envoyée au service commercial\n⏱️ Réponse sous 24h\n\n✅ Devis en préparation !`);
+                          // Rediriger vers la section contact avec le produit sélectionné
+                          const contactSection = document.getElementById('contact');
+                          if (contactSection) {
+                            contactSection.scrollIntoView({ behavior: 'smooth' });
+                            
+                            // Préremplir le formulaire avec les données du produit
+                            setTimeout(() => {
+                              const subjectField = document.querySelector('select[name="subject"]') as HTMLSelectElement;
+                              const messageField = document.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
+                              
+                              if (subjectField) {
+                                subjectField.value = 'quote';
+                              }
+                              
+                              if (messageField) {
+                                messageField.value = `Demande de devis pour : ${product.name}\n\nCatégorie : ${product.category}\nSpécifications : ${product.specifications || 'À définir'}\n\nMerci de me faire parvenir un devis détaillé pour ce produit.`;
+                              }
+                              
+                              // Mettre en évidence les champs
+                              subjectField?.focus();
+                            }, 500);
+                          }
                         }}
                       >
                         <Target className="h-4 w-4 mr-2" />
@@ -705,6 +721,8 @@ export const ExhibitorDetailPage: React.FC = () => {
                         </label>
                         <input
                           type="text"
+                          name="nom"
+                          defaultValue={user?.profile ? `${user.profile.firstName} ${user.profile.lastName}` : ''}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="Votre nom"
                         />
@@ -716,6 +734,8 @@ export const ExhibitorDetailPage: React.FC = () => {
                         </label>
                         <input
                           type="email"
+                          name="email"
+                          defaultValue={user?.email || ''}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="votre@email.com"
                         />
@@ -724,44 +744,90 @@ export const ExhibitorDetailPage: React.FC = () => {
                     
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Entreprise
+                        Société
                       </label>
                       <input
                         type="text"
+                        name="company"
+                        defaultValue={user?.profile?.company || ''}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Votre entreprise"
+                        placeholder="Votre société"
                       />
                     </div>
                     
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Sujet
+                        Téléphone
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        defaultValue={user?.profile?.phone || ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Votre numéro de téléphone"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Type de service/produit
                       </label>
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Sélectionnez un sujet</option>
-                        <option value="demo">Demande de démonstration</option>
+                        <option value="">Sélectionnez un type</option>
                         <option value="quote">Demande de devis</option>
+                        <option value="demo">Demande de démonstration</option>
                         <option value="partnership">Partenariat</option>
                         <option value="support">Support technique</option>
+                        <option value="consulting">Consulting</option>
+                        <option value="training">Formation</option>
                         <option value="other">Autre</option>
                       </select>
                     </div>
                     
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Message
+                        Détails de la demande
                       </label>
                       <textarea
                         rows={4}
+                        name="message"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Décrivez votre projet ou vos besoins..."
+                        placeholder="Décrivez précisément vos besoins, le contexte de votre projet, les spécifications techniques requises..."
                       />
                     </div>
                     
                     <div className="flex space-x-4">
-                      <Button className="flex-1">
+                      <Button 
+                        className="flex-1"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const form = e.currentTarget.closest('form') as HTMLFormElement;
+                          const formData = new FormData(form);
+                          
+                          const quoteData = {
+                            nom: formData.get('nom') as string,
+                            email: formData.get('email') as string,
+                            company: formData.get('company') as string,
+                            phone: formData.get('phone') as string,
+                            subject: (form.querySelector('select') as HTMLSelectElement)?.value,
+                            message: formData.get('message') as string,
+                            exhibitor: selectedExhibitor?.companyName,
+                            timestamp: new Date().toLocaleString('fr-FR')
+                          };
+                          
+                          if (!quoteData.nom || !quoteData.email || !quoteData.subject || !quoteData.message) {
+                            alert('❌ FORMULAIRE INCOMPLET\n\nVeuillez remplir tous les champs obligatoires :\n• Nom et prénom\n• Email\n• Type de service/produit\n• Détails de la demande');
+                            return;
+                          }
+                          
+                          alert(`✅ DEMANDE DE DEVIS ENVOYÉE\n\n👤 Contact: ${quoteData.nom}\n🏢 Société: ${quoteData.company}\n📧 Email: ${quoteData.email}\n📞 Téléphone: ${quoteData.phone}\n🎯 Type: ${quoteData.subject}\n\n📝 Détails:\n${quoteData.message}\n\n🏢 Exposant: ${quoteData.exhibitor}\n📅 Envoyé le: ${quoteData.timestamp}\n\n📧 Votre demande a été transmise au service commercial\n⏱️ Réponse sous 24-48h ouvrées\n📋 Numéro de référence: DEV-${Date.now()}`);
+                          
+                          // Reset form
+                          form.reset();
+                        }}
+                      >
                         <MessageCircle className="h-4 w-4 mr-2" />
-                        Envoyer le message
+                        Envoyer la demande de devis
                       </Button>
                       <Button variant="outline"
                         onClick={() => {
