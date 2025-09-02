@@ -335,10 +335,10 @@ export const VisitorDashboard: React.FC = () => {
                         country: visitorProfile?.country,
                         passType: visitorProfile?.passType || 'free',
                         registrationDate: new Date().toLocaleDateString('fr-FR'),
-                        validUntil: '07/02/2026',
+                  >
                         qrCode: `SIPORTS2026-${visitorProfile?.id}-${Date.now()}`,
                         accessRights: getPassBenefits(visitorProfile?.passType || 'free'),
-                        emergencyContact: '+212 1 23 45 67 89'
+                  >
                       };
                       
                       // Simulation de génération PDF du badge
@@ -536,7 +536,7 @@ ${badgeData.accessRights.map(right => `• ${right}`).join('\n')}
                     Nouveau RDV
                   </Button>
                   <Link to="/networking">
-                    <Button variant="outline" size="sm">
+                    >
                       <Users className="h-4 w-4 mr-2" />
                       Réseautage IA
                     </Button>
@@ -1153,7 +1153,7 @@ ${messageData.from}`;
                         <h4 className="font-medium text-gray-900">{connection.name}</h4>
                         <p className="text-sm text-gray-600">{connection.company}</p>
                       </div>
-                      <Button variant="outline" size="sm">
+                      >
                         <MessageCircle className="h-3 w-3" />
                       </Button>
                     </div>
