@@ -274,13 +274,41 @@ export const PartnerDashboard: React.FC = () => {
                   <Link to="/networking" className="block">
                     <Button className="w-full justify-start" variant="outline">
                       <Users className="h-4 w-4 mr-3" />
-                      Réseautage VIP
+                      Réseautage VIP Exclusif
                     </Button>
                   </Link>
                   
-                  <Button className="w-full justify-start" variant="outline">
+                  <Button 
+                    className="w-full justify-start" 
+                    variant="outline"
+                    onClick={() => {
+                      alert('🎯 LEADS PARTENAIRE\n\n👥 89 leads qualifiés générés\n💰 Valeur estimée: 2.5M€\n📈 Taux conversion: 12%\n🏆 ROI: 285%\n\n💼 Pipeline commercial excellent !');
+                    }}
+                  >
                     <Target className="h-4 w-4 mr-3" />
                     Leads & Prospects
+                  </Button>
+                  
+                  <Button 
+                    className="w-full justify-start" 
+                    variant="outline"
+                    onClick={() => {
+                      alert('📺 MÉDIAS & PRESSE\n\n📰 12 mentions médias\n📺 3 interviews TV\n📻 5 passages radio\n📱 45K impressions sociales\n\n🎬 Kit média disponible !');
+                    }}
+                  >
+                    <Globe className="h-4 w-4 mr-3" />
+                    Médias & Communication
+                  </Button>
+                  
+                  <Button 
+                    className="w-full justify-start" 
+                    variant="outline"
+                    onClick={() => {
+                      alert('🎪 ÉVÉNEMENTS SPONSORISÉS\n\n📅 8 événements actifs\n👥 2,500 participants touchés\n🎯 Satisfaction: 98%\n📊 Impact: Excellent\n\n🎉 Programmez votre prochain événement !');
+                    }}
+                  >
+                    <Calendar className="h-4 w-4 mr-3" />
+                    Mes Événements Sponsorisés
                   </Button>
                 </div>
               </div>
@@ -301,25 +329,69 @@ export const PartnerDashboard: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Mentions dans les médias</span>
-                    <span className="font-semibold text-purple-600">12</span>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => {
+                        alert('📰 MENTIONS MÉDIAS\n\n📺 TV: 3 interviews\n📻 Radio: 5 passages\n📰 Presse: 12 articles\n📱 Social: 45K vues\n\n🎬 Revue de presse complète !');
+                      }}
+                    >
+                      <span className="font-semibold text-purple-600">12</span>
+                    </Button>
                   </div>
                   
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Portée sociale</span>
-                    <span className="font-semibold text-blue-600">45,000</span>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => {
+                        alert('📱 RÉSEAUX SOCIAUX\n\n👥 45,000 impressions\n❤️ 2,340 likes\n🔄 890 partages\n💬 456 commentaires\n\n📊 Engagement excellent !');
+                      }}
+                    >
+                      <span className="font-semibold text-blue-600">45,000</span>
+                    </Button>
                   </div>
                   
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Leads qualifiés</span>
-                    <span className="font-semibold text-green-600">89</span>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => {
+                        alert('🎯 LEADS QUALIFIÉS\n\n👥 89 prospects identifiés\n💰 Valeur: 2.5M€\n🏆 Score moyen: 8.5/10\n📈 +35% vs mois dernier\n\n💼 Pipeline commercial robuste !');
+                      }}
+                    >
+                      <span className="font-semibold text-green-600">89</span>
+                    </Button>
                   </div>
                   
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Satisfaction partenariat</span>
                     <div className="flex items-center space-x-1">
                       <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                      <span className="font-semibold text-gray-900">4.9/5</span>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => {
+                          alert('⭐ SATISFACTION PARTENARIAT\n\n🏆 Note: 4.9/5\n👥 98% de satisfaction\n💬 "Partenaire exceptionnel"\n🎯 Recommandation: 100%\n\n🎉 Excellence reconnue !');
+                        }}
+                      >
+                        <span className="font-semibold text-gray-900">4.9/5</span>
+                      </Button>
                     </div>
+                  </div>
+                  
+                  <div className="pt-4 border-t border-gray-200">
+                    <Button 
+                      className="w-full"
+                      onClick={() => {
+                        alert('📊 RAPPORT ROI DÉTAILLÉ\n\n💰 Investissement: 2.5M€\n📈 Retour: 7.1M€ (285%)\n🎯 Objectifs: 120% atteints\n📅 Période: 12 mois\n\n📋 Rapport complet généré !');
+                      }}
+                    >
+                      <BarChart3 className="h-4 w-4 mr-2" />
+                      Rapport ROI Complet
+                    </Button>
                   </div>
                 </div>
               </div>

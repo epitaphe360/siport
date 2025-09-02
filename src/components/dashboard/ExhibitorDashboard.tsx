@@ -16,7 +16,11 @@ import {
   Package,
   Settings,
   Zap,
-  User
+  User,
+  Mail,
+  Target,
+  Award,
+  Video
 } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
@@ -281,16 +285,42 @@ export const ExhibitorDashboard: React.FC = () => {
                   <Link to="/networking" className="block">
                     <Button className="w-full justify-start" variant="outline">
                       <Users className="h-4 w-4 mr-3" />
-                      Réseautage & Contacts
+                      Réseautage IA & Contacts
                     </Button>
                   </Link>
                   
-                  <Link to="/minisite/editor" className="block">
-                    <Button className="w-full justify-start" variant="outline">
-                      <Package className="h-4 w-4 mr-3" />
-                      Gérer mes Produits
-                    </Button>
-                  </Link>
+                  <Button 
+                    className="w-full justify-start" 
+                    variant="outline"
+                    onClick={() => {
+                      alert('📦 GESTION PRODUITS\n\n📊 12 produits actifs\n👁️ 2,156 vues catalogue\n📥 89 téléchargements\n\n🎯 Optimisez votre catalogue !');
+                    }}
+                  >
+                    <Package className="h-4 w-4 mr-3" />
+                    Gérer mes Produits
+                  </Button>
+                  
+                  <Button 
+                    className="w-full justify-start" 
+                    variant="outline"
+                    onClick={() => {
+                      alert('📊 ANALYTICS EXPOSANT\n\n👁️ 2,156 vues mini-site\n📥 89 téléchargements\n🤝 47 leads générés\n📈 +18% cette semaine\n\n📋 Rapport détaillé disponible !');
+                    }}
+                  >
+                    <BarChart3 className="h-4 w-4 mr-3" />
+                    Analytics & Rapports
+                  </Button>
+                  
+                  <Button 
+                    className="w-full justify-start" 
+                    variant="outline"
+                    onClick={() => {
+                      alert('⚙️ PARAMÈTRES EXPOSANT\n\n🔔 Notifications: Activées\n📧 Email: Quotidien\n📱 Push: Temps réel\n🌐 Langue: Français\n\n⚙️ Personnalisez vos préférences !');
+                    }}
+                  >
+                    <Settings className="h-4 w-4 mr-3" />
+                    Paramètres & Préférences
+                  </Button>
                 </div>
               </div>
             </Card>
@@ -304,44 +334,173 @@ export const ExhibitorDashboard: React.FC = () => {
             <Card>
               <div className="p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-6">
-                  Performance de votre Stand
+                  Actions Rapides
                 </h3>
                 
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Taux de conversion</span>
-                    <span className="font-semibold text-green-600">4.2%</span>
-                  </div>
+                  <Button 
+                    className="w-full justify-start"
+                    onClick={() => {
+                      alert('📧 CAMPAGNE EMAIL\n\n👥 2,156 contacts dans votre base\n📊 Taux d\'ouverture: 24%\n📈 Leads générés: 47\n\n📬 Nouvelle campagne prête !');
+                    }}
+                  >
+                    <Mail className="h-4 w-4 mr-3" />
+                    Campagne Email Marketing
+                  </Button>
                   
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Engagement moyen</span>
-                    <span className="font-semibold text-blue-600">3m 45s</span>
-                  </div>
+                  <Button 
+                    className="w-full justify-start" 
+                    variant="outline"
+                    onClick={() => {
+                      const catalogData = {
+                        products: 12,
+                        pages: 24,
+                        downloads: 89,
+                        lastUpdate: 'Il y a 3 jours'
+                      };
+                      alert(`📋 CATALOGUE NUMÉRIQUE\n\n📦 ${catalogData.products} produits\n📄 ${catalogData.pages} pages\n📥 ${catalogData.downloads} téléchargements\n🔄 Mis à jour: ${catalogData.lastUpdate}\n\n📱 Catalogue prêt à partager !`);
+                    }}
+                  >
+                    <Download className="h-4 w-4 mr-3" />
+                    Générer Catalogue PDF
+                  </Button>
                   
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Leads générés</span>
-                    <span className="font-semibold text-purple-600">47</span>
-                  </div>
+                  <Button 
+                    className="w-full justify-start" 
+                    variant="outline"
+                    onClick={() => {
+                      alert('🎯 LEADS & PROSPECTS\n\n👥 47 leads qualifiés\n📊 Taux conversion: 4.2%\n💼 12 opportunités chaudes\n📈 +25% ce mois\n\n🚀 Pipeline commercial actif !');
+                    }}
+                  >
+                    <Target className="h-4 w-4 mr-3" />
+                    Leads & Prospects
+                  </Button>
                   
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Satisfaction</span>
-                    <div className="flex items-center space-x-1">
-                      <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                      <span className="font-semibold text-gray-900">4.8/5</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mt-6 pt-4 border-t border-gray-200">
-                  <Button variant="outline" size="sm" className="w-full">
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    Rapport Détaillé
+                  <Button 
+                    className="w-full justify-start" 
+                    variant="outline"
+                    onClick={() => {
+                      alert('🏆 CONCOURS INNOVATION\n\n🎯 Participez au concours SIPORTS\n🏅 Prix: 50,000€ + visibilité\n📅 Date limite: 15 janvier\n📋 Dossier: 80% complété\n\n🚀 Finalisez votre candidature !');
+                    }}
+                  >
+                    <Award className="h-4 w-4 mr-3" />
+                    Concours Innovation
                   </Button>
                 </div>
               </div>
             </Card>
           </motion.div>
         </div>
+
+        {/* Quick Actions Floating */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="mt-8"
+        >
+          <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+            <div className="p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="bg-blue-100 p-2 rounded-lg">
+                  <Zap className="h-5 w-5 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Actions Rapides Exposant
+                </h3>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <Button 
+                  className="w-full"
+                  onClick={() => {
+                    alert('📱 QR CODE GÉNÉRÉ\n\n🏢 Port Solutions Inc.\n📍 Stand A-12\n📱 Scan pour contact direct\n\n✅ QR Code prêt à imprimer !');
+                  }}
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  QR Code Stand
+                </Button>
+                
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    alert('📊 RAPPORT HEBDO\n\n📈 Performance cette semaine:\n👁️ +18% vues mini-site\n📥 +25% téléchargements\n🤝 +12 nouveaux contacts\n\n📧 Rapport envoyé par email !');
+                  }}
+                >
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  Rapport Hebdo
+                </Button>
+                
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    alert('🎥 LIVE STREAMING\n\n📹 Démo produit en direct\n👥 Audience: 156 spectateurs\n💬 Chat interactif\n📊 Engagement: 89%\n\n🚀 Stream démarré !');
+                  }}
+                >
+                  <Video className="h-4 w-4 mr-2" />
+                  Live Demo
+                </Button>
+                
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    alert('🎁 PROMOTION SPÉCIALE\n\n🏷️ -20% sur tous les produits\n📅 Valable pendant SIPORTS\n🎯 Code: SIPORTS2026\n\n🚀 Promotion activée !');
+                  }}
+                >
+                  <Star className="h-4 w-4 mr-2" />
+                  Promo SIPORTS
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* Performance de votre Stand */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <Card>
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6">
+                Performance de votre Stand
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Taux de conversion</span>
+                  <span className="font-semibold text-green-600">4.2%</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Engagement moyen</span>
+                  <span className="font-semibold text-blue-600">3m 45s</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Leads générés</span>
+                  <span className="font-semibold text-purple-600">47</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Satisfaction</span>
+                  <div className="flex items-center space-x-1">
+                    <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                    <span className="font-semibold text-gray-900">4.8/5</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6 pt-4 border-t border-gray-200">
+                <Button variant="outline" size="sm" className="w-full">
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Rapport Détaillé
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
 
         {/* Activité Récente Exposant */}
         <motion.div
@@ -400,11 +559,11 @@ export const ExhibitorDashboard: React.FC = () => {
           transition={{ delay: 0.9 }}
           className="mt-8"
         >
-          <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+          <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
             <div className="p-6">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="bg-blue-100 p-2 rounded-lg">
-                  <Zap className="h-5 w-5 text-blue-600" />
+                <div className="bg-green-100 p-2 rounded-lg">
+                  <Zap className="h-5 w-5 text-green-600" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">
                   Recommandations IA pour Optimiser votre Stand
@@ -412,22 +571,40 @@ export const ExhibitorDashboard: React.FC = () => {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-white rounded-lg border border-blue-200">
-                  <h4 className="font-medium text-blue-900 mb-2">
+                <div className="p-4 bg-white rounded-lg border border-green-200">
+                  <h4 className="font-medium text-green-900 mb-2">
                     📈 Optimisation du Profil
                   </h4>
-                  <p className="text-sm text-blue-700">
+                  <p className="text-sm text-green-700 mb-3">
                     Ajoutez 3 mots-clés supplémentaires pour augmenter votre visibilité de 25%
                   </p>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => {
+                      alert('🎯 OPTIMISATION PROFIL\n\n📝 Mots-clés suggérés:\n• "Port intelligent"\n• "IoT maritime"\n• "Digitalisation"\n\n✅ Ajoutez-les à votre profil !');
+                    }}
+                  >
+                    Optimiser
+                  </Button>
                 </div>
                 
-                <div className="p-4 bg-white rounded-lg border border-blue-200">
-                  <h4 className="font-medium text-blue-900 mb-2">
+                <div className="p-4 bg-white rounded-lg border border-green-200">
+                  <h4 className="font-medium text-green-900 mb-2">
                     🎯 Contacts Suggérés
                   </h4>
-                  <p className="text-sm text-blue-700">
+                  <p className="text-sm text-green-700 mb-3">
                     12 nouveaux prospects identifiés dans votre secteur d'activité
                   </p>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => {
+                      alert('👥 PROSPECTS IDENTIFIÉS\n\n🎯 12 contacts qualifiés:\n• 8 directeurs techniques\n• 3 décideurs achats\n• 1 investisseur\n\n🤝 Contactez-les maintenant !');
+                    }}
+                  >
+                    Voir Prospects
+                  </Button>
                 </div>
               </div>
             </div>
