@@ -519,7 +519,6 @@ ${badgeData.accessRights.map(right => `• ${right}`).join('\n')}
                               alert(`🔍 RECHERCHE: "${companySearch.toUpperCase()}"\n\n📊 Résultats trouvés\n📍 Localisation sur plan\n📋 Informations détaillées\n📅 Créneaux disponibles\n\n🎯 Demande de RDV possible !`);
                             }
                             break;
-                            
                           case '4': // Par pavillon
                             const pavilionChoice = prompt(`🏛️ EXPLORER PAR PAVILLON\n\n${newAppointmentData.suggestedExhibitors.map((_, i) => `${i+1}. ${Object.keys(searchData.pavilions)[i] || 'Pavillon'}`).join('\n')}\n\nChoisissez un pavillon (1-5):`);
                             if (pavilionChoice) {
@@ -538,7 +537,6 @@ ${badgeData.accessRights.map(right => `• ${right}`).join('\n')}
                       <Users className="h-4 w-4 mr-2" />
                       Réseautage IA
                     </Button>
-                  </Link>
                 </div>
 
                 <div className="space-y-4">
