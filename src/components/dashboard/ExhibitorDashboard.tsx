@@ -406,6 +406,17 @@ export const ExhibitorDashboard: React.FC = () => {
                       
                       alert(`📱 QR CODE STAND GÉNÉRÉ\n\n🏢 ${qrData.company}\n📍 Stand: ${qrData.stand}\n👤 Contact: ${qrData.contact}\n📧 ${qrData.email}\n📞 ${qrData.phone}\n🌐 ${qrData.website}\n\n🔐 Code: ${qrData.qrCode}\n⏰ Valide jusqu'au: ${qrData.validUntil}\n\n✅ QR Code prêt à imprimer et afficher sur votre stand !`);
                     }}
+                  >
+                    <Eye className="h-4 w-4 mr-3" />
+                    QR Code Stand
+                  </Button>
+                  
+                  <Button 
+                    className="w-full justify-start" 
+                    variant="outline"
+                    onClick={() => {
+                      const campaignData = {
+                        contacts: 1911,
                         openRate: '24%',
                         leads: 47,
                         templates: ['Présentation produits', 'Invitation salon', 'Suivi post-salon'],
@@ -604,7 +615,10 @@ export const ExhibitorDashboard: React.FC = () => {
               </div>
               
               <div className="mt-6 pt-4 border-t border-gray-200">
-                <Button variant="outline" size="sm" className="w-full">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full"
                   onClick={() => {
                     const analyticsData = {
                       views: '2,156',
@@ -614,23 +628,12 @@ export const ExhibitorDashboard: React.FC = () => {
                       engagement: '3m 45s',
                       satisfaction: '4.8/5',
                       topPages: ['Produits: 45%', 'À propos: 28%', 'Contact: 27%'],
-                      topCountries: ['France: 32%', 'Maroc: 28%', 'Espagne: 18%'],
-                      devices: ['Desktop: 65%', 'Mobile: 30%', 'Tablet: 5%'],
-                      peakHours: ['14h-16h: 35%', '10h-12h: 28%', '16h-18h: 22%'],
-                      bounceRate: '23%',
-                      avgSession: '4m 12s'
+                      topCountries: ['France: 32%', 'Maroc: 28%', 'Espagne: 18%']
                     };
                     
-                    // Génération du rapport détaillé
-                    const link = document.createElement('a');
-                    link.href = 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEK';
-                    link.download = `analytics-detaille-${new Date().toISOString().split('T')[0]}.pdf`;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    alert(`📊 RAPPORT ANALYTIQUE DÉTAILLÉ\n\n📈 Performance globale:\n👁️ Vues: ${analyticsData.views}\n📥 Téléchargements: ${analyticsData.downloads}\n🎯 Leads: ${analyticsData.leads}\n📊 Conversion: ${analyticsData.conversion}\n⏱️ Engagement moyen: ${analyticsData.engagement}\n⭐ Satisfaction: ${analyticsData.satisfaction}\n🚫 Taux de rebond: ${analyticsData.bounceRate}\n📱 Session moyenne: ${analyticsData.avgSession}\n\n📄 Pages populaires:\n${analyticsData.topPages.join('\n')}\n\n🌍 Top pays:\n${analyticsData.topCountries.join('\n')}\n\n📱 Appareils:\n${analyticsData.devices.join('\n')}\n\n⏰ Heures de pointe:\n${analyticsData.peakHours.join('\n')}\n\n📄 Rapport PDF téléchargé !`);
+                    alert(`📊 RAPPORT DÉTAILLÉ\n\n📈 Performance:\n👁️ Vues: ${analyticsData.views}\n📥 Téléchargements: ${analyticsData.downloads}\n🎯 Leads: ${analyticsData.leads}\n📊 Conversion: ${analyticsData.conversion}\n⏱️ Engagement: ${analyticsData.engagement}\n⭐ Satisfaction: ${analyticsData.satisfaction}\n\n📄 Pages populaires:\n${analyticsData.topPages.join('\n')}\n\n🌍 Top pays:\n${analyticsData.topCountries.join('\n')}`);
                   }}
+                >
                   <BarChart3 className="h-4 w-4 mr-2" />
                   Rapport Détaillé
                 </Button>
