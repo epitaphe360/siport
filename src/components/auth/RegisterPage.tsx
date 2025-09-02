@@ -28,13 +28,13 @@ import { motion } from 'framer-motion';
 
 const registrationSchema = z.object({
   accountType: z.enum(['exhibitor', 'partner', 'visitor']),
-  companyName: z.string().min(2, 'Nom de l\'entreprise requis'),
+  companyName: z.string().optional(),
   sector: z.string().min(2, 'Secteur d\'activité requis'),
   country: z.string().min(2, 'Pays requis'),
   website: z.string().url('URL invalide').optional().or(z.literal('')),
   firstName: z.string().min(2, 'Prénom requis'),
   lastName: z.string().min(2, 'Nom requis'),
-  position: z.string().min(2, 'Poste requis'),
+  position: z.string().optional(),
   email: z.string().email('Email invalide'),
   phone: z.string().min(8, 'Numéro de téléphone requis'),
   linkedin: z.string().url('URL LinkedIn invalide').optional().or(z.literal('')),
@@ -42,9 +42,42 @@ const registrationSchema = z.object({
   objectives: z.array(z.string()).min(1, 'Sélectionnez au moins un objectif'),
   password: z.string().min(8, 'Mot de passe trop court (minimum 8 caractères)'),
   confirmPassword: z.string()
-}).refine((data) => data.password === data.confirmPassword, {
+}).refine((data) => {
+  // Validation du mot de passe
+  if (data.password !== data.confirmPassword) {
+    return false;
+  }
+  
+  // Validation conditionnelle pour exposants et partenaires
+  if (data.accountType === 'exhibitor' || data.accountType === 'partner') {
+    if (!data.companyName || data.companyName.length < 2) {
+      return false;
+    }
+    if (!data.position || data.position.length < 2) {
+      return false;
+    }
+  }
+  
+  return true;
+}, {
   message: "Les mots de passe ne correspondent pas",
   path: ["confirmPassword"],
+}).refine((data) => {
+  if ((data.accountType === 'exhibitor' || data.accountType === 'partner') && (!data.companyName || data.companyName.length < 2)) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Nom de l'entreprise requis pour les exposants et partenaires",
+  path: ["companyName"],
+}).refine((data) => {
+  if ((data.accountType === 'exhibitor' || data.accountType === 'partner') && (!data.position || data.position.length < 2)) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Poste requis pour les exposants et partenaires",
+  path: ["position"],
 });
 
 type RegistrationForm = z.infer<typeof registrationSchema>;
@@ -95,7 +128,7 @@ export const RegisterPage: React.FC = () => {
     {
       value: 'visitor',
       title: 'Visiteur',
-      description: 'Participant au salon',
+      description: 'Professionnel ou particulier visitant le salon',
       icon: User,
       color: 'bg-purple-100 text-purple-600 border-purple-200'
     }
@@ -116,14 +149,25 @@ export const RegisterPage: React.FC = () => {
   ];
 
   const objectives = [
-    'Trouver de nouveaux partenaires',
-    'Développer mon réseau',
-    'Présenter mes innovations',
-    'Identifier des fournisseurs',
-    'Explorer de nouveaux marchés',
-    'Participer aux conférences',
-    'Rencontrer des investisseurs',
-    'Échanger sur les bonnes pratiques'
+    ...(watchedAccountType === 'visitor' ? [
+      'Découvrir les innovations portuaires',
+      'Assister aux conférences',
+      'Rencontrer des professionnels',
+      'Apprendre sur le secteur maritime',
+      'Explorer les opportunités de carrière',
+      'Développer mes connaissances',
+      'Identifier des solutions pour mon entreprise',
+      'Participer aux événements networking'
+    ] : [
+      'Trouver de nouveaux partenaires',
+      'Développer mon réseau',
+      'Présenter mes innovations',
+      'Identifier des fournisseurs',
+      'Explorer de nouveaux marchés',
+      'Participer aux conférences',
+      'Rencontrer des investisseurs',
+      'Échanger sur les bonnes pratiques'
+    ])
   ];
 
   const nextStep = async () => {
