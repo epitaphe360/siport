@@ -387,26 +387,24 @@ export const AdminDashboard: React.FC = () => {
                   </Button>
                   
                   <Button className="w-full justify-start" variant="outline">
-                    onClick={() => {
-                      const eventsData = {
-                        total: 40,
-                        conferences: 15,
-                        workshops: 12,
-                        networking: 8,
-                        webinars: 5,
-                        registered: 2847,
-                        capacity: 3200,
-                        satisfaction: '96%'
-                      };
-                      
-                      alert(`📅 GESTION ÉVÉNEMENTS\n\n📊 Total: ${eventsData.total} événements\n🎤 Conférences: ${eventsData.conferences}\n🔧 Ateliers: ${eventsData.workshops}\n🤝 Networking: ${eventsData.networking}\n💻 Webinaires: ${eventsData.webinars}\n\n👥 Inscrits: ${eventsData.registered}/${eventsData.capacity}\n⭐ Satisfaction: ${eventsData.satisfaction}\n\n🎯 Interface de gestion ouverte !`);
-                    }}
                     <Calendar className="h-4 w-4 mr-3" />
                     Gestion Événements ({adminMetrics.totalEvents})
                   </Button>
                   
                   <Link to="/networking" className="block">
-                    <Button className="w-full justify-start" variant="outline">
+                    <Button className="w-full justify-start" variant="outline"
+                    onClick={() => {
+                      const networkingData = {
+                        totalConnections: 4156,
+                        activeUsers: 1247,
+                        aiRecommendations: 12847,
+                        successRate: '89%',
+                        topSectors: ['Port Operations: 28%', 'Technology: 22%', 'Logistics: 18%'],
+                        dailyActivity: '456 nouvelles connexions'
+                      };
+                      
+                      alert(`🤝 SUPERVISION RÉSEAUTAGE\n\n👥 Connexions totales: ${networkingData.totalConnections}\n🔥 Utilisateurs actifs: ${networkingData.activeUsers}\n🤖 Recommandations IA: ${networkingData.aiRecommendations}\n📈 Taux de succès: ${networkingData.successRate}\n\n🎯 Top secteurs:\n${networkingData.topSectors.join('\n')}\n\n📊 Activité aujourd'hui: ${networkingData.dailyActivity}\n\n🎯 Supervision activée !`);
+                    }}>
                       <Users className="h-4 w-4 mr-3" />
                       Supervision Réseautage
                     </Button>

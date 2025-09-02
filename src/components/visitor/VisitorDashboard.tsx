@@ -775,6 +775,21 @@ export const VisitorDashboard: React.FC = () => {
                     Naviguez dans le Mohammed VI Exhibition Center
                   </p>
                   <Button>
+                    onClick={() => {
+                      const badgeData = {
+                        name: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
+                        company: visitorProfile?.company,
+                        email: visitorProfile?.email,
+                        passType: visitorProfile?.passType,
+                        id: visitorProfile?.id,
+                        qrCode: 'QR_CODE_DATA_HERE'
+                      };
+                      
+                      // Génération QR Code
+                      const qrContent = `BEGIN:VCARD\nVERSION:3.0\nFN:${badgeData.name}\nORG:${badgeData.company}\nEMAIL:${badgeData.email}\nNOTE:Pass ${badgeData.passType} - SIPORTS 2026\nEND:VCARD`;
+                      
+                      alert(`📱 BADGE NUMÉRIQUE GÉNÉRÉ\n\n👤 ${badgeData.name}\n🏢 ${badgeData.company}\n📧 ${badgeData.email}\n🎫 Pass ${badgeData.passType?.toUpperCase()}\n\n📲 QR Code prêt pour l'entrée !\n🚪 Accès direct au salon\n📱 Sauvegardé dans votre téléphone`);
+                    }}
                     <MapPin className="h-4 w-4 mr-2" />
                     Ouvrir le Plan
                   </Button>
