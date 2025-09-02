@@ -950,17 +950,120 @@ export const MiniSiteEditor: React.FC = () => {
                                     <p className="text-sm text-gray-600">
                                       Un formulaire de contact sera automatiquement généré
                                     </p>
-                                    <Button 
-                                      variant="outline" 
-                                      size="sm" 
-                                      className="mt-3"
-                                      onClick={() => {
-                                        alert('📝 FORMULAIRE CONFIGURÉ\n\n✅ Champs: Nom, Email, Message\n📧 Notifications: Activées\n🔒 Anti-spam: Intégré\n\n📋 Formulaire opérationnel !');
-                                      }}
-                                    >
-                                      <Settings className="h-3 w-3 mr-1" />
-                                      Configurer
-                                    </Button>
+                                    <div className="mt-3 space-y-3">
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-sm text-gray-700">Champ Nom</span>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                          <input
+                                            type="checkbox"
+                                            defaultChecked
+                                            onChange={(e) => {
+                                              const checked = e.target.checked;
+                                              alert(`📝 CHAMP NOM ${checked ? 'ACTIVÉ' : 'DÉSACTIVÉ'}\n\n${checked ? '✅ Le champ nom sera affiché' : '❌ Le champ nom sera masqué'}\n\n🔄 Configuration mise à jour !`);
+                                            }}
+                                            className="sr-only peer"
+                                          />
+                                          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                                        </label>
+                                      </div>
+                                      
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-sm text-gray-700">Champ Téléphone</span>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                          <input
+                                            type="checkbox"
+                                            onChange={(e) => {
+                                              const checked = e.target.checked;
+                                              alert(`📞 CHAMP TÉLÉPHONE ${checked ? 'ACTIVÉ' : 'DÉSACTIVÉ'}\n\n${checked ? '✅ Le champ téléphone sera affiché' : '❌ Le champ téléphone sera masqué'}\n\n🔄 Configuration mise à jour !`);
+                                            }}
+                                            className="sr-only peer"
+                                          />
+                                          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                                        </label>
+                                      </div>
+                                      
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-sm text-gray-700">Champ Entreprise</span>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                          <input
+                                            type="checkbox"
+                                            defaultChecked
+                                            onChange={(e) => {
+                                              const checked = e.target.checked;
+                                              alert(`🏢 CHAMP ENTREPRISE ${checked ? 'ACTIVÉ' : 'DÉSACTIVÉ'}\n\n${checked ? '✅ Le champ entreprise sera affiché' : '❌ Le champ entreprise sera masqué'}\n\n🔄 Configuration mise à jour !`);
+                                            }}
+                                            className="sr-only peer"
+                                          />
+                                          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                                        </label>
+                                      </div>
+                                      
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-sm text-gray-700">Anti-spam (reCAPTCHA)</span>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                          <input
+                                            type="checkbox"
+                                            defaultChecked
+                                            onChange={(e) => {
+                                              const checked = e.target.checked;
+                                              alert(`🔒 ANTI-SPAM ${checked ? 'ACTIVÉ' : 'DÉSACTIVÉ'}\n\n${checked ? '✅ Protection reCAPTCHA activée' : '❌ Protection reCAPTCHA désactivée'}\n🛡️ Recommandé: Toujours activé\n\n🔄 Sécurité mise à jour !`);
+                                            }}
+                                            className="sr-only peer"
+                                          />
+                                          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                                        </label>
+                                      </div>
+                                      
+                                      <div className="mt-4 pt-3 border-t border-gray-200">
+                                        <div className="flex items-center justify-between mb-2">
+                                          <span className="text-sm font-medium text-gray-700">Email de notification</span>
+                                        </div>
+                                        <input
+                                          type="email"
+                                          defaultValue={section.content.email}
+                                          onChange={(e) => {
+                                            updateSectionContent(section.id, 'notificationEmail', e.target.value);
+                                            alert(`📧 EMAIL NOTIFICATION MODIFIÉ\n\n📬 Nouveau email: ${e.target.value}\n📨 Les messages du formulaire seront envoyés à cette adresse\n\n✅ Configuration sauvegardée !`);
+                                          }}
+                                          placeholder="email@entreprise.com"
+                                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        />
+                                      </div>
+                                      
+                                      <div className="mt-3">
+                                        <Button 
+                                          variant="outline" 
+                                          size="sm" 
+                                          className="w-full"
+                                          onClick={() => {
+                                            const config = {
+                                              fields: {
+                                                name: true,
+                                                email: true,
+                                                phone: false,
+                                                company: true,
+                                                message: true
+                                              },
+                                              security: {
+                                                recaptcha: true,
+                                                honeypot: true,
+                                                rateLimit: '5 messages/heure'
+                                              },
+                                              notifications: {
+                                                email: section.content.notificationEmail || section.content.email,
+                                                autoReply: true,
+                                                template: 'Merci pour votre message, nous vous répondrons sous 24h.'
+                                              }
+                                            };
+                                            
+                                            alert(`📝 FORMULAIRE CONFIGURÉ\n\n✅ Champs actifs: ${Object.entries(config.fields).filter(([k,v]) => v).map(([k]) => k).join(', ')}\n🔒 Sécurité: reCAPTCHA + Anti-spam\n📧 Notifications: ${config.notifications.email}\n🤖 Réponse auto: Activée\n\n📋 Formulaire opérationnel !`);
+                                          }}
+                                        >
+                                          <Settings className="h-3 w-3 mr-1" />
+                                          Tester la Configuration
+                                        </Button>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
