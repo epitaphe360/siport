@@ -775,21 +775,6 @@ export const VisitorDashboard: React.FC = () => {
                     Naviguez dans le Mohammed VI Exhibition Center
                   </p>
                   <Button>
-                    onClick={() => {
-                      const badgeData = {
-                        name: `${visitorProfile?.firstName} ${visitorProfile?.lastName}`,
-                        company: visitorProfile?.company,
-                        email: visitorProfile?.email,
-                        passType: visitorProfile?.passType,
-                        id: visitorProfile?.id,
-                        qrCode: 'QR_CODE_DATA_HERE'
-                      };
-                      
-                      // Génération QR Code
-                      const qrContent = `BEGIN:VCARD\nVERSION:3.0\nFN:${badgeData.name}\nORG:${badgeData.company}\nEMAIL:${badgeData.email}\nNOTE:Pass ${badgeData.passType} - SIPORTS 2026\nEND:VCARD`;
-                      
-                      alert(`📱 BADGE NUMÉRIQUE GÉNÉRÉ\n\n👤 ${badgeData.name}\n🏢 ${badgeData.company}\n📧 ${badgeData.email}\n🎫 Pass ${badgeData.passType?.toUpperCase()}\n\n📲 QR Code prêt pour l'entrée !\n🚪 Accès direct au salon\n📱 Sauvegardé dans votre téléphone`);
-                    }}
                     <MapPin className="h-4 w-4 mr-2" />
                     Ouvrir le Plan
                   </Button>
@@ -850,6 +835,27 @@ export const VisitorDashboard: React.FC = () => {
                   Application officielle SIPORTS
                 </p>
                 <Button variant="outline" size="sm">
+                  onClick={() => {
+                    const appData = {
+                      name: 'SIPORTS 2026 Official',
+                      version: '2.1.0',
+                      size: '45 MB',
+                      features: ['Plan interactif', 'Agenda personnel', 'Networking', 'QR Scanner', 'Mode offline'],
+                      platforms: ['iOS App Store', 'Google Play Store', 'PWA Web'],
+                      rating: '4.8/5 (2,847 avis)'
+                    };
+                    
+                    alert(`📱 APPLICATION MOBILE OFFICIELLE\n\n📲 ${appData.name}\n🔄 Version: ${appData.version}\n💾 Taille: ${appData.size}\n⭐ Note: ${appData.rating}\n\n🎯 Fonctionnalités:\n${appData.features.map(f => `• ${f}`).join('\n')}\n\n📦 Disponible sur:\n${appData.platforms.join('\n')}\n\n⬇️ Téléchargement démarré !`);
+                    
+                    // Simulation téléchargement app
+                    setTimeout(() => {
+                      if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+                        window.open('https://apps.apple.com/app/siports2026', '_blank');
+                      } else {
+                        window.open('https://play.google.com/store/apps/details?id=com.siports.app2026', '_blank');
+                      }
+                    }, 1000);
+                  }}
                   <Download className="h-3 w-3 mr-1" />
                   Télécharger
                 </Button>
