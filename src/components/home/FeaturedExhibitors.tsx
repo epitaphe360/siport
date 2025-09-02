@@ -163,8 +163,6 @@ export const FeaturedExhibitors: React.FC = () => {
                         RDV
                       </Button>
                     </Link>
-                    {exhibitor.website && (
-                    )}
                   </div>
                 </div>
               </Card>
