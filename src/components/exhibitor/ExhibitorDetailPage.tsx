@@ -489,6 +489,24 @@ export const ExhibitorDetailPage: React.FC = () => {
                         <Clock className="h-4 w-4 mr-1" />
                         {formatDate(article.date)}
                       </span>
+                    </div>
+                    
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                      {article.title}
+                    </h3>
+                    
+                    <p className="text-gray-700 mb-4">
+                      {article.excerpt}
+                    </p>
+                    
+                    <Button 
+                      size="sm"
+                      onClick={() => {
+                        alert(`📰 ARTICLE COMPLET\n\n📝 ${article.title}\n📅 ${formatDate(article.date)}\n🏷️ ${article.category}\n\n${article.excerpt}\n\n✅ Article ouvert !`);
+                      }}
+                    >
+                      Lire la suite
+                    </Button>
                   </div>
                 </Card>
               </motion.div>
