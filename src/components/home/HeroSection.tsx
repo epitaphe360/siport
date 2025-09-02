@@ -2,11 +2,41 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Users, Building2, ArrowRight } from 'lucide-react';
 import { Button } from '../ui/Button';
-import { CountdownModal } from '../ui/CountdownModal';
 import { motion } from 'framer-motion';
 
 export const HeroSection: React.FC = () => {
-  const [showCountdown, setShowCountdown] = React.useState(false);
+  const [timeLeft, setTimeLeft] = React.useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  React.useEffect(() => {
+    const salonDate = new Date('2026-02-05T09:30:00');
+    
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const difference = salonDate.getTime() - now.getTime();
+
+      if (difference <= 0) {
+        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      }
+
+      return {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((difference % (1000 * 60)) / 1000)
+      };
+    };
+
+    setTimeLeft(calculateTimeLeft());
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatNumber = (num: number) => {
+    return num.toString().padStart(2, '0');
+  };
 
   return (
     <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white overflow-hidden">
@@ -40,6 +70,84 @@ export const HeroSection: React.FC = () => {
                 découvrez les innovations qui façonnent l'avenir des ports.
               </p>
             </div>
+
+            {/* Compte à Rebours */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="mb-8"
+            >
+              <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-2xl p-6 border border-white border-opacity-20">
+                <h3 className="text-lg font-semibold text-center mb-4 text-blue-100">
+                  Ouverture dans :
+                </h3>
+                
+                <div className="grid grid-cols-4 gap-3">
+                  <motion.div
+                    key={timeLeft.days}
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    className="text-center bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4"
+                  >
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {formatNumber(timeLeft.days)}
+                    </div>
+                    <div className="text-blue-200 text-xs font-medium">
+                      {timeLeft.days <= 1 ? 'Jour' : 'Jours'}
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    key={timeLeft.hours}
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    className="text-center bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4"
+                  >
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {formatNumber(timeLeft.hours)}
+                    </div>
+                    <div className="text-blue-200 text-xs font-medium">
+                      {timeLeft.hours <= 1 ? 'Heure' : 'Heures'}
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    key={timeLeft.minutes}
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    className="text-center bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4"
+                  >
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {formatNumber(timeLeft.minutes)}
+                    </div>
+                    <div className="text-blue-200 text-xs font-medium">
+                      {timeLeft.minutes <= 1 ? 'Minute' : 'Minutes'}
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    key={timeLeft.seconds}
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    className="text-center bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4"
+                  >
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {formatNumber(timeLeft.seconds)}
+                    </div>
+                    <div className="text-blue-200 text-xs font-medium">
+                      {timeLeft.seconds <= 1 ? 'Seconde' : 'Secondes'}
+                    </div>
+                  </motion.div>
+                </div>
+                
+                <div className="text-center mt-4">
+                  <p className="text-blue-200 text-sm">
+                    📍 Mohammed VI Exhibition Center • El Jadida, Maroc
+                  </p>
+                </div>
+              </div>
+            </motion.div>
 
             {/* Event Info */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
@@ -85,15 +193,6 @@ export const HeroSection: React.FC = () => {
                   Découvrir les Exposants
                 </Button>
               </Link>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="border-white text-white hover:bg-white hover:text-blue-900 w-full sm:w-auto"
-                onClick={() => setShowCountdown(true)}
-              >
-                <Calendar className="mr-2 h-5 w-5" />
-                Compte à Rebours
-              </Button>
             </div>
           </motion.div>
 
@@ -174,12 +273,6 @@ export const HeroSection: React.FC = () => {
           />
         </svg>
       </div>
-
-      {/* Countdown Modal */}
-      <CountdownModal 
-        isOpen={showCountdown} 
-        onClose={() => setShowCountdown(false)} 
-      />
     </section>
   );
 };
