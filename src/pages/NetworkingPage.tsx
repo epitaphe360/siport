@@ -21,70 +21,271 @@ import {
   CheckCircle,
   X,
   Send,
-  Settings
+  Settings,
+  Handshake,
+  Mail,
+  Phone,
+  Linkedin
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
-import { useNetworkingStore } from '../store/networkingStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
+interface NetworkingProfile {
+  id: string;
+  name: string;
+  firstName: string;
+  lastName: string;
+  company: string;
+  position: string;
+  country: string;
+  sector: string;
+  avatar: string;
+  type: 'exhibitor' | 'partner' | 'visitor';
+  bio: string;
+  interests: string[];
+  objectives: string[];
+  email: string;
+  phone: string;
+  linkedin?: string;
+  matchScore: number;
+  isOnline: boolean;
+  lastSeen: Date;
+  mutualConnections: number;
+  isConnected: boolean;
+  connectionRequested: boolean;
+  isFavorite: boolean;
+}
+
+// Données de démonstration enrichies et réalistes
+const demoProfiles: NetworkingProfile[] = [
+  {
+    id: '1',
+    name: 'Sarah Johnson',
+    firstName: 'Sarah',
+    lastName: 'Johnson',
+    company: 'Global Port Solutions',
+    position: 'CEO & Founder',
+    country: 'Pays-Bas',
+    sector: 'Technologies Portuaires',
+    avatar: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=200',
+    type: 'exhibitor',
+    bio: 'Experte en transformation digitale portuaire avec 15+ années d\'expérience. Spécialisée dans l\'optimisation des opérations portuaires et l\'implémentation de solutions IoT.',
+    interests: ['Digital Transformation', 'IoT Solutions', 'Port Operations', 'Sustainability'],
+    objectives: ['Trouver des partenaires technologiques', 'Expansion en Afrique', 'Présenter nos innovations'],
+    email: 'sarah.johnson@globalports.com',
+    phone: '+31 20 123 4567',
+    linkedin: 'https://linkedin.com/in/sarahjohnson',
+    matchScore: 95,
+    isOnline: true,
+    lastSeen: new Date(Date.now() - 300000), // 5 min ago
+    mutualConnections: 3,
+    isConnected: false,
+    connectionRequested: false,
+    isFavorite: false
+  },
+  {
+    id: '2',
+    name: 'Ahmed El Mansouri',
+    firstName: 'Ahmed',
+    lastName: 'El Mansouri',
+    company: 'Autorité Portuaire de Casablanca',
+    position: 'Directeur Technique',
+    country: 'Maroc',
+    sector: 'Autorité Portuaire',
+    avatar: 'https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=200',
+    type: 'partner',
+    bio: 'Directeur technique avec 20+ ans d\'expérience dans le développement d\'infrastructures portuaires. Expert en modernisation et durabilité des ports.',
+    interests: ['Infrastructure Development', 'Sustainability', 'Port Modernization', 'Government Relations'],
+    objectives: ['Partenariats d\'infrastructure', 'Adoption de technologies', 'Coopération internationale'],
+    email: 'ahmed.mansouri@casaport.ma',
+    phone: '+212 522 123 456',
+    linkedin: 'https://linkedin.com/in/ahmedelmansouri',
+    matchScore: 88,
+    isOnline: true,
+    lastSeen: new Date(Date.now() - 600000), // 10 min ago
+    mutualConnections: 2,
+    isConnected: true,
+    connectionRequested: false,
+    isFavorite: true
+  },
+  {
+    id: '3',
+    name: 'Dr. Maria Santos',
+    firstName: 'Maria',
+    lastName: 'Santos',
+    company: 'Maritime University of Barcelona',
+    position: 'Research Director',
+    country: 'Espagne',
+    sector: 'Recherche & Formation',
+    avatar: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=200',
+    type: 'visitor',
+    bio: 'Directrice de recherche spécialisée en innovation maritime et développement durable. 12 ans d\'expérience en recherche appliquée et partenariats industriels.',
+    interests: ['Maritime Research', 'Innovation', 'Sustainability', 'Academic Partnerships'],
+    objectives: ['Collaboration recherche', 'Partenariats industriels', 'Opportunités de financement'],
+    email: 'maria.santos@maritimeuni.es',
+    phone: '+34 93 123 4567',
+    linkedin: 'https://linkedin.com/in/mariasantos',
+    matchScore: 82,
+    isOnline: false,
+    lastSeen: new Date(Date.now() - 3600000), // 1 hour ago
+    mutualConnections: 1,
+    isConnected: false,
+    connectionRequested: true,
+    isFavorite: false
+  },
+  {
+    id: '4',
+    name: 'Jean-Pierre Dubois',
+    firstName: 'Jean-Pierre',
+    lastName: 'Dubois',
+    company: 'Ocean Tech Solutions',
+    position: 'Directeur Innovation',
+    country: 'France',
+    sector: 'Technologies Maritimes',
+    avatar: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=200',
+    type: 'exhibitor',
+    bio: 'Spécialiste en solutions IoT pour l\'optimisation des opérations portuaires et la surveillance maritime en temps réel.',
+    interests: ['IoT Maritime', 'Surveillance Portuaire', 'Automatisation', 'Big Data'],
+    objectives: ['Démonstrations technologiques', 'Partenariats commerciaux', 'Expansion internationale'],
+    email: 'jp.dubois@oceantech.fr',
+    phone: '+33 1 23 45 67 89',
+    linkedin: 'https://linkedin.com/in/jpdubois',
+    matchScore: 79,
+    isOnline: true,
+    lastSeen: new Date(Date.now() - 180000), // 3 min ago
+    mutualConnections: 0,
+    isConnected: false,
+    connectionRequested: false,
+    isFavorite: false
+  },
+  {
+    id: '5',
+    name: 'Captain Mohamed Alami',
+    firstName: 'Mohamed',
+    lastName: 'Alami',
+    company: 'Tanger Med Port Authority',
+    position: 'Operations Manager',
+    country: 'Maroc',
+    sector: 'Opérations Portuaires',
+    avatar: 'https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=200',
+    type: 'partner',
+    bio: 'Gestionnaire d\'opérations portuaires avec expertise en logistique internationale et optimisation des flux de conteneurs.',
+    interests: ['Port Operations', 'Logistics', 'Container Management', 'Efficiency'],
+    objectives: ['Optimisation opérationnelle', 'Nouvelles technologies', 'Benchmarking'],
+    email: 'm.alami@tangermed.ma',
+    phone: '+212 539 123 456',
+    matchScore: 76,
+    isOnline: false,
+    lastSeen: new Date(Date.now() - 7200000), // 2 hours ago
+    mutualConnections: 1,
+    isConnected: false,
+    connectionRequested: false,
+    isFavorite: true
+  },
+  {
+    id: '6',
+    name: 'Lisa Chen',
+    firstName: 'Lisa',
+    lastName: 'Chen',
+    company: 'Singapore Port Technologies',
+    position: 'Head of Digital Innovation',
+    country: 'Singapour',
+    sector: 'Innovation Digitale',
+    avatar: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=200',
+    type: 'exhibitor',
+    bio: 'Leader en innovation digitale portuaire, spécialisée dans l\'IA et l\'automatisation des ports intelligents.',
+    interests: ['AI & Machine Learning', 'Smart Ports', 'Automation', 'Digital Twin'],
+    objectives: ['Showcase IA solutions', 'Asian market expansion', 'Technology partnerships'],
+    email: 'lisa.chen@sgporttech.com',
+    phone: '+65 6123 4567',
+    linkedin: 'https://linkedin.com/in/lisachen',
+    matchScore: 91,
+    isOnline: true,
+    lastSeen: new Date(Date.now() - 120000), // 2 min ago
+    mutualConnections: 2,
+    isConnected: false,
+    connectionRequested: false,
+    isFavorite: false
+  }
+];
+
 export const NetworkingPage: React.FC = () => {
-  const {
-    profiles,
-    recommendations,
-    searchResults,
-    favorites,
-    connections,
-    pendingRequests,
-    sentRequests,
-    isLoading,
-    searchFilters,
-    fetchProfiles,
-    generateRecommendations,
-    searchProfiles,
-    sendConnectionRequest,
-    acceptConnectionRequest,
-    rejectConnectionRequest,
-    addToFavorites,
-    removeFromFavorites,
-    getAIInsights
-  } = useNetworkingStore();
-
-  const [activeTab, setActiveTab] = useState<'recommendations' | 'search' | 'connections' | 'requests'>('recommendations');
+  const [profiles, setProfiles] = useState<NetworkingProfile[]>(demoProfiles);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSector, setSelectedSector] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedType, setSelectedType] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
-  const [connectionMessage, setConnectionMessage] = useState('');
-  const [showConnectionModal, setShowConnectionModal] = useState(false);
-  const [aiInsights, setAiInsights] = useState<any>(null);
+  const [selectedProfile, setSelectedProfile] = useState<NetworkingProfile | null>(null);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactMessage, setContactMessage] = useState('');
+  const [sortBy, setSortBy] = useState<'match' | 'online' | 'recent'>('match');
 
-  useEffect(() => {
-    fetchProfiles();
-    generateRecommendations('user1'); // Current user ID
-  }, [fetchProfiles, generateRecommendations]);
-
-  useEffect(() => {
-    // Load AI insights
-    getAIInsights('user1').then(setAiInsights);
-  }, [getAIInsights]);
-
-  const handleSendConnectionRequest = async (userId: string) => {
-    await sendConnectionRequest(userId, connectionMessage);
-    setShowConnectionModal(false);
-    setSelectedProfile(null);
-    setConnectionMessage('');
+  // Statistiques du réseautage
+  const networkingStats = {
+    totalProfiles: profiles.length,
+    onlineNow: profiles.filter(p => p.isOnline).length,
+    myConnections: profiles.filter(p => p.isConnected).length,
+    pendingRequests: profiles.filter(p => p.connectionRequested).length,
+    favorites: profiles.filter(p => p.isFavorite).length,
+    averageMatch: Math.round(profiles.reduce((sum, p) => sum + p.matchScore, 0) / profiles.length)
   };
 
-  const sectors = ['Port Operations', 'Technology', 'Logistics', 'Infrastructure', 'Research', 'Government'];
-  const regions = ['Europe', 'Africa', 'Middle East', 'Asia', 'Americas'];
-  const companySizes = ['1-50', '50-200', '200-1000', '1000+'];
-  const objectives = ['Technology Transfer', 'Market Expansion', 'Research Partnership', 'Investment'];
+  // Filtrage et tri des profils
+  const filteredProfiles = profiles
+    .filter(profile => {
+      const matchesSearch = profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           profile.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           profile.bio.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSector = !selectedSector || profile.sector === selectedSector;
+      const matchesCountry = !selectedCountry || profile.country === selectedCountry;
+      const matchesType = !selectedType || profile.type === selectedType;
+      
+      return matchesSearch && matchesSector && matchesCountry && matchesType;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'match':
+          return b.matchScore - a.matchScore;
+        case 'online':
+          if (a.isOnline && !b.isOnline) return -1;
+          if (!a.isOnline && b.isOnline) return 1;
+          return b.matchScore - a.matchScore;
+        case 'recent':
+          return b.lastSeen.getTime() - a.lastSeen.getTime();
+        default:
+          return b.matchScore - a.matchScore;
+      }
+    });
 
-  const getCompatibilityColor = (score: number) => {
-    if (score >= 90) return 'text-green-600 bg-green-100';
-    if (score >= 80) return 'text-blue-600 bg-blue-100';
-    if (score >= 70) return 'text-yellow-600 bg-yellow-100';
-    return 'text-gray-600 bg-gray-100';
+  const sectors = [...new Set(profiles.map(p => p.sector))];
+  const countries = [...new Set(profiles.map(p => p.country))];
+
+  const handleConnect = (profileId: string) => {
+    setProfiles(prev => prev.map(p => 
+      p.id === profileId ? { ...p, connectionRequested: true } : p
+    ));
+    
+    const profile = profiles.find(p => p.id === profileId);
+    alert(`🤝 DEMANDE DE CONNEXION ENVOYÉE\n\n👤 Vers: ${profile?.name}\n🏢 ${profile?.company}\n📧 Notification envoyée\n\n⏱️ Réponse attendue sous 48h`);
+  };
+
+  const handleFavorite = (profileId: string) => {
+    setProfiles(prev => prev.map(p => 
+      p.id === profileId ? { ...p, isFavorite: !p.isFavorite } : p
+    ));
+  };
+
+  const handleSendMessage = () => {
+    if (!selectedProfile || !contactMessage.trim()) return;
+    
+    alert(`📧 MESSAGE ENVOYÉ\n\n👤 À: ${selectedProfile.name}\n🏢 ${selectedProfile.company}\n💬 Message: "${contactMessage}"\n\n✅ Votre message a été envoyé avec succès !`);
+    
+    setShowContactModal(false);
+    setSelectedProfile(null);
+    setContactMessage('');
   };
 
   const getProfileTypeIcon = (type: string) => {
@@ -105,9 +306,37 @@ export const NetworkingPage: React.FC = () => {
     }
   };
 
+  const getProfileTypeColor = (type: string) => {
+    switch (type) {
+      case 'exhibitor': return 'bg-blue-100 text-blue-800';
+      case 'partner': return 'bg-purple-100 text-purple-800';
+      case 'visitor': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getMatchScoreColor = (score: number) => {
+    if (score >= 90) return 'text-green-600 bg-green-100';
+    if (score >= 80) return 'text-blue-600 bg-blue-100';
+    if (score >= 70) return 'text-yellow-600 bg-yellow-100';
+    return 'text-gray-600 bg-gray-100';
+  };
+
+  const formatLastSeen = (date: Date) => {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    
+    if (diffMins < 5) return 'À l\'instant';
+    if (diffMins < 60) return `Il y a ${diffMins} min`;
+    if (diffHours < 24) return `Il y a ${diffHours}h`;
+    return 'Hors ligne';
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Header avec explication claire */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <motion.div
@@ -120,634 +349,438 @@ export const NetworkingPage: React.FC = () => {
                 <Brain className="h-8 w-8 text-white" />
               </div>
               <h1 className="text-3xl font-bold text-gray-900">
-                Réseautage Intelligent IA
+                Réseautage Intelligent SIPORTS
               </h1>
             </div>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Découvrez les professionnels les plus pertinents grâce à notre moteur de matching 
-              basé sur l'intelligence artificielle et les algorithmes d'apprentissage automatique
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
+              Connectez-vous avec les professionnels les plus pertinents grâce à notre système de matching intelligent. 
+              Plus votre score de compatibilité est élevé, plus vous avez de chances de créer des partenariats fructueux.
             </p>
+            
+            {/* Explication du système */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-4xl mx-auto">
+              <h3 className="font-semibold text-blue-900 mb-2">Comment ça marche ?</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-blue-800">
+                <div className="flex items-center space-x-2">
+                  <Target className="h-4 w-4" />
+                  <span>L'IA analyse vos objectifs et secteurs d'intérêt</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Zap className="h-4 w-4" />
+                  <span>Calcule un score de compatibilité (0-100%)</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Handshake className="h-4 w-4" />
+                  <span>Vous recommande les meilleurs contacts</span>
+                </div>
+              </div>
+            </div>
           </motion.div>
 
-          {/* AI Insights Banner */}
-          {aiInsights && (
+          {/* Statistiques du réseautage */}
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
+            <Card className="text-center p-4">
+              <div className="text-2xl font-bold text-blue-600 mb-1">
+                {networkingStats.totalProfiles}
+              </div>
+              <div className="text-xs text-gray-600">Profils Disponibles</div>
+            </Card>
+            
+            <Card className="text-center p-4">
+              <div className="text-2xl font-bold text-green-600 mb-1 flex items-center justify-center">
+                {networkingStats.onlineNow}
+                <div className="w-2 h-2 bg-green-500 rounded-full ml-1 animate-pulse" />
+              </div>
+              <div className="text-xs text-gray-600">En Ligne Maintenant</div>
+            </Card>
+            
+            <Card className="text-center p-4">
+              <div className="text-2xl font-bold text-purple-600 mb-1">
+                {networkingStats.myConnections}
+              </div>
+              <div className="text-xs text-gray-600">Mes Connexions</div>
+            </Card>
+            
+            <Card className="text-center p-4">
+              <div className="text-2xl font-bold text-orange-600 mb-1">
+                {networkingStats.pendingRequests}
+              </div>
+              <div className="text-xs text-gray-600">Demandes Envoyées</div>
+            </Card>
+            
+            <Card className="text-center p-4">
+              <div className="text-2xl font-bold text-red-600 mb-1">
+                {networkingStats.favorites}
+              </div>
+              <div className="text-xs text-gray-600">Favoris</div>
+            </Card>
+            
+            <Card className="text-center p-4">
+              <div className="text-2xl font-bold text-indigo-600 mb-1">
+                {networkingStats.averageMatch}%
+              </div>
+              <div className="text-xs text-gray-600">Match Moyen</div>
+            </Card>
+          </div>
+
+          {/* Filtres et recherche */}
+          <div className="flex flex-col lg:flex-row gap-4 items-center">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Rechercher par nom, entreprise ou expertise..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="match">Meilleur match</option>
+                <option value="online">En ligne d'abord</option>
+                <option value="recent">Activité récente</option>
+              </select>
+              
+              <Button
+                variant="outline"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                <Filter className="h-4 w-4 mr-2" />
+                Filtres
+              </Button>
+            </div>
+          </div>
+
+          {/* Filtres avancés */}
+          {showFilters && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4 mb-6"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="mt-4 p-4 bg-gray-50 rounded-lg"
             >
-              <div className="flex items-start space-x-3">
-                <div className="bg-purple-100 p-2 rounded-lg">
-                  <Brain className="h-5 w-5 text-purple-600" />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Secteur
+                  </label>
+                  <select
+                    value={selectedSector}
+                    onChange={(e) => setSelectedSector(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Tous les secteurs</option>
+                    {sectors.map(sector => (
+                      <option key={sector} value={sector}>{sector}</option>
+                    ))}
+                  </select>
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-purple-900 mb-2">
-                    Recommandations IA Personnalisées
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-purple-700 font-medium mb-1">Optimisation du profil :</p>
-                      <p className="text-purple-600">{aiInsights.profileOptimization[0]}</p>
-                    </div>
-                    <div>
-                      <p className="text-purple-700 font-medium mb-1">Conseil réseautage :</p>
-                      <p className="text-purple-600">{aiInsights.networkingTips[0]}</p>
-                    </div>
-                  </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Pays
+                  </label>
+                  <select
+                    value={selectedCountry}
+                    onChange={(e) => setSelectedCountry(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Tous les pays</option>
+                    {countries.map(country => (
+                      <option key={country} value={country}>{country}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Type de profil
+                  </label>
+                  <select
+                    value={selectedType}
+                    onChange={(e) => setSelectedType(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Tous les types</option>
+                    <option value="exhibitor">Exposants</option>
+                    <option value="partner">Partenaires</option>
+                    <option value="visitor">Visiteurs</option>
+                  </select>
                 </div>
               </div>
             </motion.div>
           )}
-
-          {/* Navigation Tabs */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {[
-              { id: 'recommendations', label: 'Recommandations IA', icon: Brain, count: recommendations.length },
-              { id: 'search', label: 'Recherche Avancée', icon: Search, count: searchResults.length },
-              { id: 'connections', label: 'Mes Connexions', icon: Users, count: connections.length },
-              { id: 'requests', label: 'Demandes', icon: UserPlus, count: pendingRequests.length }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors relative ${
-                  activeTab === tab.id
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                }`}
-              >
-                <tab.icon className="h-5 w-5" />
-                <span>{tab.label}</span>
-                {tab.count > 0 && (
-                  <Badge variant="info" size="sm">
-                    {tab.count}
-                  </Badge>
-                )}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
-      {/* Content */}
+      {/* Contenu principal */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Recommendations Tab */}
-        {activeTab === 'recommendations' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <Card className="text-center p-6">
-                <div className="bg-blue-100 p-3 rounded-lg w-12 h-12 mx-auto mb-3">
-                  <Target className="h-6 w-6 text-blue-600" />
-                </div>
-                <div className="text-2xl font-bold text-gray-900 mb-1">{recommendations.length}</div>
-                <div className="text-sm text-gray-600">Recommandations IA</div>
-              </Card>
-              
-              <Card className="text-center p-6">
-                <div className="bg-green-100 p-3 rounded-lg w-12 h-12 mx-auto mb-3">
-                  <MessageCircle className="h-6 w-6 text-green-600" />
-                </div>
-                <div className="text-2xl font-bold text-gray-900 mb-1">8</div>
-                <div className="text-sm text-gray-600">Conversations Actives</div>
-              </Card>
-              
-              <Card className="text-center p-6">
-                <div className="bg-purple-100 p-3 rounded-lg w-12 h-12 mx-auto mb-3">
-                  <Calendar className="h-6 w-6 text-purple-600" />
-                </div>
-                <div className="text-2xl font-bold text-gray-900 mb-1">5</div>
-                <div className="text-sm text-gray-600">RDV Programmés</div>
-              </Card>
-              
-              <Card className="text-center p-6">
-                <div className="bg-orange-100 p-3 rounded-lg w-12 h-12 mx-auto mb-3">
-                  <Users className="h-6 w-6 text-orange-600" />
-                </div>
-                <div className="text-2xl font-bold text-gray-900 mb-1">{connections.length}</div>
-                <div className="text-sm text-gray-600">Connexions</div>
-              </Card>
-            </div>
+        {/* Résultats */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-gray-900">
+              Professionnels Recommandés ({filteredProfiles.length})
+            </h2>
+            
+            {(searchTerm || selectedSector || selectedCountry || selectedType) && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  setSearchTerm('');
+                  setSelectedSector('');
+                  setSelectedCountry('');
+                  setSelectedType('');
+                }}
+              >
+                Réinitialiser les filtres
+              </Button>
+            )}
+          </div>
+          
+          <p className="text-gray-600 text-sm mt-1">
+            Triés par {sortBy === 'match' ? 'score de compatibilité' : sortBy === 'online' ? 'statut en ligne' : 'activité récente'}
+          </p>
+        </div>
 
-            {/* AI Recommendations */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Recommandations Personnalisées par IA
-                </h2>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => generateRecommendations('user1')}
-                  disabled={isLoading}
+        {/* Grille des profils */}
+        {filteredProfiles.length === 0 ? (
+          <div className="text-center py-12">
+            <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Aucun profil trouvé
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Essayez de modifier vos critères de recherche
+            </p>
+            <Button onClick={() => {
+              setSearchTerm('');
+              setSelectedSector('');
+              setSelectedCountry('');
+              setSelectedType('');
+            }}>
+              Voir tous les profils
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProfiles.map((profile, index) => {
+              const ProfileIcon = getProfileTypeIcon(profile.type);
+              
+              return (
+                <motion.div
+                  key={profile.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
                 >
-                  <Zap className="h-4 w-4 mr-2" />
-                  Actualiser
-                </Button>
-              </div>
-
-              {isLoading ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="animate-pulse">
-                      <div className="bg-white rounded-lg p-6 h-80">
-                        <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                        <div className="h-20 bg-gray-200 rounded mb-4"></div>
-                        <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <Card hover className="relative h-full">
+                    {/* Score de compatibilité */}
+                    <div className="absolute top-4 right-4">
+                      <div className={`px-3 py-1 rounded-full text-sm font-bold ${getMatchScoreColor(profile.matchScore)}`}>
+                        {profile.matchScore}% match
                       </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {recommendations.map((match, index) => {
-                    const ProfileIcon = getProfileTypeIcon(match.user.type);
-                    const isFavorite = favorites.includes(match.user.id);
-                    const isConnected = connections.includes(match.user.id);
-                    const requestSent = sentRequests.includes(match.user.id);
-                    
-                    return (
-                      <motion.div
-                        key={match.user.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                      >
-                        <Card hover className="relative h-full">
-                          {/* Compatibility Score */}
-                          <div className="absolute top-4 right-4">
-                            <div className={`px-3 py-1 rounded-full text-sm font-bold ${getCompatibilityColor(match.score)}`}>
-                              {match.score}% match
-                            </div>
-                          </div>
 
-                          {/* Favorite Button */}
-                          <button
-                            onClick={() => isFavorite ? removeFromFavorites(match.user.id) : addToFavorites(match.user.id)}
-                            className="absolute top-4 left-4 p-2 rounded-full bg-white shadow-sm hover:shadow-md transition-shadow"
-                          >
-                            <Heart className={`h-4 w-4 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-400'}`} />
-                          </button>
-
-                          <div className="p-6 pt-12">
-                            {/* Profile Header */}
-                            <div className="flex items-start space-x-4 mb-4">
-                              <img
-                                src={match.user.profile.avatar}
-                                alt={match.user.name}
-                                className="h-16 w-16 rounded-full object-cover border-2 border-gray-200"
-                              />
-                              <div className="flex-1">
-                                <h3 className="font-bold text-gray-900 text-lg mb-1">
-                                  {match.user.profile.firstName} {match.user.profile.lastName}
-                                </h3>
-                                <p className="text-sm text-gray-600 mb-1">{match.user.profile.position}</p>
-                                <div className="flex items-center space-x-2 mb-2">
-                                  <Building2 className="h-4 w-4 text-gray-400" />
-                                  <span className="text-sm text-gray-600">{match.user.profile.company}</span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <MapPin className="h-4 w-4 text-gray-400" />
-                                  <span className="text-sm text-gray-600">{match.user.profile.country}</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Profile Type */}
-                            <div className="flex items-center space-x-2 mb-4">
-                              <ProfileIcon className="h-4 w-4 text-blue-600" />
-                              <Badge variant="info" size="sm">
-                                {getProfileTypeLabel(match.user.type)}
-                              </Badge>
-                            </div>
-
-                            {/* Bio */}
-                            <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                              {match.user.profile.bio}
-                            </p>
-
-                            {/* Compatibility Factors */}
-                            <div className="mb-4">
-                              <h4 className="text-sm font-medium text-gray-900 mb-2">
-                                Facteurs de compatibilité :
-                              </h4>
-                              <div className="grid grid-cols-2 gap-2 text-xs">
-                                <div className="flex justify-between">
-                                  <span className="text-gray-600">Secteur:</span>
-                                  <span className="font-medium">{match.compatibilityFactors.sectorAlignment}%</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-gray-600">Objectifs:</span>
-                                  <span className="font-medium">{match.compatibilityFactors.objectiveAlignment}%</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-gray-600">Géographie:</span>
-                                  <span className="font-medium">{match.compatibilityFactors.geographicRelevance}%</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-gray-600">Collaboration:</span>
-                                  <span className="font-medium">{match.compatibilityFactors.collaborationPotential}%</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Match Reasons */}
-                            <div className="mb-4">
-                              <h4 className="text-sm font-medium text-gray-900 mb-2">
-                                Raisons du match IA :
-                              </h4>
-                              <div className="flex flex-wrap gap-1">
-                                {match.reasons.map((reason, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-50 text-blue-700"
-                                  >
-                                    {reason}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Interests & Expertise */}
-                            <div className="mb-6">
-                              <h4 className="text-sm font-medium text-gray-900 mb-2">
-                                Expertises :
-                              </h4>
-                              <div className="flex flex-wrap gap-1">
-                                {match.user.profile.expertise?.slice(0, 3).map((exp, idx) => (
-                                  <Badge key={idx} variant="default" size="sm">
-                                    {exp}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Mutual Connections */}
-                            {match.mutualConnections > 0 && (
-                              <div className="mb-4 text-sm text-gray-600 flex items-center">
-                                <Users className="h-4 w-4 mr-1" />
-                                {match.mutualConnections} connexion{match.mutualConnections > 1 ? 's' : ''} mutuelle{match.mutualConnections > 1 ? 's' : ''}
-                              </div>
-                            )}
-
-                            {/* Actions */}
-                            <div className="flex space-x-2">
-                              {isConnected ? (
-                                <Button size="sm" variant="outline" className="flex-1" disabled>
-                                  <CheckCircle className="h-4 w-4 mr-2" />
-                                  Connecté
-                                </Button>
-                              ) : requestSent ? (
-                                <Button size="sm" variant="outline" className="flex-1" disabled>
-                                  <Clock className="h-4 w-4 mr-2" />
-                                  Demande envoyée
-                                </Button>
-                              ) : (
-                                <Button 
-                                  size="sm" 
-                                  className="flex-1"
-                                  onClick={() => {
-                                    setSelectedProfile(match.user.id);
-                                    setShowConnectionModal(true);
-                                  }}
-                                >
-                                  <UserPlus className="h-4 w-4 mr-2" />
-                                  Se connecter
-                                </Button>
-                              )}
-                              
-                              <Button variant="outline" size="sm">
-                                <MessageCircle className="h-4 w-4 mr-2" />
-                                Message
-                              </Button>
-                              
-                              <Button variant="outline" size="sm">
-                                <Calendar className="h-4 w-4 mr-2" />
-                                RDV
-                              </Button>
-                            </div>
-                          </div>
-                        </Card>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Search Tab */}
-        {activeTab === 'search' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            {/* Advanced Search Filters */}
-            <Card className="mb-8">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    Recherche Avancée avec IA Sémantique
-                  </h2>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowFilters(!showFilters)}
-                  >
-                    <Filter className="h-4 w-4 mr-2" />
-                    Filtres Avancés
-                  </Button>
-                </div>
-
-                {/* Search Bar */}
-                <div className="relative mb-6">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Recherche sémantique IA : 'ports durables', 'automation maritime', 'partenaires technologiques'..."
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                    onChange={(e) => searchProfiles({ keywords: e.target.value })}
-                  />
-                </div>
-
-                {/* Advanced Filters */}
-                <AnimatePresence>
-                  {showFilters && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="grid grid-cols-1 md:grid-cols-4 gap-4"
+                    {/* Bouton favori */}
+                    <button
+                      onClick={() => handleFavorite(profile.id)}
+                      className="absolute top-4 left-4 p-2 rounded-full bg-white shadow-sm hover:shadow-md transition-shadow"
                     >
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Secteurs
-                        </label>
-                        <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                          <option value="">Tous les secteurs</option>
-                          {sectors.map(sector => (
-                            <option key={sector} value={sector}>{sector}</option>
-                          ))}
-                        </select>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Régions
-                        </label>
-                        <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                          <option value="">Toutes les régions</option>
-                          {regions.map(region => (
-                            <option key={region} value={region}>{region}</option>
-                          ))}
-                        </select>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Taille d'entreprise
-                        </label>
-                        <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                          <option value="">Toutes tailles</option>
-                          {companySizes.map(size => (
-                            <option key={size} value={size}>{size} employés</option>
-                          ))}
-                        </select>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Objectifs
-                        </label>
-                        <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                          <option value="">Tous objectifs</option>
-                          {objectives.map(obj => (
-                            <option key={obj} value={obj}>{obj}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </Card>
+                      <Heart className={`h-4 w-4 ${profile.isFavorite ? 'text-red-500 fill-current' : 'text-gray-400'}`} />
+                    </button>
 
-            {/* Search Results */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {searchResults.length === 0 && !isLoading ? (
-                <div className="col-span-full text-center py-12">
-                  <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    Aucun résultat trouvé
-                  </h3>
-                  <p className="text-gray-600">
-                    Essayez de modifier vos critères de recherche
-                  </p>
-                </div>
-              ) : (
-                searchResults.map((profile, index) => (
-                  <motion.div
-                    key={profile.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Card hover>
-                      <div className="p-6">
-                        <div className="flex items-start space-x-4 mb-4">
-                          <img
-                            src={profile.profile.avatar}
-                            alt={profile.name}
-                            className="h-12 w-12 rounded-full object-cover"
-                          />
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-gray-900">
-                              {profile.profile.firstName} {profile.profile.lastName}
-                            </h3>
-                            <p className="text-sm text-gray-600">{profile.profile.position}</p>
-                            <p className="text-sm text-gray-500">{profile.profile.company}</p>
+                    {/* Statut en ligne */}
+                    {profile.isOnline && (
+                      <div className="absolute top-16 left-4 flex items-center space-x-1 bg-green-100 px-2 py-1 rounded-full">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                        <span className="text-xs text-green-800 font-medium">En ligne</span>
+                      </div>
+                    )}
+
+                    <div className="p-6 pt-12">
+                      {/* En-tête du profil */}
+                      <div className="flex items-start space-x-4 mb-4">
+                        <img
+                          src={profile.avatar}
+                          alt={profile.name}
+                          className="h-16 w-16 rounded-full object-cover border-2 border-gray-200"
+                        />
+                        <div className="flex-1">
+                          <h3 className="font-bold text-gray-900 text-lg mb-1">
+                            {profile.firstName} {profile.lastName}
+                          </h3>
+                          <p className="text-sm text-gray-600 mb-1">{profile.position}</p>
+                          <div className="flex items-center space-x-2 mb-2">
+                            <Building2 className="h-4 w-4 text-gray-400" />
+                            <span className="text-sm text-gray-600">{profile.company}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <MapPin className="h-4 w-4 text-gray-400" />
+                            <span className="text-sm text-gray-600">{profile.country}</span>
                           </div>
                         </div>
-                        
-                        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                          {profile.profile.bio}
-                        </p>
+                      </div>
+
+                      {/* Type de profil */}
+                      <div className="flex items-center space-x-2 mb-4">
+                        <ProfileIcon className="h-4 w-4 text-blue-600" />
+                        <Badge className={getProfileTypeColor(profile.type)} size="sm">
+                          {getProfileTypeLabel(profile.type)}
+                        </Badge>
+                        <Badge variant="default" size="sm">
+                          {profile.sector}
+                        </Badge>
+                      </div>
+
+                      {/* Bio */}
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                        {profile.bio}
+                      </p>
+
+                      {/* Intérêts communs */}
+                      <div className="mb-4">
+                        <h4 className="text-sm font-medium text-gray-900 mb-2">
+                          Expertises :
+                        </h4>
+                        <div className="flex flex-wrap gap-1">
+                          {profile.interests.slice(0, 3).map((interest, idx) => (
+                            <Badge key={idx} variant="info" size="sm">
+                              {interest}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Connexions mutuelles */}
+                      {profile.mutualConnections > 0 && (
+                        <div className="mb-4 text-sm text-gray-600 flex items-center">
+                          <Users className="h-4 w-4 mr-1" />
+                          {profile.mutualConnections} connexion{profile.mutualConnections > 1 ? 's' : ''} mutuelle{profile.mutualConnections > 1 ? 's' : ''}
+                        </div>
+                      )}
+
+                      {/* Dernière activité */}
+                      <div className="mb-4 text-xs text-gray-500 flex items-center">
+                        <Clock className="h-3 w-3 mr-1" />
+                        {profile.isOnline ? 'En ligne maintenant' : formatLastSeen(profile.lastSeen)}
+                      </div>
+
+                      {/* Actions */}
+                      <div className="space-y-2">
+                        {profile.isConnected ? (
+                          <Button size="sm" variant="outline" className="w-full" disabled>
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Déjà connecté
+                          </Button>
+                        ) : profile.connectionRequested ? (
+                          <Button size="sm" variant="outline" className="w-full" disabled>
+                            <Clock className="h-4 w-4 mr-2" />
+                            Demande envoyée
+                          </Button>
+                        ) : (
+                          <Button 
+                            size="sm" 
+                            className="w-full"
+                            onClick={() => handleConnect(profile.id)}
+                          >
+                            <UserPlus className="h-4 w-4 mr-2" />
+                            Se connecter
+                          </Button>
+                        )}
                         
                         <div className="flex space-x-2">
                           <Button 
+                            variant="outline" 
                             size="sm" 
                             className="flex-1"
                             onClick={() => {
-                              alert(`🤝 DEMANDE DE CONNEXION\n\n👤 Vers: ${profile.profile.firstName} ${profile.profile.lastName}\n🏢 ${profile.profile.company}\n📧 Demande envoyée\n\n⏱️ Réponse attendue sous 48h`);
+                              setSelectedProfile(profile);
+                              setShowContactModal(true);
                             }}
                           >
-                            <UserPlus className="h-4 w-4 mr-2" />
-                            Connecter
+                            <MessageCircle className="h-4 w-4 mr-1" />
+                            Message
                           </Button>
+                          
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1"
+                            onClick={() => {
+                              alert(`📅 DEMANDE DE RENDEZ-VOUS\n\n👤 Avec: ${profile.name}\n🏢 ${profile.company}\n📍 ${profile.country}\n\n⏰ Créneaux disponibles proposés !`);
+                            }}
+                          >
+                            <Calendar className="h-4 w-4 mr-1" />
+                            RDV
+                          </Button>
+                          
                           <Button 
                             variant="outline" 
                             size="sm"
                             onClick={() => {
-                              alert(`👁️ PROFIL DÉTAILLÉ\n\n👤 ${profile.profile.firstName} ${profile.profile.lastName}\n🏢 ${profile.profile.company}\n📍 ${profile.profile.country}\n\n📋 Profil complet affiché !`);
+                              alert(`👁️ PROFIL DÉTAILLÉ\n\n👤 ${profile.name}\n🏢 ${profile.company}\n📧 ${profile.email}\n📞 ${profile.phone}\n🌐 ${profile.linkedin || 'Non renseigné'}\n\n📋 Profil complet affiché !`);
                             }}
+                            title="Voir le profil complet"
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
-                    </Card>
-                  </motion.div>
-                ))
-              )}
-            </div>
-          </motion.div>
+                    </div>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
         )}
 
-        {/* Connections Tab */}
-        {activeTab === 'connections' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center py-12"
-          >
-            <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Mes Connexions ({connections.length})
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Gérez vos connexions professionnelles
-            </p>
-            <Button>
-              <Search className="h-4 w-4 mr-2" />
-              Découvrir de nouveaux contacts
-            </Button>
-          </motion.div>
-        )}
-
-        {/* Requests Tab */}
-        {activeTab === 'requests' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Pending Requests */}
-              <Card>
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Demandes Reçues ({pendingRequests.length})
-                  </h3>
-                  
-                  {pendingRequests.length === 0 ? (
-                    <div className="text-center py-8">
-                      <UserPlus className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                      <p className="text-gray-600 text-sm">Aucune demande en attente</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {pendingRequests.map(requestId => {
-                        const profile = profiles.find(p => p.id === requestId);
-                        if (!profile) return null;
-                        
-                        return (
-                          <div key={requestId} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                            <div className="flex items-center space-x-3">
-                              <img
-                                src={profile.profile.avatar}
-                                alt={profile.name}
-                                className="h-10 w-10 rounded-full object-cover"
-                              />
-                              <div>
-                                <p className="font-medium text-gray-900">
-                                  {profile.profile.firstName} {profile.profile.lastName}
-                                </p>
-                                <p className="text-sm text-gray-600">{profile.profile.company}</p>
-                              </div>
-                            </div>
-                            
-                            <div className="flex space-x-2">
-                              <Button 
-                                size="sm"
-                                onClick={() => acceptConnectionRequest(requestId)}
-                              >
-                                <CheckCircle className="h-3 w-3 mr-1" />
-                                Accepter
-                              </Button>
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => rejectConnectionRequest(requestId)}
-                              >
-                                <X className="h-3 w-3 mr-1" />
-                                Refuser
-                              </Button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+        {/* Conseils IA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-12"
+        >
+          <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <Brain className="h-5 w-5 mr-2 text-purple-600" />
+                Conseils IA pour Optimiser votre Réseautage
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white p-4 rounded-lg border border-purple-200">
+                  <h4 className="font-medium text-purple-900 mb-2">
+                    💡 Optimisation du Profil
+                  </h4>
+                  <p className="text-sm text-purple-700">
+                    Complétez votre bio avec plus de mots-clés sectoriels pour améliorer vos scores de compatibilité
+                  </p>
                 </div>
-              </Card>
-
-              {/* Sent Requests */}
-              <Card>
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Demandes Envoyées ({sentRequests.length})
-                  </h3>
-                  
-                  {sentRequests.length === 0 ? (
-                    <div className="text-center py-8">
-                      <Send className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                      <p className="text-gray-600 text-sm">Aucune demande envoyée</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {sentRequests.map(requestId => {
-                        const profile = profiles.find(p => p.id === requestId);
-                        if (!profile) return null;
-                        
-                        return (
-                          <div key={requestId} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                            <div className="flex items-center space-x-3">
-                              <img
-                                src={profile.profile.avatar}
-                                alt={profile.name}
-                                className="h-10 w-10 rounded-full object-cover"
-                              />
-                              <div>
-                                <p className="font-medium text-gray-900">
-                                  {profile.profile.firstName} {profile.profile.lastName}
-                                </p>
-                                <p className="text-sm text-gray-600">{profile.profile.company}</p>
-                              </div>
-                            </div>
-                            
-                            <Badge variant="warning" size="sm">
-                              <Clock className="h-3 w-3 mr-1" />
-                              En attente
-                            </Badge>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                
+                <div className="bg-white p-4 rounded-lg border border-purple-200">
+                  <h4 className="font-medium text-purple-900 mb-2">
+                    🎯 Stratégie de Contact
+                  </h4>
+                  <p className="text-sm text-purple-700">
+                    Les profils avec un score >85% ont 3x plus de chances de répondre positivement
+                  </p>
                 </div>
-              </Card>
+              </div>
             </div>
-          </motion.div>
-        )}
+          </Card>
+        </motion.div>
       </div>
 
-      {/* Connection Request Modal */}
+      {/* Modal de contact */}
       <AnimatePresence>
-        {showConnectionModal && selectedProfile && (
+        {showContactModal && selectedProfile && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -756,22 +789,38 @@ export const NetworkingPage: React.FC = () => {
               className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
             >
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Demande de Connexion
+                Envoyer un message à {selectedProfile.firstName}
               </h3>
               
               <div className="mb-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <img
+                    src={selectedProfile.avatar}
+                    alt={selectedProfile.name}
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
+                  <div>
+                    <p className="font-medium text-gray-900">{selectedProfile.name}</p>
+                    <p className="text-sm text-gray-600">{selectedProfile.company}</p>
+                    <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${getProfileTypeColor(selectedProfile.type)}`}>
+                      <ProfileIcon className="h-3 w-3 mr-1" />
+                      {getProfileTypeLabel(selectedProfile.type)}
+                    </div>
+                  </div>
+                </div>
+                
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Message personnalisé (recommandé par l'IA)
+                  Votre message
                 </label>
                 <textarea
-                  value={connectionMessage}
-                  onChange={(e) => setConnectionMessage(e.target.value)}
-                  placeholder="Bonjour, j'ai remarqué que nous partageons des intérêts communs dans le domaine de... J'aimerais échanger avec vous sur..."
+                  value={contactMessage}
+                  onChange={(e) => setContactMessage(e.target.value)}
+                  placeholder={`Bonjour ${selectedProfile.firstName},\n\nJ'ai remarqué que nous partageons des intérêts communs dans le domaine de ${selectedProfile.sector}. J'aimerais échanger avec vous sur...`}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  rows={4}
+                  rows={5}
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  💡 L'IA suggère de personnaliser votre message pour augmenter vos chances d'acceptation
+                  💡 Conseil IA: Personnalisez votre message en mentionnant vos intérêts communs
                 </p>
               </div>
               
@@ -779,14 +828,17 @@ export const NetworkingPage: React.FC = () => {
                 <Button 
                   variant="outline" 
                   onClick={() => {
-                    setShowConnectionModal(false);
+                    setShowContactModal(false);
                     setSelectedProfile(null);
-                    setConnectionMessage('');
+                    setContactMessage('');
                   }}
                 >
                   Annuler
                 </Button>
-                <Button onClick={() => handleSendConnectionRequest(selectedProfile)}>
+                <Button 
+                  onClick={handleSendMessage}
+                  disabled={!contactMessage.trim()}
+                >
                   <Send className="h-4 w-4 mr-2" />
                   Envoyer
                 </Button>
