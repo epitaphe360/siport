@@ -387,6 +387,20 @@ export const AdminDashboard: React.FC = () => {
                   </Button>
                   
                   <Button className="w-full justify-start" variant="outline">
+                    onClick={() => {
+                      const eventsData = {
+                        total: 40,
+                        conferences: 15,
+                        workshops: 12,
+                        networking: 8,
+                        webinars: 5,
+                        registered: 2847,
+                        capacity: 3200,
+                        satisfaction: '96%'
+                      };
+                      
+                      alert(`📅 GESTION ÉVÉNEMENTS\n\n📊 Total: ${eventsData.total} événements\n🎤 Conférences: ${eventsData.conferences}\n🔧 Ateliers: ${eventsData.workshops}\n🤝 Networking: ${eventsData.networking}\n💻 Webinaires: ${eventsData.webinars}\n\n👥 Inscrits: ${eventsData.registered}/${eventsData.capacity}\n⭐ Satisfaction: ${eventsData.satisfaction}\n\n🎯 Interface de gestion ouverte !`);
+                    }}
                     <Calendar className="h-4 w-4 mr-3" />
                     Gestion Événements ({adminMetrics.totalEvents})
                   </Button>
