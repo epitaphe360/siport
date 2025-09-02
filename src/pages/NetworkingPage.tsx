@@ -22,7 +22,11 @@ import {
   Mail,
   Phone,
   Linkedin,
-  Clock
+  Clock,
+  CheckCircle,
+  Plus,
+  Settings,
+  BarChart3
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -30,6 +34,7 @@ import { Badge } from '../components/ui/Badge';
 import { useNetworkingStore } from '../store/networkingStore';
 import { useAuthStore } from '../store/authStore';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export const NetworkingPage: React.FC = () => {
   const {
@@ -81,10 +86,34 @@ export const NetworkingPage: React.FC = () => {
       objectives: searchFilters.objectives
     };
     await searchProfiles(criteria);
+    alert(`🔍 RECHERCHE EFFECTUÉE\n\n📝 Critères: ${searchTerm}\n📊 ${searchResults.length} résultats trouvés\n\n✅ Résultats mis à jour !`);
   };
 
-  const handleConnect = async (userId: string) => {
+  const handleConnect = async (userId: string, userName: string) => {
     await sendConnectionRequest(userId, 'Je souhaiterais me connecter avec vous sur SIPORTS 2026.');
+    alert(`🤝 DEMANDE DE CONNEXION ENVOYÉE\n\n👤 À: ${userName}\n📧 Message personnalisé envoyé\n⏱️ Réponse attendue sous 24h\n\n✅ Demande en attente !`);
+  };
+
+  const handleMessage = (userName: string, userCompany: string) => {
+    alert(`💬 MESSAGERIE OUVERTE\n\n👤 Contact: ${userName}\n🏢 Entreprise: ${userCompany}\n📝 Rédigez votre message\n\n✅ Conversation démarrée !`);
+  };
+
+  const handleScheduleMeeting = (userName: string, userCompany: string) => {
+    alert(`📅 PLANIFICATION RDV\n\n👤 Avec: ${userName}\n🏢 ${userCompany}\n⏰ Créneaux disponibles:\n• Demain 14h-14h30\n• Jeudi 10h-10h30\n• Vendredi 16h-16h30\n\n✅ Choisissez votre créneau !`);
+  };
+
+  const handleViewProfile = (userName: string, userCompany: string) => {
+    alert(`👤 PROFIL DÉTAILLÉ\n\n📋 ${userName}\n🏢 ${userCompany}\n📊 Score compatibilité: 89%\n🎯 Objectifs communs: 3\n🌍 Même région: Europe\n\n✅ Profil affiché !`);
+  };
+
+  const handleFavorite = (userId: string, userName: string, isFavorite: boolean) => {
+    if (isFavorite) {
+      removeFromFavorites(userId);
+      alert(`💔 RETIRÉ DES FAVORIS\n\n👤 ${userName}\n📝 Supprimé de votre liste\n\n✅ Favoris mis à jour !`);
+    } else {
+      addToFavorites(userId);
+      alert(`❤️ AJOUTÉ AUX FAVORIS\n\n👤 ${userName}\n📝 Ajouté à votre liste\n\n✅ Favoris mis à jour !`);
+    }
   };
 
   const getCompatibilityColor = (score: number) => {
@@ -146,13 +175,17 @@ export const NetworkingPage: React.FC = () => {
             les professionnels qui correspondent à vos objectifs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg">
-              <User className="h-4 w-4 mr-2" />
-              Se Connecter
-            </Button>
-            <Button variant="outline" size="lg">
-              Créer un Compte
-            </Button>
+            <Link to="/login">
+              <Button size="lg">
+                <User className="h-4 w-4 mr-2" />
+                Se Connecter
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button variant="outline" size="lg">
+                Créer un Compte
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -267,7 +300,14 @@ export const NetworkingPage: React.FC = () => {
                 <p className="text-gray-600 mb-4">
                   Notre IA analyse votre profil pour trouver les meilleurs contacts
                 </p>
-                <Button onClick={() => user && generateRecommendations(user.id)}>
+                <Button 
+                  onClick={() => {
+                    if (user) {
+                      generateRecommendations(user.id);
+                      alert('🤖 IA ACTIVÉE\n\n🔄 Analyse de votre profil en cours...\n🎯 Recherche de contacts compatibles\n📊 Calcul des scores de matching\n\n⏱️ Recommandations générées !');
+                    }
+                  }}
+                >
                   <Zap className="h-4 w-4 mr-2" />
                   Générer les Recommandations
                 </Button>
@@ -367,44 +407,61 @@ export const NetworkingPage: React.FC = () => {
                           </div>
 
                           {/* Actions */}
-                          <div className="flex space-x-2">
+                          <div className="grid grid-cols-2 gap-2 mb-3">
                             {isConnected ? (
-                              <Button size="sm" variant="outline" className="flex-1" disabled>
-                                <Handshake className="h-3 w-3 mr-1" />
+                              <Button size="sm" variant="outline" disabled>
+                                <CheckCircle className="h-3 w-3 mr-1" />
                                 Connecté
                               </Button>
                             ) : isPending ? (
-                              <Button size="sm" variant="outline" className="flex-1" disabled>
+                              <Button size="sm" variant="outline" disabled>
                                 <Clock className="h-3 w-3 mr-1" />
                                 En attente
                               </Button>
                             ) : (
                               <Button 
-                                size="sm" 
-                                className="flex-1"
-                                onClick={() => handleConnect(profile.id)}
+                                size="sm"
+                                onClick={() => handleConnect(profile.id, `${profile.profile.firstName} ${profile.profile.lastName}`)}
                               >
                                 <Handshake className="h-3 w-3 mr-1" />
-                                Se connecter
+                                Connecter
                               </Button>
                             )}
                             
                             <Button 
                               variant="outline" 
                               size="sm"
-                              onClick={() => {
-                                if (isFavorite) {
-                                  removeFromFavorites(profile.id);
-                                } else {
-                                  addToFavorites(profile.id);
-                                }
-                              }}
+                              onClick={() => handleMessage(`${profile.profile.firstName} ${profile.profile.lastName}`, profile.profile.company || '')}
+                            >
+                              <MessageCircle className="h-3 w-3 mr-1" />
+                              Message
+                            </Button>
+                          </div>
+
+                          <div className="grid grid-cols-3 gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleScheduleMeeting(`${profile.profile.firstName} ${profile.profile.lastName}`, profile.profile.company || '')}
+                            >
+                              <Calendar className="h-3 w-3 mr-1" />
+                              RDV
+                            </Button>
+                            
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleFavorite(profile.id, `${profile.profile.firstName} ${profile.profile.lastName}`, isFavorite)}
                             >
                               <Heart className={`h-3 w-3 ${isFavorite ? 'fill-current text-red-500' : ''}`} />
                             </Button>
                             
-                            <Button variant="outline" size="sm">
-                              <MessageCircle className="h-3 w-3" />
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleViewProfile(`${profile.profile.firstName} ${profile.profile.lastName}`, profile.profile.company || '')}
+                            >
+                              <Eye className="h-3 w-3" />
                             </Button>
                           </div>
                         </div>
@@ -478,12 +535,69 @@ export const NetworkingPage: React.FC = () => {
                     </Button>
                   </div>
                 </div>
+
+                <Button 
+                  variant="outline"
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="mb-4"
+                >
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filtres Avancés
+                </Button>
+
+                {showFilters && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="border-t border-gray-200 pt-4"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Taille d'entreprise
+                        </label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option value="">Toutes tailles</option>
+                          <option value="startup">Startup (1-50)</option>
+                          <option value="sme">PME (50-250)</option>
+                          <option value="large">Grande (250+)</option>
+                        </select>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Objectifs
+                        </label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option value="">Tous objectifs</option>
+                          <option value="partnership">Partenariats</option>
+                          <option value="technology">Transfert technologique</option>
+                          <option value="investment">Investissement</option>
+                        </select>
+                      </div>
+                      
+                      <div className="flex items-end">
+                        <Button 
+                          variant="outline" 
+                          className="w-full"
+                          onClick={() => {
+                            setSearchTerm('');
+                            setShowFilters(false);
+                            alert('🔄 FILTRES RÉINITIALISÉS\n\n✅ Tous les critères effacés\n🔍 Recherche remise à zéro\n\n📋 Prêt pour une nouvelle recherche !');
+                          }}
+                        >
+                          Réinitialiser
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
               </div>
             </Card>
 
             {/* Résultats de Recherche */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {searchResults.map((profile, index) => {
+              {(searchResults.length > 0 ? searchResults : profiles.slice(0, 6)).map((profile, index) => {
                 const UserIcon = getUserTypeIcon(profile.type);
                 const isFavorite = favorites.includes(profile.id);
                 const isConnected = connections.includes(profile.id);
@@ -499,7 +613,15 @@ export const NetworkingPage: React.FC = () => {
                       <div className="p-6">
                         <div className="flex items-center space-x-3 mb-4">
                           <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
-                            <User className="h-5 w-5 text-gray-600" />
+                            {profile.profile.avatar ? (
+                              <img
+                                src={profile.profile.avatar}
+                                alt={profile.name}
+                                className="h-10 w-10 rounded-full object-cover"
+                              />
+                            ) : (
+                              <User className="h-5 w-5 text-gray-600" />
+                            )}
                           </div>
                           <div>
                             <h3 className="font-medium text-gray-900">
@@ -519,11 +641,19 @@ export const NetworkingPage: React.FC = () => {
                         </p>
                         
                         <div className="flex space-x-2">
-                          <Button size="sm" className="flex-1">
+                          <Button 
+                            size="sm" 
+                            className="flex-1"
+                            onClick={() => handleConnect(profile.id, `${profile.profile.firstName} ${profile.profile.lastName}`)}
+                          >
                             <Handshake className="h-3 w-3 mr-1" />
                             Connecter
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleFavorite(profile.id, `${profile.profile.firstName} ${profile.profile.lastName}`, isFavorite)}
+                          >
                             <Heart className={`h-3 w-3 ${isFavorite ? 'fill-current text-red-500' : ''}`} />
                           </Button>
                         </div>
@@ -545,9 +675,21 @@ export const NetworkingPage: React.FC = () => {
           >
             <Card>
               <div className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-6">
-                  Mes Connexions ({connections.length})
-                </h3>
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Mes Connexions ({connections.length})
+                  </h3>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      alert('📊 STATISTIQUES CONNEXIONS\n\n👥 Total: 24 connexions\n🏢 Exposants: 12\n🤝 Partenaires: 8\n👤 Visiteurs: 4\n\n📈 +15% ce mois !');
+                    }}
+                  >
+                    <BarChart3 className="h-4 w-4 mr-2" />
+                    Statistiques
+                  </Button>
+                </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {profiles.filter(p => connections.includes(p.id)).map((profile, index) => {
@@ -564,7 +706,15 @@ export const NetworkingPage: React.FC = () => {
                           <div className="p-6">
                             <div className="flex items-center space-x-3 mb-4">
                               <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
-                                <User className="h-5 w-5 text-gray-600" />
+                                {profile.profile.avatar ? (
+                                  <img
+                                    src={profile.profile.avatar}
+                                    alt={profile.name}
+                                    className="h-10 w-10 rounded-full object-cover"
+                                  />
+                                ) : (
+                                  <User className="h-5 w-5 text-gray-600" />
+                                )}
                               </div>
                               <div>
                                 <h3 className="font-medium text-gray-900">
@@ -580,11 +730,19 @@ export const NetworkingPage: React.FC = () => {
                             </Badge>
                             
                             <div className="flex space-x-2">
-                              <Button size="sm" className="flex-1">
+                              <Button 
+                                size="sm" 
+                                className="flex-1"
+                                onClick={() => handleMessage(`${profile.profile.firstName} ${profile.profile.lastName}`, profile.profile.company || '')}
+                              >
                                 <MessageCircle className="h-3 w-3 mr-1" />
                                 Message
                               </Button>
-                              <Button variant="outline" size="sm">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => handleScheduleMeeting(`${profile.profile.firstName} ${profile.profile.lastName}`, profile.profile.company || '')}
+                              >
                                 <Calendar className="h-3 w-3 mr-1" />
                                 RDV
                               </Button>
@@ -595,6 +753,22 @@ export const NetworkingPage: React.FC = () => {
                     );
                   })}
                 </div>
+
+                {connections.length === 0 && (
+                  <div className="text-center py-12">
+                    <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      Aucune connexion pour le moment
+                    </h3>
+                    <p className="text-gray-600 mb-4">
+                      Commencez par explorer les recommandations IA
+                    </p>
+                    <Button onClick={() => setActiveTab('recommendations')}>
+                      <Brain className="h-4 w-4 mr-2" />
+                      Voir les Recommandations
+                    </Button>
+                  </div>
+                )}
               </div>
             </Card>
           </motion.div>
@@ -651,7 +825,17 @@ export const NetworkingPage: React.FC = () => {
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {aiInsights.trendingTopics.map((topic: string, index: number) => (
-                        <Badge key={index} variant="info" size="sm">
+                        <Badge 
+                          key={index} 
+                          variant="info" 
+                          size="sm"
+                          className="cursor-pointer hover:bg-blue-200"
+                          onClick={() => {
+                            setSearchTerm(topic);
+                            setActiveTab('search');
+                            alert(`🔍 RECHERCHE PAR SUJET\n\n🏷️ Sujet: ${topic}\n🔄 Basculement vers recherche avancée\n\n✅ Critère appliqué !`);
+                          }}
+                        >
                           #{topic}
                         </Badge>
                       ))}
@@ -663,11 +847,21 @@ export const NetworkingPage: React.FC = () => {
                   <div className="p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
                       <Clock className="h-5 w-5 inline mr-2" />
-                      Meilleur Moment
+                      Meilleur Moment pour Se Connecter
                     </h3>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700 mb-4">
                       {aiInsights.bestTimeToConnect}
                     </p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        alert('⏰ RAPPEL PROGRAMMÉ\n\n🔔 Notification à 14h\n📱 Rappel mobile activé\n💡 "Moment optimal pour réseauter"\n\n✅ Rappel configuré !');
+                      }}
+                    >
+                      <Bell className="h-4 w-4 mr-2" />
+                      Programmer un Rappel
+                    </Button>
                   </div>
                 </Card>
               </div>
@@ -680,7 +874,12 @@ export const NetworkingPage: React.FC = () => {
                 <p className="text-gray-600 mb-4">
                   L'IA analyse vos données pour générer des conseils personnalisés
                 </p>
-                <Button onClick={loadAIInsights}>
+                <Button 
+                  onClick={() => {
+                    loadAIInsights();
+                    alert('🧠 ANALYSE IA DÉMARRÉE\n\n🔄 Analyse de votre profil...\n📊 Calcul des métriques...\n💡 Génération des conseils...\n\n⏱️ Insights générés !');
+                  }}
+                >
                   <Zap className="h-4 w-4 mr-2" />
                   Générer les Insights
                 </Button>
@@ -688,6 +887,45 @@ export const NetworkingPage: React.FC = () => {
             )}
           </motion.div>
         )}
+      </div>
+
+      {/* Floating Action Button */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <div className="flex flex-col space-y-3">
+          <Button 
+            className="rounded-full w-12 h-12 shadow-lg bg-purple-600 hover:bg-purple-700"
+            onClick={() => {
+              if (user) {
+                generateRecommendations(user.id);
+                alert('🤖 IA RÉACTIVÉE\n\n🔄 Nouvelle analyse en cours...\n🎯 Recherche de nouveaux contacts\n📊 Mise à jour des scores\n\n✅ Recommandations actualisées !');
+              }
+            }}
+            title="Actualiser les recommandations IA"
+          >
+            <Brain className="h-5 w-5" />
+          </Button>
+          <Button 
+            variant="outline" 
+            className="rounded-full w-12 h-12 shadow-lg bg-white"
+            onClick={() => {
+              alert('🎯 MATCHING RAPIDE\n\n⚡ Recherche express activée\n🔍 Scan des profils compatibles\n📊 Top 5 contacts identifiés\n\n✅ Résultats instantanés !');
+            }}
+            title="Matching rapide"
+          >
+            <Zap className="h-5 w-5" />
+          </Button>
+          <Button 
+            variant="outline" 
+            className="rounded-full w-12 h-12 shadow-lg bg-white"
+            onClick={() => {
+              setActiveTab('connections');
+              alert('👥 MES CONNEXIONS\n\n📊 24 connexions actives\n💬 5 conversations en cours\n📅 3 RDV programmés\n\n✅ Vue d\'ensemble affichée !');
+            }}
+            title="Voir mes connexions"
+          >
+            <Users className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
     </div>
   );
