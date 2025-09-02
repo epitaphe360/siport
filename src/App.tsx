@@ -31,8 +31,12 @@ import { MiniSiteEditor } from './components/minisite/MiniSiteEditor';
 import { NewsPage } from './pages/NewsPage';
 import { ExhibitorCreationSimulator } from './components/admin/ExhibitorCreationSimulator';
 import { UserManagementPage } from './pages/UserManagementPage';
+import { ChatBot } from './components/chatbot/ChatBot';
+import { ChatBotToggle } from './components/chatbot/ChatBotToggle';
 
 function App() {
+  const [isChatBotOpen, setIsChatBotOpen] = React.useState(false);
+
   return (
     <Router>
       <div className="min-h-screen bg-white flex flex-col">
@@ -73,6 +77,20 @@ function App() {
           </Routes>
         </main>
         <Footer />
+        
+        {/* ChatBot */}
+        <ChatBot 
+          isOpen={isChatBotOpen} 
+          onToggle={() => setIsChatBotOpen(!isChatBotOpen)} 
+        />
+        
+        {/* ChatBot Toggle Button */}
+        {!isChatBotOpen && (
+          <ChatBotToggle 
+            onClick={() => setIsChatBotOpen(true)}
+            hasUnreadMessages={false}
+          />
+        )}
       </div>
     </Router>
   );
