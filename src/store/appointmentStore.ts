@@ -169,7 +169,11 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
       ...slot,
       id: Date.now().toString()
     };
-    set({ timeSlots: [...timeSlots, newSlot] });
+    
+    // Simulation d'appel API
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    set({ timeSlots: [newSlot, ...timeSlots] });
   },
 
   updateTimeSlot: async (slotId, updates) => {

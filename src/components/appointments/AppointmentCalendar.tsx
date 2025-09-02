@@ -111,6 +111,18 @@ export const AppointmentCalendar: React.FC = () => {
   };
 
   const handleCreateSlot = async () => {
+    // Validation des données
+    if (!newSlotData.date || !newSlotData.startTime || !newSlotData.endTime) {
+      alert('❌ Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+
+    // Vérifier que l'heure de fin est après l'heure de début
+    if (newSlotData.startTime >= newSlotData.endTime) {
+      alert('❌ L\'heure de fin doit être après l\'heure de début');
+      return;
+    }
+
     const slotData = {
       date: new Date(newSlotData.date),
       startTime: newSlotData.startTime,
@@ -123,20 +135,79 @@ export const AppointmentCalendar: React.FC = () => {
       location: newSlotData.location || undefined
     };
     
-    await createTimeSlot(slotData);
-    setShowCreateSlotModal(false);
-    setNewSlotData({
-      date: new Date().toISOString().split('T')[0],
-      startTime: '09:00',
-      endTime: '09:30',
-      duration: 30,
-      type: 'in-person',
-      maxBookings: 1,
-      location: ''
-    });
+    try {
+      await createTimeSlot(slotData);
+      
+      alert(`✅ CRÉNEAU CRÉÉ AVEC SUCCÈS\n\n📅 Date: ${new Date(newSlotData.date).toLocaleDateString('fr-FR')}\n⏰ Horaire: ${newSlotData.startTime} - ${newSlotData.endTime}\n📍 Type: ${newSlotData.type === 'in-person' ? 'Présentiel' : newSlotData.type === 'virtual' ? 'Virtuel' : 'Hybride'}\n👥 Capacité: ${newSlotData.maxBookings} personne(s)\n${newSlotData.location ? `📍 Lieu: ${newSlotData.location}` : ''}\n\n🎯 Créneau disponible pour réservation !`);
+      
+      setShowCreateSlotModal(false);
+      setNewSlotData({
+        date: new Date().toISOString().split('T')[0],
+        startTime: '09:00',
+        endTime: '09:30',
+        duration: 30,
+        type: 'in-person',
+        maxBookings: 1,
+        location: ''
+      });
+      
+      // Recharger les créneaux
+      fetchTimeSlots(exhibitorId);
+    } catch (error) {
+      alert('❌ Erreur lors de la création du créneau. Veuillez réessayer.');
+    }
+  };
+
+  const handleBookSlotImproved = async () => {
+    if (!selectedSlot) return;
     
-    // Recharger les créneaux
-    fetchTimeSlots(exhibitorId);
+    const slot = timeSlots.find(s => s.id === selectedSlot);
+    if (!slot) {
+      alert('❌ Créneau non trouvé');
+      return;
+    }
+    
+    try {
+      await bookAppointment(selectedSlot, bookingMessage);
+      
+      alert(`✅ RENDEZ-VOUS RÉSERVÉ\n\n📅 Date: ${new Date(slot.date).toLocaleDateString('fr-FR')}\n⏰ Horaire: ${slot.startTime} - ${slot.endTime}\n📍 Type: ${slot.type === 'in-person' ? 'Présentiel' : slot.type === 'virtual' ? 'Virtuel' : 'Hybride'}\n${slot.location ? `📍 Lieu: ${slot.location}` : ''}\n${bookingMessage ? `💬 Message: ${bookingMessage}` : ''}\n\n📧 Confirmation envoyée par email !`);
+      
+      setShowBookingModal(false);
+      setSelectedSlot(null);
+      setBookingMessage('');
+    } catch (error) {
+      alert('❌ Erreur lors de la réservation. Veuillez réessayer.');
+    }
+  };
+
+  const handleConfirmAppointment = async (appointmentId: string) => {
+    try {
+      await updateAppointmentStatus(appointmentId, 'confirmed');
+      alert('✅ RENDEZ-VOUS CONFIRMÉ\n\n📅 Le rendez-vous a été confirmé\n📧 Notification envoyée au visiteur\n📱 Rappel programmé\n\n🎯 Rendez-vous validé !');
+    } catch (error) {
+      alert('❌ Erreur lors de la confirmation');
+    }
+  };
+
+  const handleRejectAppointment = async (appointmentId: string) => {
+    const reason = prompt('Motif du refus (optionnel):');
+    try {
+      await cancelAppointment(appointmentId);
+      alert(`❌ RENDEZ-VOUS REFUSÉ\n\n📅 Le rendez-vous a été annulé\n${reason ? `💬 Motif: ${reason}` : ''}\n📧 Notification envoyée au visiteur\n\n🔄 Créneau libéré pour d'autres réservations`);
+    } catch (error) {
+      alert('❌ Erreur lors du refus');
+    }
+  };
+
+  const handleCancelAppointment = async (appointmentId: string) => {
+    if (confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous ?')) {
+      try {
+        await cancelAppointment(appointmentId);
+        alert('✅ RENDEZ-VOUS ANNULÉ\n\n📅 Le rendez-vous a été annulé\n📧 Notification envoyée\n🔄 Créneau libéré\n\n✅ Annulation effectuée !');
+      } catch (error) {
+        alert('❌ Erreur lors de l\'annulation');
+      }
+    }
   };
 
   const todaySlots = timeSlots.filter(slot => {
@@ -397,7 +468,7 @@ export const AppointmentCalendar: React.FC = () => {
                                 <Button 
                                   size="sm" 
                                   variant="outline"
-                                  onClick={() => updateAppointmentStatus(appointment.id, 'confirmed')}
+                                  onClick={() => handleConfirmAppointment(appointment.id)}
                                 >
                                   <Check className="h-3 w-3 mr-1" />
                                   Confirmer
@@ -405,7 +476,7 @@ export const AppointmentCalendar: React.FC = () => {
                                 <Button 
                                   size="sm" 
                                   variant="outline"
-                                  onClick={() => cancelAppointment(appointment.id)}
+                                  onClick={() => handleRejectAppointment(appointment.id)}
                                 >
                                   <X className="h-3 w-3 mr-1" />
                                   Refuser
@@ -417,7 +488,7 @@ export const AppointmentCalendar: React.FC = () => {
                               <Button 
                                 size="sm" 
                                 variant="outline"
-                                onClick={() => cancelAppointment(appointment.id)}
+                                onClick={() => handleCancelAppointment(appointment.id)}
                               >
                                 <X className="h-3 w-3 mr-1" />
                                 Annuler
@@ -471,7 +542,7 @@ export const AppointmentCalendar: React.FC = () => {
                   >
                     Annuler
                   </Button>
-                  <Button onClick={handleBookSlot}>
+                  <Button onClick={handleBookSlotImproved}>
                     Réserver
                   </Button>
                 </div>
