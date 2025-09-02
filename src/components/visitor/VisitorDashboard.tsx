@@ -133,6 +133,11 @@ export const NetworkingPage: React.FC = () => {
     if (!selectedTimeSlot || !selectedExhibitorForRDV) {
       alert('❌ Veuillez sélectionner un créneau horaire');
       return;
-                  const UserIcon = getUserTypeIcon(profile.type);
-  );
+    }
+    const UserIcon = getUserTypeIcon(profile.type);
+  };
+
+  const getUserTypeIcon = (type: string) => {
+    return User;
+  };
 };
