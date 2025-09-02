@@ -537,6 +537,7 @@ ${badgeData.accessRights.map(right => `• ${right}`).join('\n')}
                       <Users className="h-4 w-4 mr-2" />
                       Réseautage IA
                     </Button>
+                  </Link>
                 </div>
 
                 <div className="space-y-4">
