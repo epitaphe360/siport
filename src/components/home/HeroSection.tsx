@@ -2,9 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Users, Building2, ArrowRight } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { CountdownModal } from '../ui/CountdownModal';
 import { motion } from 'framer-motion';
 
 export const HeroSection: React.FC = () => {
+  const [showCountdown, setShowCountdown] = React.useState(false);
+
   return (
     <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white overflow-hidden">
       {/* Background Pattern */}
@@ -86,14 +89,7 @@ export const HeroSection: React.FC = () => {
                 variant="outline" 
                 size="lg" 
                 className="border-white text-white hover:bg-white hover:text-blue-900 w-full sm:w-auto"
-                onClick={() => {
-                  const salonDate = new Date('2026-02-05T09:30:00');
-                  const now = new Date();
-                  const diffTime = salonDate.getTime() - now.getTime();
-                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                  
-                  alert(`⏰ COMPTE À REBOURS SIPORTS 2026\n\n📅 Ouverture: 5 février 2026 à 9h30\n⏳ Dans ${diffDays} jours\n📍 El Jadida, Maroc\n\n🎯 Préparez-vous pour le plus grand salon portuaire !`);
-                }}
+                onClick={() => setShowCountdown(true)}
               >
                 <Calendar className="mr-2 h-5 w-5" />
                 Compte à Rebours
@@ -178,6 +174,12 @@ export const HeroSection: React.FC = () => {
           />
         </svg>
       </div>
+
+      {/* Countdown Modal */}
+      <CountdownModal 
+        isOpen={showCountdown} 
+        onClose={() => setShowCountdown(false)} 
+      />
     </section>
   );
 };
