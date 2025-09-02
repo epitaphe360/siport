@@ -164,14 +164,6 @@ export const FeaturedExhibitors: React.FC = () => {
                       </Button>
                     </Link>
                     {exhibitor.website && (
-                      <a
-                        href={exhibitor.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
                     )}
                   </div>
                 </div>
