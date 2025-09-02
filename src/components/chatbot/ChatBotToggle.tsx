@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MessageCircle, Bot, Sparkles } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ChatBotToggleProps {
   onClick: () => void;
