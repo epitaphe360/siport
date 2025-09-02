@@ -91,12 +91,12 @@ export const HeroSection: React.FC = () => {
                     key={timeLeft.days}
                     initial={{ scale: 1.1 }}
                     animate={{ scale: 1 }}
-                    className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 shadow-2xl text-center"
+                    className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-4 shadow-2xl text-center"
                   >
-                    <div className="text-4xl font-bold text-white mb-2">
+                    <div className="text-3xl font-bold text-white mb-1">
                       {formatNumber(timeLeft.days)}
                     </div>
-                    <div className="text-blue-100 text-xs font-medium uppercase">
+                    <div className="text-blue-100 text-xs font-medium uppercase tracking-wide">
                       {timeLeft.days <= 1 ? 'Jour' : 'Jours'}
                     </div>
                   </motion.div>
@@ -105,12 +105,12 @@ export const HeroSection: React.FC = () => {
                     key={timeLeft.hours}
                     initial={{ scale: 1.1 }}
                     animate={{ scale: 1 }}
-                    className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 shadow-2xl text-center"
+                    className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-4 shadow-2xl text-center"
                   >
-                    <div className="text-4xl font-bold text-white mb-2">
+                    <div className="text-3xl font-bold text-white mb-1">
                       {formatNumber(timeLeft.hours)}
                     </div>
-                    <div className="text-purple-100 text-xs font-medium uppercase">
+                    <div className="text-purple-100 text-xs font-medium uppercase tracking-wide">
                       {timeLeft.hours <= 1 ? 'Heure' : 'Heures'}
                     </div>
                   </motion.div>
@@ -119,12 +119,12 @@ export const HeroSection: React.FC = () => {
                     key={timeLeft.minutes}
                     initial={{ scale: 1.1 }}
                     animate={{ scale: 1 }}
-                    className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 shadow-2xl text-center"
+                    className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-4 shadow-2xl text-center"
                   >
-                    <div className="text-4xl font-bold text-white mb-2">
+                    <div className="text-3xl font-bold text-white mb-1">
                       {formatNumber(timeLeft.minutes)}
                     </div>
-                    <div className="text-green-100 text-xs font-medium uppercase">
+                    <div className="text-green-100 text-xs font-medium uppercase tracking-wide">
                       {timeLeft.minutes <= 1 ? 'Minute' : 'Minutes'}
                     </div>
                   </motion.div>
@@ -133,12 +133,12 @@ export const HeroSection: React.FC = () => {
                     key={timeLeft.seconds}
                     initial={{ scale: 1.1 }}
                     animate={{ scale: 1 }}
-                    className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 shadow-2xl text-center"
+                    className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-4 shadow-2xl text-center"
                   >
-                    <div className="text-4xl font-bold text-white mb-2">
+                    <div className="text-3xl font-bold text-white mb-1">
                       {formatNumber(timeLeft.seconds)}
                     </div>
-                    <div className="text-orange-100 text-xs font-medium uppercase">
+                    <div className="text-orange-100 text-xs font-medium uppercase tracking-wide">
                       {timeLeft.seconds <= 1 ? 'Seconde' : 'Secondes'}
                     </div>
                   </motion.div>
