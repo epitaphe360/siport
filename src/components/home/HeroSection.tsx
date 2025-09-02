@@ -38,10 +38,6 @@ export const HeroSection: React.FC = () => {
     return num.toString().padStart(2, '0');
   };
 
-  const easeOutQuart = (t: number) => {
-    return 1 - Math.pow(1 - t, 4);
-  };
-
   return (
     <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white overflow-hidden">
       {/* Background Pattern */}
@@ -82,109 +78,78 @@ export const HeroSection: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="mb-8"
             >
-              <div className="relative overflow-hidden">
-                {/* Background avec effet de particules */}
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 via-purple-600/20 to-pink-600/20 rounded-3xl"></div>
-                <div className="absolute inset-0 bg-black/10 rounded-3xl backdrop-blur-xl"></div>
-                
-                {/* Bordure animée */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 p-[2px]">
-                  <div className="h-full w-full bg-white/5 rounded-3xl backdrop-blur-xl"></div>
-                </div>
-                
-                <div className="relative p-8">
-                  <h3 className="text-2xl font-bold text-center mb-2 text-white">
+              <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
+                <h3 className="text-2xl font-bold text-center mb-2 text-white">
                   Ouverture dans :
                 </h3>
-                  <p className="text-center text-blue-200 mb-6 text-sm">
-                    Le plus grand salon portuaire international
-                  </p>
+                <p className="text-center text-blue-200 mb-6 text-sm">
+                  Le plus grand salon portuaire international
+                </p>
                 
-                  <div className="grid grid-cols-4 gap-4">
-                    <motion.div
-                      key={timeLeft.days}
-                      initial={{ scale: 1.1 }}
-                      animate={{ scale: 1 }}
-                      className="relative group"
-                    >
-                      <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 shadow-2xl transform group-hover:scale-105 transition-all duration-300">
-                        <div className="absolute inset-0 bg-white/10 rounded-2xl"></div>
-                        <div className="relative text-center">
-                          <div className="text-4xl font-black text-white mb-2 tracking-tight">
-                            {formatNumber(timeLeft.days)}
-                          </div>
-                          <div className="text-blue-100 text-xs font-semibold uppercase tracking-wider">
-                            {timeLeft.days <= 1 ? 'Jour' : 'Jours'}
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    <motion.div
-                      key={timeLeft.hours}
-                      initial={{ scale: 1.1 }}
-                      animate={{ scale: 1 }}
-                      className="relative group"
-                    >
-                      <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 shadow-2xl transform group-hover:scale-105 transition-all duration-300">
-                        <div className="absolute inset-0 bg-white/10 rounded-2xl"></div>
-                        <div className="relative text-center">
-                          <div className="text-4xl font-black text-white mb-2 tracking-tight">
-                            {formatNumber(timeLeft.hours)}
-                          </div>
-                          <div className="text-purple-100 text-xs font-semibold uppercase tracking-wider">
-                            {timeLeft.hours <= 1 ? 'Heure' : 'Heures'}
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    <motion.div
-                      key={timeLeft.minutes}
-                      initial={{ scale: 1.1 }}
-                      animate={{ scale: 1 }}
-                      className="relative group"
-                    >
-                      <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 shadow-2xl transform group-hover:scale-105 transition-all duration-300">
-                        <div className="absolute inset-0 bg-white/10 rounded-2xl"></div>
-                        <div className="relative text-center">
-                          <div className="text-4xl font-black text-white mb-2 tracking-tight">
-                            {formatNumber(timeLeft.minutes)}
-                          </div>
-                          <div className="text-green-100 text-xs font-semibold uppercase tracking-wider">
-                            {timeLeft.minutes <= 1 ? 'Minute' : 'Minutes'}
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    <motion.div
-                      key={timeLeft.seconds}
-                      initial={{ scale: 1.1 }}
-                      animate={{ scale: 1 }}
-                      className="relative group"
-                    >
-                      <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 shadow-2xl transform group-hover:scale-105 transition-all duration-300">
-                        <div className="absolute inset-0 bg-white/10 rounded-2xl"></div>
-                        <div className="relative text-center">
-                          <div className="text-4xl font-black text-white mb-2 tracking-tight">
-                            {formatNumber(timeLeft.seconds)}
-                          </div>
-                          <div className="text-orange-100 text-xs font-semibold uppercase tracking-wider">
-                            {timeLeft.seconds <= 1 ? 'Seconde' : 'Secondes'}
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </div>
-                  
-                  <div className="text-center mt-6">
-                    <div className="inline-flex items-center space-x-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
-                      <MapPin className="h-4 w-4 text-white" />
-                      <span className="text-white text-sm font-medium">
-                        Mohammed VI Exhibition Center • El Jadida, Maroc
-                      </span>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <motion.div
+                    key={timeLeft.days}
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-4 shadow-2xl text-center"
+                  >
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {formatNumber(timeLeft.days)}
                     </div>
+                    <div className="text-blue-100 text-xs font-medium uppercase tracking-wide">
+                      {timeLeft.days <= 1 ? 'Jour' : 'Jours'}
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    key={timeLeft.hours}
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-4 shadow-2xl text-center"
+                  >
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {formatNumber(timeLeft.hours)}
+                    </div>
+                    <div className="text-purple-100 text-xs font-medium uppercase tracking-wide">
+                      {timeLeft.hours <= 1 ? 'Heure' : 'Heures'}
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    key={timeLeft.minutes}
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-4 shadow-2xl text-center"
+                  >
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {formatNumber(timeLeft.minutes)}
+                    </div>
+                    <div className="text-green-100 text-xs font-medium uppercase tracking-wide">
+                      {timeLeft.minutes <= 1 ? 'Minute' : 'Minutes'}
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    key={timeLeft.seconds}
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-4 shadow-2xl text-center"
+                  >
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {formatNumber(timeLeft.seconds)}
+                    </div>
+                    <div className="text-orange-100 text-xs font-medium uppercase tracking-wide">
+                      {timeLeft.seconds <= 1 ? 'Seconde' : 'Secondes'}
+                    </div>
+                  </motion.div>
+                </div>
+                
+                <div className="text-center mt-6">
+                  <div className="inline-flex items-center space-x-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
+                    <MapPin className="h-4 w-4 text-white" />
+                    <span className="text-white text-sm font-medium">
+                      Mohammed VI Exhibition Center • El Jadida, Maroc
+                    </span>
                   </div>
                 </div>
               </div>
