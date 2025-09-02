@@ -21,7 +21,8 @@ import {
   Handshake,
   Mail,
   Phone,
-  Linkedin
+  Linkedin,
+  Clock
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
