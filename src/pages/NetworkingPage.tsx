@@ -35,6 +35,7 @@ import { useNetworkingStore } from '../store/networkingStore';
 import { useAuthStore } from '../store/authStore';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 export const NetworkingPage: React.FC = () => {
   const {
@@ -57,16 +58,27 @@ export const NetworkingPage: React.FC = () => {
   } = useNetworkingStore();
 
   const { user, isAuthenticated } = useAuthStore();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<'recommendations' | 'search' | 'connections' | 'insights'>('recommendations');
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [aiInsights, setAiInsights] = useState<any>(null);
+  const [showAppointmentModal, setShowAppointmentModal] = useState(false);
+  const [selectedExhibitorForRDV, setSelectedExhibitorForRDV] = useState<any>(null);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('');
+  const [appointmentMessage, setAppointmentMessage] = useState('');
 
   useEffect(() => {
     if (isAuthenticated && user) {
       fetchProfiles();
       generateRecommendations(user.id);
       loadAIInsights();
+      
+      // Vérifier si on vient pour prendre un RDV
+      const action = searchParams.get('action');
+      if (action === 'book_appointment') {
+        setActiveTab('recommendations');
+      }
     }
   }, [isAuthenticated, user, fetchProfiles, generateRecommendations]);
 
@@ -104,6 +116,42 @@ export const NetworkingPage: React.FC = () => {
 
   const handleViewProfile = (userName: string, userCompany: string) => {
     alert(`👤 PROFIL DÉTAILLÉ\n\n📋 ${userName}\n🏢 ${userCompany}\n📊 Score compatibilité: 89%\n🎯 Objectifs communs: 3\n🌍 Même région: Europe\n\n✅ Profil affiché !`);
+  };
+
+  const handleBookAppointment = (profile: any) => {
+    if (!isAuthenticated) {
+      alert('🔐 CONNEXION REQUISE\n\nVeuillez vous connecter pour prendre rendez-vous avec les exposants.\n\n✅ Redirection vers la page de connexion...');
+      window.location.href = '/login';
+      return;
+    }
+    
+    setSelectedExhibitorForRDV(profile);
+    setShowAppointmentModal(true);
+  };
+
+  const handleConfirmAppointment = () => {
+    if (!selectedTimeSlot || !selectedExhibitorForRDV) {
+      alert('❌ Veuillez sélectionner un créneau horaire');
+      return;
+    }
+    
+    const appointmentData = {
+      exhibitor: `${selectedExhibitorForRDV.profile.firstName} ${selectedExhibitorForRDV.profile.lastName}`,
+      company: selectedExhibitorForRDV.profile.company,
+      timeSlot: selectedTimeSlot,
+      message: appointmentMessage,
+      visitor: `${user?.profile.firstName} ${user?.profile.lastName}`,
+      visitorCompany: user?.profile.company,
+      passType: user?.profile.passType || 'basic',
+      confirmationId: `RDV-${Date.now()}`
+    };
+    
+    alert(`✅ DEMANDE DE RDV ENVOYÉE\n\n🏢 Exposant: ${appointmentData.exhibitor}\n🏢 Société: ${appointmentData.company}\n⏰ Créneau demandé: ${appointmentData.timeSlot}\n👤 Demandeur: ${appointmentData.visitor}\n🏢 Société: ${appointmentData.visitorCompany}\n🎟️ Pass: ${appointmentData.passType}\n\n💬 Message:\n${appointmentData.message || 'Aucun message spécifique'}\n\n📧 Demande envoyée à l'exposant\n🔔 Vous recevrez une confirmation sous 24h\n📋 Référence: ${appointmentData.confirmationId}\n\n✅ Demande de rendez-vous transmise !`);
+    
+    setShowAppointmentModal(false);
+    setSelectedExhibitorForRDV(null);
+    setSelectedTimeSlot('');
+    setAppointmentMessage('');
   };
 
   const handleFavorite = (userId: string, userName: string, isFavorite: boolean) => {
