@@ -262,6 +262,17 @@ export const PartnerDashboard: React.FC = () => {
                   </Button>
                   
                   <Button className="w-full justify-start" variant="outline">
+                    onClick={() => {
+                      const networkingData = {
+                        vipAccess: 'Salon VIP Partenaires',
+                        exclusiveEvents: 4,
+                        premiumContacts: 156,
+                        conciergeService: 'Disponible 24/7',
+                        benefits: ['Accès salon VIP', 'Conciergerie dédiée', 'Networking exclusif', 'Transferts premium']
+                      };
+                      
+                      alert(`👑 NETWORKING VIP PRIVILÉGIÉ\n\n🏛️ Accès: ${networkingData.vipAccess}\n🎪 ${networkingData.exclusiveEvents} événements exclusifs\n👥 ${networkingData.premiumContacts} contacts premium\n🛎️ ${networkingData.conciergeService}\n\n🎯 Avantages VIP:\n${networkingData.benefits.map(b => `• ${b}`).join('\n')}\n\n✨ Expérience partenaire premium !`);
+                    }}
                     <Users className="h-4 w-4 mr-3" />
                     Networking Privilégié
                   </Button>

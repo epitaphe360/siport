@@ -390,15 +390,7 @@ export const ExhibitorDashboard: React.FC = () => {
                     className="w-full justify-start" 
                     variant="outline"
                     onClick={() => {
-                      const innovationData = {
-                        prize: '50,000€',
-                        visibility: 'Médias internationaux',
-                        deadline: '15 janvier 2026',
-                        completion: '80%',
-                        categories: ['Innovation Digitale', 'Développement Durable', 'Efficacité Opérationnelle']
-                      };
-                      
-                      alert(`🏆 CONCOURS INNOVATION SIPORTS\n\n💰 Prix: ${innovationData.prize} + ${innovationData.visibility}\n📅 Date limite: ${innovationData.deadline}\n📋 Dossier: ${innovationData.completion} complété\n\n🎯 Catégories:\n${innovationData.categories.map(c => `• ${c}`).join('\n')}\n\n🚀 Finalisez votre candidature !`);
+                      alert('🏆 CONCOURS INNOVATION\n\n🎯 Participez au concours SIPORTS\n🏅 Prix: 50,000€ + visibilité\n📅 Date limite: 15 janvier\n📋 Dossier: 80% complété\n\n🚀 Finalisez votre candidature !');
                     }}
                   >
                     <Award className="h-4 w-4 mr-3" />
@@ -512,6 +504,20 @@ export const ExhibitorDashboard: React.FC = () => {
               
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <Button variant="outline" size="sm" className="w-full">
+                  onClick={() => {
+                    const analyticsData = {
+                      views: '2,156',
+                      downloads: '89',
+                      leads: '47',
+                      conversion: '4.2%',
+                      engagement: '3m 45s',
+                      satisfaction: '4.8/5',
+                      topPages: ['Produits: 45%', 'À propos: 28%', 'Contact: 27%'],
+                      topCountries: ['France: 32%', 'Maroc: 28%', 'Espagne: 18%']
+                    };
+                    
+                    alert(`📊 RAPPORT DÉTAILLÉ\n\n📈 Performance:\n👁️ Vues: ${analyticsData.views}\n📥 Téléchargements: ${analyticsData.downloads}\n🎯 Leads: ${analyticsData.leads}\n📊 Conversion: ${analyticsData.conversion}\n⏱️ Engagement: ${analyticsData.engagement}\n⭐ Satisfaction: ${analyticsData.satisfaction}\n\n📄 Pages populaires:\n${analyticsData.topPages.join('\n')}\n\n🌍 Top pays:\n${analyticsData.topCountries.join('\n')}`);
+                  }}
                   <BarChart3 className="h-4 w-4 mr-2" />
                   Rapport Détaillé
                 </Button>
