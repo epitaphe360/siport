@@ -402,7 +402,7 @@ export const ExhibitorDetailPage: React.FC = () => {
                     )}
                     
                     <div className="flex space-x-3">
-                      <Button size="sm" className="flex-1">
+                      <Button size="sm" className="flex-1"
                         onClick={() => {
                           const quoteData = {
                             product: product.name,
@@ -413,10 +413,11 @@ export const ExhibitorDetailPage: React.FC = () => {
                           
                           alert(`💰 DEMANDE DE DEVIS\n\n📦 Produit: ${quoteData.product}\n🏢 Fournisseur: ${quoteData.company}\n📋 Catégorie: ${quoteData.category}\n\n📧 Demande envoyée au service commercial\n⏱️ Réponse sous 24h\n\n✅ Devis en préparation !`);
                         }}
+                      >
                         <Target className="h-4 w-4 mr-2" />
                         Demander un devis
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm"
                         onClick={() => {
                           const docData = {
                             product: product.name,
@@ -434,6 +435,7 @@ export const ExhibitorDetailPage: React.FC = () => {
                           
                           alert(`📄 FICHE TECHNIQUE\n\n📦 ${docData.product}\n📋 ${docData.type}\n💾 ${docData.size}\n\n⬇️ Téléchargement démarré !`);
                         }}
+                      >
                         <Download className="h-4 w-4" />
                       </Button>
                     </div>
@@ -490,23 +492,6 @@ export const ExhibitorDetailPage: React.FC = () => {
                         {formatDate(article.date)}
                       </span>
                     </div>
-                    
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                      {article.title}
-                    </h3>
-                    
-                    <p className="text-gray-700 mb-4">
-                      {article.excerpt}
-                    </p>
-                    
-                    <Button 
-                      size="sm"
-                      onClick={() => {
-                        alert(`📰 ARTICLE COMPLET\n\n📝 ${article.title}\n📅 ${formatDate(article.date)}\n🏷️ ${article.category}\n\n${article.excerpt}\n\n✅ Article ouvert !`);
-                      }}
-                    >
-                      Lire la suite
-                    </Button>
                   </div>
                 </Card>
               </motion.div>
@@ -778,7 +763,7 @@ export const ExhibitorDetailPage: React.FC = () => {
                         <MessageCircle className="h-4 w-4 mr-2" />
                         Envoyer le message
                       </Button>
-                      <Button variant="outline">
+                      <Button variant="outline"
                         onClick={() => {
                           const appointmentData = {
                             company: selectedExhibitor?.companyName,
@@ -789,6 +774,7 @@ export const ExhibitorDetailPage: React.FC = () => {
                           
                           alert(`📅 PRISE DE RENDEZ-VOUS\n\n🏢 Avec: ${appointmentData.company}\n👤 Contact: ${appointmentData.contact}\n📧 ${appointmentData.email}\n\n⏰ Créneaux disponibles:\n${appointmentData.availableSlots.map(slot => `• ${slot}`).join('\n')}\n\n📞 Choisissez votre créneau !`);
                         }}
+                      >
                         <Calendar className="h-4 w-4 mr-2" />
                         Prendre RDV
                       </Button>
@@ -816,7 +802,7 @@ export const ExhibitorDetailPage: React.FC = () => {
               Rejoignez plus de 500 ports dans le monde qui font confiance à nos solutions
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50"
                 onClick={() => {
                   const demoData = {
                     company: selectedExhibitor?.companyName,
@@ -827,10 +813,11 @@ export const ExhibitorDetailPage: React.FC = () => {
                   
                   alert(`🎯 DÉMONSTRATION PROGRAMMÉE\n\n🏢 ${demoData.company}\n📦 ${demoData.products} solutions à découvrir\n⏱️ Durée: ${demoData.duration}\n🎥 ${demoData.format}\n\n📅 Rendez-vous confirmé !\n📧 Lien de connexion envoyé par email`);
                 }}
+              >
                 <Target className="h-5 w-5 mr-2" />
                 Demander une démonstration
               </Button>
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
+              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600"
                 onClick={() => {
                   const catalogData = {
                     company: selectedExhibitor?.companyName,
@@ -850,6 +837,7 @@ export const ExhibitorDetailPage: React.FC = () => {
                   
                   alert(`📋 CATALOGUE COMPLET\n\n🏢 ${catalogData.company}\n📦 ${catalogData.products} produits détaillés\n📄 ${catalogData.pages} pages\n💾 ${catalogData.size} - ${catalogData.format}\n\n⬇️ Téléchargement démarré !`);
                 }}
+              >
                 <Download className="h-5 w-5 mr-2" />
                 Télécharger notre catalogue
               </Button>
