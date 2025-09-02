@@ -23,6 +23,7 @@ import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../../store/authStore';
+import { useChatBotStore } from '../../store/chatbotStore';
 
 interface ChatMessage {
   id: string;
@@ -46,6 +47,7 @@ interface ChatBotProps {
 
 export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
   const { user, isAuthenticated } = useAuthStore();
+  const { generateBotResponse } = useChatBotStore();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -118,13 +120,15 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
   const getBotResponse = (userMessage: string): ChatMessage => {
     const message = userMessage.toLowerCase();
     const timestamp = new Date();
+    const userType = user?.type || 'visitor';
+    const firstName = user?.profile.firstName || 'cher utilisateur';
 
     // Réponses selon l'authentification
     if (!isAuthenticated) {
       if (message.includes('connecter') || message.includes('connexion')) {
         return {
           id: Date.now().toString(),
-          content: "🔐 Pour vous connecter, cliquez sur le bouton 'Se connecter' en haut à droite de la page. Vous pouvez utiliser votre email ou vous connecter avec Google.",
+          content: "🔐 Pour vous connecter, cliquez sur le bouton 'Connexion' en haut à droite de la page. Vous pouvez utiliser votre email ou vous connecter avec Google pour accéder à toutes les fonctionnalités SIPORTS !",
           isBot: true,
           timestamp,
           type: 'suggestion',
@@ -142,7 +146,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
       if (message.includes('exposant') || message.includes('entreprise')) {
         return {
           id: Date.now().toString(),
-          content: "🏢 Je vois que vous vous intéressez aux exposants ! Voici les 330+ entreprises qui participent à SIPORTS 2026. Connectez-vous pour accéder aux fonctionnalités de networking avancées.",
+          content: "🏢 SIPORTS 2026 accueille 330+ exposants internationaux ! Découvrez les leaders de l'industrie portuaire. Connectez-vous pour accéder au réseautage intelligent et aux RDV B2B.",
           isBot: true,
           timestamp,
           type: 'suggestion',
@@ -163,24 +167,52 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
         };
       }
 
+      if (message.includes('salon') || message.includes('siports') || message.includes('information')) {
+        return {
+          id: Date.now().toString(),
+          content: "🚢 SIPORTS 2026 - Le plus grand salon portuaire international ! 📅 5-7 Février 2026 à El Jadida, Maroc. 330+ exposants, 6000+ visiteurs de 40 pays, 40+ conférences !",
+          isBot: true,
+          timestamp,
+          type: 'quick_reply',
+          quickReplies: ["Voir le programme", "Liste des exposants", "S'inscrire", "Informations pratiques"]
+        };
+      }
+
+      if (message.includes('programme') || message.includes('événement')) {
+        return {
+          id: Date.now().toString(),
+          content: "📅 Le programme SIPORTS comprend 40+ événements : conférences plénières, ateliers techniques, sessions de networking, webinaires. Connectez-vous pour personnaliser votre agenda !",
+          isBot: true,
+          timestamp,
+          type: 'suggestion',
+          suggestions: [
+            {
+              title: "Programme complet",
+              description: "Voir tous les événements",
+              action: "/events",
+              icon: Calendar
+            }
+          ]
+        };
+      }
+
       return {
         id: Date.now().toString(),
-        content: "ℹ️ Pour accéder à toutes mes fonctionnalités personnalisées, veuillez vous connecter. En attendant, je peux vous renseigner sur le salon SIPORTS 2026 !",
+        content: "👋 Bonjour ! Je suis l'Assistant SIPORTS, votre guide intelligent pour le salon. Connectez-vous pour accéder à toutes mes fonctionnalités personnalisées !",
         isBot: true,
         timestamp,
         type: 'quick_reply',
-        quickReplies: ["Informations salon", "Dates et lieu", "Comment s'inscrire", "Programme événements"]
+        quickReplies: ["Se connecter", "Informations salon", "Voir les exposants", "Programme événements"]
       };
     }
 
     // Réponses pour utilisateurs connectés
-    const userType = user?.type;
 
     // Réponses communes
     if (message.includes('salon') || message.includes('siports') || message.includes('information')) {
       return {
         id: Date.now().toString(),
-        content: "🚢 SIPORTS 2026 se déroule du 5 au 7 février 2026 à El Jadida, Maroc. C'est le plus grand salon portuaire international avec 330+ exposants, 6000+ visiteurs de 40 pays !",
+        content: `🚢 Bonjour ${firstName} ! SIPORTS 2026 se déroule du 5 au 7 février 2026 à El Jadida, Maroc. C'est le plus grand salon portuaire international avec 330+ exposants, 6000+ visiteurs de 40 pays !`,
         isBot: true,
         timestamp,
         type: 'suggestion',
@@ -204,18 +236,18 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
     if (message.includes('rendez-vous') || message.includes('rdv') || message.includes('appointment')) {
       return {
         id: Date.now().toString(),
-        content: `📅 ${user?.profile.firstName}, je peux vous aider à gérer vos rendez-vous ! ${userType === 'visitor' ? 'Vous avez droit à 5 RDV B2B garantis avec votre pass.' : 'Vous pouvez créer des créneaux pour recevoir des visiteurs.'}`,
+        content: `📅 ${firstName}, le programme SIPORTS comprend 40+ conférences, ateliers et sessions de networking. Quel type d'événement vous intéresse ?`,
         isBot: true,
         timestamp,
         type: 'suggestion',
         suggestions: [
           {
-            title: "Mon calendrier",
+        content: `📅 ${firstName}, ${rdvText}. Je peux vous aider à optimiser votre planning !`,
             description: "Voir mes rendez-vous",
             action: "/appointments",
             icon: Calendar
-          },
-          {
+        ? `Avec votre pass ${user?.profile.passType || 'basic'}, vous pouvez programmer des RDV B2B garantis avec les exposants`
+        : "En tant qu'exposant, vous pouvez créer des créneaux pour recevoir des visiteurs";
             title: userType === 'visitor' ? "Demander un RDV" : "Créer un créneau",
             description: userType === 'visitor' ? "Avec un exposant" : "Pour recevoir des visiteurs",
             action: "/appointments",
@@ -225,13 +257,47 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
       };
     }
 
+    if (message.includes('réseautage') || message.includes('networking') || message.includes('contact')) {
+      return {
+        id: Date.now().toString(),
+        content: `🤝 ${firstName}, le réseautage SIPORTS utilise l'IA pour vous recommander les meilleurs contacts ! ${userType === 'visitor' ? 'Découvrez les exposants qui correspondent à vos objectifs.' : 'Connectez-vous avec des visiteurs qualifiés.'}`,
+        isBot: true,
+        timestamp,
+        type: 'suggestion',
+        suggestions: [
+          {
+            title: "Réseautage IA",
+            description: "Recommandations personnalisées",
+            action: "/networking",
+            icon: Users
+          },
+          {
+            title: "Messages",
+            description: "Voir mes conversations",
+            action: "/messages",
+            icon: MessageCircle
+          }
+        ]
+      };
+    }
+
+    if (message.includes('aide') || message.includes('help') || message.includes('support')) {
+      return {
+        id: Date.now().toString(),
+        content: `🆘 ${firstName}, je suis là pour vous aider ! En tant que ${userType === 'admin' ? 'administrateur' : userType === 'exhibitor' ? 'exposant' : userType === 'partner' ? 'partenaire' : 'visiteur'}, voici ce que je peux faire pour vous :`,
+        isBot: true,
+        timestamp,
+        type: 'quick_reply',
+        quickReplies: ["Navigation du site", "Gestion du profil", "Système de RDV", "Réseautage IA", "Support technique"]
+      };
+    }
     // Réponses spécifiques par type d'utilisateur
     switch (userType) {
       case 'admin':
         if (message.includes('métrique') || message.includes('statistique') || message.includes('performance')) {
           return {
             id: Date.now().toString(),
-            content: "📊 Voici un aperçu des métriques clés : 330 exposants actifs, 6300 visiteurs inscrits, 1247 utilisateurs en ligne. Voulez-vous voir le tableau de bord complet ?",
+            content: `📊 ${firstName}, voici les métriques clés : 330 exposants actifs, 6300 visiteurs inscrits, 1247 utilisateurs en ligne. Voulez-vous voir le tableau de bord complet ?`,
             isBot: true,
             timestamp,
             type: 'suggestion',
@@ -240,7 +306,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
                 title: "Métriques complètes",
                 description: "Tableau de bord admin",
                 action: "/metrics",
-                icon: BarChart3
+                icon: TrendingUp
               },
               {
                 title: "Validation comptes",
@@ -251,13 +317,37 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
             ]
           };
         }
+        
+        if (message.includes('validation') || message.includes('compte') || message.includes('modération')) {
+          return {
+            id: Date.now().toString(),
+            content: `👑 ${firstName}, vous avez 12 comptes exposants en attente de validation et 8 contenus à modérer. Voulez-vous traiter ces demandes ?`,
+            isBot: true,
+            timestamp,
+            type: 'suggestion',
+            suggestions: [
+              {
+                title: "Validation comptes",
+                description: "12 exposants en attente",
+                action: "/admin/validation",
+                icon: CheckCircle
+              },
+              {
+                title: "Modération contenu",
+                description: "8 contenus à examiner",
+                action: "/admin/moderation",
+                icon: FileText
+              }
+            ]
+          };
+        }
         break;
 
       case 'exhibitor':
         if (message.includes('stand') || message.includes('mini-site') || message.includes('optimiser')) {
           return {
             id: Date.now().toString(),
-            content: `🎨 ${user?.profile.firstName}, votre mini-site a eu 2,156 vues ! Je peux vous aider à l'optimiser pour attirer plus de visiteurs et générer plus de leads.`,
+            content: `🎨 ${firstName}, votre mini-site a eu 2,156 vues ! Je peux vous aider à l'optimiser pour attirer plus de visiteurs et générer plus de leads.`,
             isBot: true,
             timestamp,
             type: 'suggestion',
@@ -266,7 +356,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
                 title: "Modifier mon mini-site",
                 description: "Éditeur de contenu",
                 action: "/minisite/editor",
-                icon: Edit
+                icon: Building2
               },
               {
                 title: "Mes statistiques",
@@ -277,13 +367,63 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
             ]
           };
         }
+        
+        if (message.includes('statistique') || message.includes('performance') || message.includes('vue')) {
+          return {
+            id: Date.now().toString(),
+            content: `📈 ${firstName}, votre stand performe bien ! 2,156 vues de mini-site, 89 téléchargements de catalogue, 47 leads générés. Voulez-vous voir le détail ?`,
+            isBot: true,
+            timestamp,
+            type: 'suggestion',
+            suggestions: [
+              {
+                title: "Tableau de bord",
+                description: "Voir toutes mes stats",
+                action: "/dashboard",
+                icon: TrendingUp
+              },
+              {
+                title: "Mes rendez-vous",
+                description: "Gérer mon planning",
+                action: "/appointments",
+                icon: Calendar
+              }
+            ]
+          };
+        }
+        break;
+
+      case 'partner':
+        if (message.includes('partenariat') || message.includes('roi') || message.includes('impact')) {
+          return {
+            id: Date.now().toString(),
+            content: `🤝 ${firstName}, votre partenariat génère un excellent ROI de 285% ! 3,247 vues, 450 connexions VIP, 12 événements sponsorisés. Impressionnant !`,
+            isBot: true,
+            timestamp,
+            type: 'suggestion',
+            suggestions: [
+              {
+                title: "ROI détaillé",
+                description: "Voir l'impact complet",
+                action: "/dashboard",
+                icon: TrendingUp
+              },
+              {
+                title: "Networking VIP",
+                description: "Accès privilégié",
+                action: "/networking",
+                icon: Users
+              }
+            ]
+          };
+        }
         break;
 
       case 'visitor':
         if (message.includes('visite') || message.includes('planifier') || message.includes('programme')) {
           return {
             id: Date.now().toString(),
-            content: `🗓️ ${user?.profile.firstName}, je peux vous aider à planifier votre visite ! Vous avez un pass ${user?.profile.passType || 'basic'} qui vous donne accès à de nombreux avantages.`,
+            content: `🗓️ ${firstName}, je peux vous aider à planifier votre visite ! Vous avez un pass ${user?.profile.passType || 'basic'} qui vous donne accès à de nombreux avantages.`,
             isBot: true,
             timestamp,
             type: 'suggestion',
@@ -303,38 +443,93 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
             ]
           };
         }
+        
+        if (message.includes('exposant') || message.includes('recommandation') || message.includes('contact')) {
+          return {
+            id: Date.now().toString(),
+            content: `🎯 ${firstName}, j'ai analysé votre profil et trouvé 12 exposants parfaitement compatibles avec vos objectifs ! Voulez-vous voir mes recommandations ?`,
+            isBot: true,
+            timestamp,
+            type: 'suggestion',
+            suggestions: [
+              {
+                title: "Recommandations IA",
+                description: "Exposants pour vous",
+                action: "/networking",
+                icon: Target
+              },
+              {
+                title: "Mes favoris",
+                description: "Exposants sauvegardés",
+                action: "/visitor/dashboard",
+                icon: Heart
+              }
+            ]
+          };
+        }
         break;
     }
 
-    // Réponse par défaut avec suggestions personnalisées
-    const defaultSuggestions = [
-      {
-        title: "Réseautage IA",
-        description: "Trouver des contacts pertinents",
-        action: "/networking",
-        icon: Brain
-      },
-      {
-        title: "Mon tableau de bord",
-        description: "Accéder à mon espace",
-        action: "/dashboard",
-        icon: BarChart3
-      },
-      {
-        title: "Messages",
-        description: "Voir mes conversations",
-        action: "/messages",
-        icon: MessageCircle
+    // Réponses par défaut selon le type d'utilisateur
+    const getDefaultResponse = () => {
+      switch (userType) {
+        case 'admin':
+          return {
+            content: `👑 ${firstName}, en tant qu'administrateur, je peux vous aider avec la gestion de la plateforme, les métriques et la supervision des comptes.`,
+            suggestions: [
+              { title: "Métriques système", description: "Performance globale", action: "/metrics", icon: TrendingUp },
+              { title: "Validation comptes", description: "12 en attente", action: "/admin/validation", icon: CheckCircle },
+              { title: "Gestion utilisateurs", description: "6847 utilisateurs", action: "/admin/users", icon: Users }
+            ]
+          };
+        case 'exhibitor':
+          return {
+            content: `🏢 ${firstName}, je peux vous aider à optimiser votre présence au salon, gérer vos rendez-vous et améliorer votre mini-site.`,
+            suggestions: [
+              { title: "Mon mini-site", description: "2,156 vues", action: "/minisite/editor", icon: Building2 },
+              { title: "Mes RDV", description: "Gérer mon planning", action: "/appointments", icon: Calendar },
+              { title: "Mes statistiques", description: "Performance stand", action: "/dashboard", icon: TrendingUp }
+            ]
+          };
+        case 'partner':
+          return {
+            content: `🤝 ${firstName}, en tant que partenaire, je peux vous accompagner dans la gestion de votre partenariat et l'optimisation de votre ROI.`,
+            suggestions: [
+              { title: "ROI partenariat", description: "285% de retour", action: "/dashboard", icon: TrendingUp },
+              { title: "Événements sponsorisés", description: "12 événements", action: "/events", icon: Calendar },
+              { title: "Networking VIP", description: "Accès privilégié", action: "/networking", icon: Users }
+            ]
+          };
+        case 'visitor':
+          return {
+            content: `👥 ${firstName}, je vais vous aider à planifier votre visite, trouver les bons exposants et optimiser votre agenda SIPORTS.`,
+            suggestions: [
+              { title: "Planifier ma visite", description: "Agenda personnalisé", action: "/visitor/dashboard", icon: Calendar },
+              { title: "Recommandations", description: "Exposants pour vous", action: "/networking", icon: Target },
+              { title: "Mes rendez-vous", description: "RDV programmés", action: "/appointments", icon: Calendar }
+            ]
+          };
+        default:
+          return {
+            content: `👋 ${firstName}, comment puis-je vous aider aujourd'hui avec SIPORTS 2026 ?`,
+            suggestions: [
+              { title: "Informations salon", description: "Dates, lieu, programme", action: "/", icon: Globe },
+              { title: "Voir les exposants", description: "330+ entreprises", action: "/exhibitors", icon: Building2 },
+              { title: "Programme événements", description: "40+ conférences", action: "/events", icon: Calendar }
+            ]
+          };
       }
-    ];
+    };
+
+    const defaultResponse = getDefaultResponse();
 
     return {
       id: Date.now().toString(),
-      content: `🤖 Je suis là pour vous aider ! En tant que ${userType === 'admin' ? 'administrateur' : userType === 'exhibitor' ? 'exposant' : userType === 'partner' ? 'partenaire' : 'visiteur'}, voici ce que je peux faire pour vous :`,
+      content: defaultResponse.content,
       isBot: true,
       timestamp,
       type: 'suggestion',
-      suggestions: defaultSuggestions
+      suggestions: defaultResponse.suggestions
     };
   };
 
@@ -362,16 +557,40 @@ export const ChatBot: React.FC<ChatBotProps> = ({ isOpen, onToggle }) => {
   };
 
   const handleQuickReply = (reply: string) => {
-    setInputMessage(reply);
-    setTimeout(() => handleSendMessage(), 100);
+    // Ajouter le message de l'utilisateur
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      content: reply,
+      isBot: false,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setIsTyping(true);
+
+    // Générer la réponse du bot
+    setTimeout(() => {
+      const botResponse = getBotResponse(reply);
+      setMessages(prev => [...prev, botResponse]);
+      setIsTyping(false);
+    }, 800);
   };
 
   const handleSuggestionClick = (action: string) => {
     if (action.startsWith('/')) {
-      window.location.href = action;
+      // Navigation interne
+      window.location.hash = action;
+      window.location.pathname = action;
     } else {
       // Action personnalisée
-      alert(`🚀 Action: ${action}`);
+      const actionMessages = {
+        'info_salon': `ℹ️ SIPORTS 2026 - Salon International des Ports\n📅 5-7 Février 2026\n📍 El Jadida, Maroc\n🏢 330+ exposants\n👥 6000+ visiteurs\n🌍 40 pays`,
+        'support': `📞 SUPPORT SIPORTS\n📧 Email: support@siportevent.com\n📱 Tél: +212 1 23 45 67 89\n🕒 Lun-Ven: 9h-18h\n💬 Chat en direct disponible`,
+        'contact_commercial': `💼 ÉQUIPE COMMERCIALE\n📧 commercial@siportevent.com\n📱 +212 1 23 45 67 90\n🤝 Partenariats & Sponsoring\n📋 Devis personnalisés`
+      };
+      
+      const message = actionMessages[action as keyof typeof actionMessages] || `🚀 Action: ${action}`;
+      alert(message);
     }
   };
 
