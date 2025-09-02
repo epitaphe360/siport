@@ -237,19 +237,21 @@ export const AppointmentCalendar: React.FC = () => {
 
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <div>
+          <div className="flex-1 min-w-0 mr-6">
             <h2 className="text-2xl font-bold text-gray-900">
               Calendrier des Rendez-vous
-              <span className="text-blue-600"> - Exposant #{exhibitorId}</span>
             </h2>
-            <p className="text-gray-600">Gérez vos créneaux et rendez-vous</p>
+            <p className="text-gray-600 mt-1">
+              Gérez vos créneaux et rendez-vous - Exposant #{exhibitorId}
+            </p>
           </div>
-            onClick={() => setShowCreateSlotModal(true)}
-            title="Créer un nouveau créneau de rendez-vous"
-          <Button onClick={() => setShowCreateSlotModal(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Nouveau Créneau
-          </Button>
+          
+          <div className="flex-shrink-0">
+            <Button onClick={() => setShowCreateSlotModal(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Nouveau Créneau
+            </Button>
+          </div>
         </div>
 
         <div className="space-y-6">
