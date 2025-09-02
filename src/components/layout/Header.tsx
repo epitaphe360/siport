@@ -87,9 +87,23 @@ export const Header: React.FC = () => {
                 onClick={() => {
                   const currentLang = localStorage.getItem('siports-language') || 'fr';
                   const newLang = currentLang === 'fr' ? 'en' : currentLang === 'en' ? 'ar' : 'fr';
+                  
+                  const languages = {
+                    fr: { name: 'Français', flag: '🇫🇷', code: 'fr-FR' },
+                    en: { name: 'English', flag: '🇬🇧', code: 'en-US' },
+                    ar: { name: 'العربية', flag: '🇲🇦', code: 'ar-MA' }
+                  };
+                  
                   localStorage.setItem('siports-language', newLang);
-                  alert(`🌐 Langue changée vers: ${newLang === 'fr' ? 'Français' : newLang === 'en' ? 'English' : 'العربية'}\n\n🔄 Rechargement de la page...`);
-                  setTimeout(() => window.location.reload(), 1000);
+                  localStorage.setItem('siports-language-changed', new Date().toISOString());
+                  
+                  const selectedLang = languages[newLang as keyof typeof languages];
+                  
+                  alert(`🌐 LANGUE MODIFIÉE\n\n${selectedLang.flag} Nouvelle langue: ${selectedLang.name}\n🔤 Code: ${selectedLang.code}\n📅 Changement: ${new Date().toLocaleTimeString('fr-FR')}\n\n🔄 Rechargement de l'interface...\n⚙️ Préférences sauvegardées\n\n✅ Interface mise à jour !`);
+                  
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 1500);
                 }}
                 title="Changer de langue"
               >

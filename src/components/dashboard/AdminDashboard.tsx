@@ -392,19 +392,26 @@ export const AdminDashboard: React.FC = () => {
                   </Button>
                   
                   <Link to="/networking" className="block">
-                    <Button className="w-full justify-start" variant="outline"
-                    onClick={() => {
-                      const networkingData = {
-                        totalConnections: 4156,
-                        activeUsers: 1247,
-                        aiRecommendations: 12847,
-                        successRate: '89%',
-                        topSectors: ['Port Operations: 28%', 'Technology: 22%', 'Logistics: 18%'],
-                        dailyActivity: '456 nouvelles connexions'
-                      };
-                      
-                      alert(`🤝 SUPERVISION RÉSEAUTAGE\n\n👥 Connexions totales: ${networkingData.totalConnections}\n🔥 Utilisateurs actifs: ${networkingData.activeUsers}\n🤖 Recommandations IA: ${networkingData.aiRecommendations}\n📈 Taux de succès: ${networkingData.successRate}\n\n🎯 Top secteurs:\n${networkingData.topSectors.join('\n')}\n\n📊 Activité aujourd'hui: ${networkingData.dailyActivity}\n\n🎯 Supervision activée !`);
-                    }}>
+                    <Button 
+                      className="w-full justify-start" 
+                      variant="outline"
+                      onClick={() => {
+                        const networkingData = {
+                          totalConnections: 4156,
+                          activeUsers: 1247,
+                          aiRecommendations: 12847,
+                          successRate: '89%',
+                          topSectors: ['Port Operations: 28%', 'Technology: 22%', 'Logistics: 18%'],
+                          dailyActivity: '456 nouvelles connexions',
+                          avgConnectionsPerUser: '3.2',
+                          peakHours: '14h-16h',
+                          satisfaction: '94%',
+                          aiAccuracy: '92%'
+                        };
+                        
+                        alert(`🤝 SUPERVISION RÉSEAUTAGE AVANCÉE\n\n👥 Connexions totales: ${networkingData.totalConnections.toLocaleString()}\n🔥 Utilisateurs actifs: ${networkingData.activeUsers.toLocaleString()}\n🤖 Recommandations IA: ${networkingData.aiRecommendations.toLocaleString()}\n📈 Taux de succès: ${networkingData.successRate}\n🎯 Précision IA: ${networkingData.aiAccuracy}\n⭐ Satisfaction: ${networkingData.satisfaction}\n\n📊 Métriques:\n• Connexions/utilisateur: ${networkingData.avgConnectionsPerUser}\n• Heures de pointe: ${networkingData.peakHours}\n• Activité aujourd'hui: ${networkingData.dailyActivity}\n\n🎯 Top secteurs:\n${networkingData.topSectors.join('\n')}\n\n🎯 Supervision complète activée !`);
+                      }}
+                    >
                       <Users className="h-4 w-4 mr-3" />
                       Supervision Réseautage
                     </Button>

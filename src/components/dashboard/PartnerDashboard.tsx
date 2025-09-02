@@ -392,18 +392,25 @@ export const PartnerDashboard: React.FC = () => {
                           roi: '285%',
                           period: '12 mois',
                           objectives: '120% atteints',
-                          kpis: ['Visibilité: 95%', 'Leads: 89%', 'Networking: 92%', 'Satisfaction: 98%']
+                          kpis: ['Visibilité: 95%', 'Leads: 89%', 'Networking: 92%', 'Satisfaction: 98%'],
+                          breakdown: {
+                            sponsorship: '1.2M€ → 3.8M€ (317% ROI)',
+                            networking: '800K€ → 2.1M€ (263% ROI)',
+                            branding: '500K€ → 1.2M€ (240% ROI)'
+                          },
+                          projections: '350% ROI prévu année prochaine',
+                          recommendations: ['Augmenter budget networking', 'Sponsoriser plus d\'événements', 'Étendre à l\'international']
                         };
                         
-                        // Génération rapport PDF
+                        // Génération rapport PDF détaillé
                         const link = document.createElement('a');
                         link.href = 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEK';
-                        link.download = `rapport-roi-partenaire-${new Date().getFullYear()}.pdf`;
+                        link.download = `rapport-roi-detaille-partenaire-${new Date().getFullYear()}.pdf`;
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
                         
-                        alert(`📊 RAPPORT ROI DÉTAILLÉ\n\n💰 Investissement: ${roiData.investment}\n📈 Retour: ${roiData.return} (${roiData.roi})\n📅 Période: ${roiData.period}\n🎯 Objectifs: ${roiData.objectives}\n\n📋 KPIs:\n${roiData.kpis.join('\n')}\n\n📄 Rapport PDF téléchargé !`);
+                        alert(`📊 RAPPORT ROI DÉTAILLÉ\n\n💰 Investissement total: ${roiData.investment}\n📈 Retour généré: ${roiData.return}\n🎯 ROI global: ${roiData.roi}\n📅 Période d'analyse: ${roiData.period}\n🏆 Objectifs: ${roiData.objectives}\n\n📋 KPIs principaux:\n${roiData.kpis.join('\n')}\n\n💼 Détail par activité:\n• Sponsoring: ${roiData.breakdown.sponsorship}\n• Networking: ${roiData.breakdown.networking}\n• Branding: ${roiData.breakdown.branding}\n\n🔮 Projections: ${roiData.projections}\n\n💡 Recommandations:\n${roiData.recommendations.map(r => `• ${r}`).join('\n')}\n\n📄 Rapport PDF complet téléchargé !`);
                       }}
                     >
                       <BarChart3 className="h-4 w-4 mr-2" />

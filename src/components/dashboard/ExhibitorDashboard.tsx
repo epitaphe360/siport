@@ -293,7 +293,17 @@ export const ExhibitorDashboard: React.FC = () => {
                     className="w-full justify-start" 
                     variant="outline"
                     onClick={() => {
-                      alert('📦 GESTION PRODUITS\n\n📊 12 produits actifs\n👁️ 2,156 vues catalogue\n📥 89 téléchargements\n\n🎯 Optimisez votre catalogue !');
+                      const productData = {
+                        total: 12,
+                        active: 10,
+                        views: 2156,
+                        downloads: 89,
+                        categories: ['Software: 5', 'Hardware: 4', 'Services: 3'],
+                        topProduct: 'SmartPort Management System',
+                        lastUpdate: 'Il y a 3 jours'
+                      };
+                      
+                      alert(`📦 GESTION PRODUITS\n\n📊 ${productData.total} produits (${productData.active} actifs)\n👁️ ${productData.views.toLocaleString()} vues catalogue\n📥 ${productData.downloads} téléchargements\n\n🏷️ Répartition:\n${productData.categories.join('\n')}\n\n🏆 Produit vedette: ${productData.topProduct}\n🔄 Dernière MAJ: ${productData.lastUpdate}\n\n🎯 Optimisez votre catalogue !`);
                     }}
                   >
                     <Package className="h-4 w-4 mr-3" />
@@ -304,7 +314,19 @@ export const ExhibitorDashboard: React.FC = () => {
                     className="w-full justify-start" 
                     variant="outline"
                     onClick={() => {
-                      alert('📊 ANALYTICS EXPOSANT\n\n👁️ 2,156 vues mini-site\n📥 89 téléchargements\n🤝 47 leads générés\n📈 +18% cette semaine\n\n📋 Rapport détaillé disponible !');
+                      const analyticsData = {
+                        views: 2156,
+                        downloads: 89,
+                        leads: 47,
+                        conversion: '4.2%',
+                        engagement: '3m 45s',
+                        topPages: ['Produits: 45%', 'À propos: 28%', 'Contact: 27%'],
+                        topCountries: ['France: 32%', 'Maroc: 28%', 'Espagne: 18%'],
+                        weeklyGrowth: '+18%',
+                        satisfaction: '4.8/5'
+                      };
+                      
+                      alert(`📊 ANALYTICS EXPOSANT\n\n📈 Performance:\n👁️ ${analyticsData.views.toLocaleString()} vues mini-site\n📥 ${analyticsData.downloads} téléchargements\n🎯 ${analyticsData.leads} leads générés\n📊 Conversion: ${analyticsData.conversion}\n⏱️ Engagement: ${analyticsData.engagement}\n⭐ Satisfaction: ${analyticsData.satisfaction}\n\n📄 Pages populaires:\n${analyticsData.topPages.join('\n')}\n\n🌍 Top pays:\n${analyticsData.topCountries.join('\n')}\n\n📈 Croissance: ${analyticsData.weeklyGrowth} cette semaine\n\n📋 Rapport détaillé disponible !`);
                     }}
                   >
                     <BarChart3 className="h-4 w-4 mr-3" />
@@ -315,11 +337,29 @@ export const ExhibitorDashboard: React.FC = () => {
                     className="w-full justify-start" 
                     variant="outline"
                     onClick={() => {
-                      alert('⚙️ PARAMÈTRES EXPOSANT\n\n🔔 Notifications: Activées\n📧 Email: Quotidien\n📱 Push: Temps réel\n🌐 Langue: Français\n\n⚙️ Personnalisez vos préférences !');
+                      const settingsData = {
+                        notifications: {
+                          email: true,
+                          push: true,
+                          inApp: true,
+                          frequency: 'Temps réel'
+                        },
+                        language: 'Français',
+                        timezone: 'Europe/Paris',
+                        privacy: 'Public',
+                        autoSave: true,
+                        theme: 'Clair'
+                      };
+                      
+                      alert(`⚙️ PARAMÈTRES EXPOSANT\n\n🔔 Notifications:\n• Email: ${settingsData.notifications.email ? 'Activées' : 'Désactivées'}\n• Push: ${settingsData.notifications.push ? 'Activées' : 'Désactivées'}\n• In-App: ${settingsData.notifications.inApp ? 'Activées' : 'Désactivées'}\n• Fréquence: ${settingsData.notifications.frequency}\n\n🌐 Langue: ${settingsData.language}\n⏰ Fuseau: ${settingsData.timezone}\n🔒 Confidentialité: ${settingsData.privacy}\n💾 Sauvegarde auto: ${settingsData.autoSave ? 'Activée' : 'Désactivée'}\n🎨 Thème: ${settingsData.theme}\n\n⚙️ Personnalisez vos préférences !`);
                     }}
                   >
-                    <Settings className="h-4 w-4 mr-3" />
-                    Paramètres & Préférences
+                    <Link to="/profile" className="w-full">
+                      <Button className="w-full justify-start" variant="outline">
+                        <Settings className="h-4 w-4 mr-3" />
+                        Paramètres & Préférences
+                      </Button>
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -341,17 +381,40 @@ export const ExhibitorDashboard: React.FC = () => {
                   <Button 
                     className="w-full justify-start"
                     onClick={() => {
-                      const campaignData = {
-                        contacts: 2156,
-                        openRate: '24%',
-                        leads: 47,
-                        templates: ['Présentation produits', 'Invitation salon', 'Suivi post-salon']
+                      const qrData = {
+                        company: user?.profile.company || 'Votre Entreprise',
+                        stand: 'A-12',
+                        contact: `${user?.profile.firstName} ${user?.profile.lastName}`,
+                        email: user?.email,
+                        phone: user?.profile.phone,
+                        website: user?.profile.website,
+                        qrCode: `SIPORTS2026-EXHIBITOR-${user?.id}-${Date.now()}`,
+                        validUntil: '7 Février 2026 18:00'
                       };
                       
-                      alert(`📧 CAMPAGNE EMAIL MARKETING\n\n👥 ${campaignData.contacts} contacts dans votre base\n📊 Taux d'ouverture: ${campaignData.openRate}\n🎯 Leads générés: ${campaignData.leads}\n\n📝 Templates disponibles:\n${campaignData.templates.map(t => `• ${t}`).join('\n')}\n\n🚀 Campagne prête à envoyer !`);
+                      // Génération du QR Code (simulation)
+                      const canvas = document.createElement('canvas');
+                      canvas.width = 200;
+                      canvas.height = 200;
+                      const ctx = canvas.getContext('2d');
+                      if (ctx) {
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(0, 0, 200, 200);
+                        ctx.fillStyle = '#fff';
+                        ctx.fillRect(10, 10, 180, 180);
+                      }
+                      
+                      alert(`📱 QR CODE STAND GÉNÉRÉ\n\n🏢 ${qrData.company}\n📍 Stand: ${qrData.stand}\n👤 Contact: ${qrData.contact}\n📧 ${qrData.email}\n📞 ${qrData.phone}\n🌐 ${qrData.website}\n\n🔐 Code: ${qrData.qrCode}\n⏰ Valide jusqu'au: ${qrData.validUntil}\n\n✅ QR Code prêt à imprimer et afficher sur votre stand !`);
                     }}
-                    onClick={() => {
-                      alert('📧 CAMPAGNE EMAIL\n\n👥 2,156 contacts dans votre base\n📊 Taux d\'ouverture: 24%\n📈 Leads générés: 47\n\n📬 Nouvelle campagne prête !');
+                        openRate: '24%',
+                        leads: 47,
+                        templates: ['Présentation produits', 'Invitation salon', 'Suivi post-salon'],
+                        segments: ['Prospects chauds: 156', 'Clients existants: 89', 'Nouveaux contacts: 1911'],
+                        bestTime: '14h-16h (mardi-jeudi)',
+                        deliveryRate: '98.5%'
+                      };
+                      
+                      alert(`📧 CAMPAGNE EMAIL MARKETING\n\n👥 ${campaignData.contacts.toLocaleString()} contacts dans votre base\n📊 Taux d'ouverture: ${campaignData.openRate}\n🎯 Leads générés: ${campaignData.leads}\n📈 Taux de livraison: ${campaignData.deliveryRate}\n\n📝 Templates disponibles:\n${campaignData.templates.map(t => `• ${t}`).join('\n')}\n\n👥 Segments:\n${campaignData.segments.join('\n')}\n\n⏰ Meilleur moment: ${campaignData.bestTime}\n\n🚀 Campagne prête à envoyer !`);
                     }}
                   >
                     <Mail className="h-4 w-4 mr-3" />
@@ -366,9 +429,22 @@ export const ExhibitorDashboard: React.FC = () => {
                         products: 12,
                         pages: 24,
                         downloads: 89,
-                        lastUpdate: 'Il y a 3 jours'
+                        lastUpdate: 'Il y a 3 jours',
+                        format: 'PDF interactif',
+                        languages: ['Français', 'Anglais', 'Arabe'],
+                        size: '4.2 MB',
+                        version: '2.1'
                       };
-                      alert(`📋 CATALOGUE NUMÉRIQUE\n\n📦 ${catalogData.products} produits\n📄 ${catalogData.pages} pages\n📥 ${catalogData.downloads} téléchargements\n🔄 Mis à jour: ${catalogData.lastUpdate}\n\n📱 Catalogue prêt à partager !`);
+                      
+                      // Génération et téléchargement du catalogue
+                      const link = document.createElement('a');
+                      link.href = 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEK';
+                      link.download = `catalogue-numerique-v${catalogData.version}.pdf`;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                      
+                      alert(`📋 CATALOGUE NUMÉRIQUE GÉNÉRÉ\n\n📦 ${catalogData.products} produits\n📄 ${catalogData.pages} pages\n📥 ${catalogData.downloads} téléchargements\n🔄 Mis à jour: ${catalogData.lastUpdate}\n\n📱 Format: ${catalogData.format}\n🌐 Langues: ${catalogData.languages.join(', ')}\n💾 Taille: ${catalogData.size}\n📋 Version: ${catalogData.version}\n\n⬇️ Téléchargement démarré !`);
                     }}
                   >
                     <Download className="h-4 w-4 mr-3" />
@@ -379,7 +455,21 @@ export const ExhibitorDashboard: React.FC = () => {
                     className="w-full justify-start" 
                     variant="outline"
                     onClick={() => {
-                      alert('🎯 LEADS & PROSPECTS\n\n👥 47 leads qualifiés\n📊 Taux conversion: 4.2%\n💼 12 opportunités chaudes\n📈 +25% ce mois\n\n🚀 Pipeline commercial actif !');
+                      const leadsData = {
+                        total: 47,
+                        qualified: 35,
+                        hot: 12,
+                        warm: 23,
+                        cold: 12,
+                        conversion: '4.2%',
+                        growth: '+25%',
+                        sources: ['Mini-site: 45%', 'Networking: 30%', 'Conférences: 25%'],
+                        topSectors: ['Port Operations: 40%', 'Technology: 35%', 'Logistics: 25%'],
+                        avgValue: '125,000€',
+                        pipeline: '5.8M€'
+                      };
+                      
+                      alert(`🎯 LEADS & PROSPECTS\n\n👥 ${leadsData.total} leads qualifiés\n🔥 ${leadsData.hot} opportunités chaudes\n🌡️ ${leadsData.warm} prospects tièdes\n❄️ ${leadsData.cold} contacts froids\n\n📊 Taux conversion: ${leadsData.conversion}\n📈 Croissance: ${leadsData.growth} ce mois\n💰 Valeur moyenne: ${leadsData.avgValue}\n💼 Pipeline total: ${leadsData.pipeline}\n\n📍 Sources:\n${leadsData.sources.join('\n')}\n\n🏭 Secteurs:\n${leadsData.topSectors.join('\n')}\n\n🚀 Pipeline commercial très actif !`);
                     }}
                   >
                     <Target className="h-4 w-4 mr-3" />
@@ -390,7 +480,18 @@ export const ExhibitorDashboard: React.FC = () => {
                     className="w-full justify-start" 
                     variant="outline"
                     onClick={() => {
-                      alert('🏆 CONCOURS INNOVATION\n\n🎯 Participez au concours SIPORTS\n🏅 Prix: 50,000€ + visibilité\n📅 Date limite: 15 janvier\n📋 Dossier: 80% complété\n\n🚀 Finalisez votre candidature !');
+                      const contestData = {
+                        name: 'SIPORTS Innovation Awards 2026',
+                        prize: '50,000€',
+                        categories: ['Port Technology', 'Sustainability', 'Digital Innovation', 'Safety & Security'],
+                        deadline: '15 janvier 2026',
+                        progress: '80%',
+                        requirements: ['Dossier technique', 'Vidéo démo', 'Business plan', 'Références clients'],
+                        jury: '15 experts internationaux',
+                        benefits: ['Prix en espèces', 'Visibilité médiatique', 'Partenariats', 'Certification']
+                      };
+                      
+                      alert(`🏆 CONCOURS INNOVATION SIPORTS\n\n🎯 ${contestData.name}\n🏅 Prix: ${contestData.prize} + avantages\n📅 Date limite: ${contestData.deadline}\n📋 Dossier: ${contestData.progress} complété\n\n🏷️ Catégories:\n${contestData.categories.map(cat => `• ${cat}`).join('\n')}\n\n📄 Requis:\n${contestData.requirements.map(req => `• ${req}`).join('\n')}\n\n👨‍⚖️ Jury: ${contestData.jury}\n🎁 Avantages:\n${contestData.benefits.map(ben => `• ${ben}`).join('\n')}\n\n🚀 Finalisez votre candidature !`);
                     }}
                   >
                     <Award className="h-4 w-4 mr-3" />
@@ -513,10 +614,22 @@ export const ExhibitorDashboard: React.FC = () => {
                       engagement: '3m 45s',
                       satisfaction: '4.8/5',
                       topPages: ['Produits: 45%', 'À propos: 28%', 'Contact: 27%'],
-                      topCountries: ['France: 32%', 'Maroc: 28%', 'Espagne: 18%']
+                      topCountries: ['France: 32%', 'Maroc: 28%', 'Espagne: 18%'],
+                      devices: ['Desktop: 65%', 'Mobile: 30%', 'Tablet: 5%'],
+                      peakHours: ['14h-16h: 35%', '10h-12h: 28%', '16h-18h: 22%'],
+                      bounceRate: '23%',
+                      avgSession: '4m 12s'
                     };
                     
-                    alert(`📊 RAPPORT DÉTAILLÉ\n\n📈 Performance:\n👁️ Vues: ${analyticsData.views}\n📥 Téléchargements: ${analyticsData.downloads}\n🎯 Leads: ${analyticsData.leads}\n📊 Conversion: ${analyticsData.conversion}\n⏱️ Engagement: ${analyticsData.engagement}\n⭐ Satisfaction: ${analyticsData.satisfaction}\n\n📄 Pages populaires:\n${analyticsData.topPages.join('\n')}\n\n🌍 Top pays:\n${analyticsData.topCountries.join('\n')}`);
+                    // Génération du rapport détaillé
+                    const link = document.createElement('a');
+                    link.href = 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEK';
+                    link.download = `analytics-detaille-${new Date().toISOString().split('T')[0]}.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    alert(`📊 RAPPORT ANALYTIQUE DÉTAILLÉ\n\n📈 Performance globale:\n👁️ Vues: ${analyticsData.views}\n📥 Téléchargements: ${analyticsData.downloads}\n🎯 Leads: ${analyticsData.leads}\n📊 Conversion: ${analyticsData.conversion}\n⏱️ Engagement moyen: ${analyticsData.engagement}\n⭐ Satisfaction: ${analyticsData.satisfaction}\n🚫 Taux de rebond: ${analyticsData.bounceRate}\n📱 Session moyenne: ${analyticsData.avgSession}\n\n📄 Pages populaires:\n${analyticsData.topPages.join('\n')}\n\n🌍 Top pays:\n${analyticsData.topCountries.join('\n')}\n\n📱 Appareils:\n${analyticsData.devices.join('\n')}\n\n⏰ Heures de pointe:\n${analyticsData.peakHours.join('\n')}\n\n📄 Rapport PDF téléchargé !`);
                   }}
                   <BarChart3 className="h-4 w-4 mr-2" />
                   Rapport Détaillé

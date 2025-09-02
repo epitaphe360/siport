@@ -877,7 +877,24 @@ export const NetworkingPage: React.FC = () => {
                 <Button 
                   onClick={() => {
                     loadAIInsights();
-                    alert('🧠 ANALYSE IA DÉMARRÉE\n\n🔄 Analyse de votre profil...\n📊 Calcul des métriques...\n💡 Génération des conseils...\n\n⏱️ Insights générés !');
+                    const insightsData = {
+                      profileOptimization: {
+                        completeness: '85%',
+                        suggestions: 3,
+                        impact: '+25% visibilité'
+                      },
+                      networkingTips: {
+                        personalizedTips: 5,
+                        successRate: '+40%',
+                        bestPractices: 8
+                      },
+                      trendingTopics: ['Digital Transformation', 'Green Ports', 'Automation', 'AI in Ports'],
+                      optimalTiming: '14h-16h (heure locale)',
+                      compatibilityAnalysis: '12 profils analysés',
+                      marketInsights: 'Secteur en croissance +15%'
+                    };
+                    
+                    alert(`🧠 ANALYSE IA INSIGHTS COMPLÈTE\n\n📊 Optimisation profil:\n• Complétude: ${insightsData.profileOptimization.completeness}\n• ${insightsData.profileOptimization.suggestions} suggestions d'amélioration\n• Impact estimé: ${insightsData.profileOptimization.impact}\n\n🎯 Conseils networking:\n• ${insightsData.networkingTips.personalizedTips} conseils personnalisés\n• Amélioration succès: ${insightsData.networkingTips.successRate}\n• ${insightsData.networkingTips.bestPractices} bonnes pratiques\n\n🔥 Sujets tendance:\n${insightsData.trendingTopics.map(topic => `• ${topic}`).join('\n')}\n\n⏰ Meilleur moment: ${insightsData.optimalTiming}\n🔍 ${insightsData.compatibilityAnalysis}\n📈 ${insightsData.marketInsights}\n\n💡 Insights IA générés avec succès !`);
                   }}
                 >
                   <Zap className="h-4 w-4 mr-2" />

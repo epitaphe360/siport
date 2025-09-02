@@ -237,7 +237,27 @@ export const ExhibitorDetailPage: React.FC = () => {
                 {miniSiteData.hero.ctaText}
               </Button>
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
-                <Download className="h-4 w-4 mr-2" />
+                <Download 
+                  className="h-4 w-4 mr-2" 
+                  onClick={() => {
+                    const catalogData = {
+                      company: selectedExhibitor?.companyName,
+                      products: selectedExhibitor?.products.length || 0,
+                      pages: 24,
+                      size: '2.4 MB'
+                    };
+                    
+                    // Simulation du téléchargement
+                    const link = document.createElement('a');
+                    link.href = 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKMiAwIG9iago8PAovVHlwZSAvUGFnZXMKL0tpZHMgWzMgMCBSXQovQ291bnQgMQo+PgplbmRvYmoKMyAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCi9NZWRpYUJveCBbMCAwIDYxMiA3OTJdCj4+CmVuZG9iago=';
+                    link.download = `catalogue-${catalogData.company?.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    alert(`📥 TÉLÉCHARGEMENT DÉMARRÉ\n\n📋 Catalogue: ${catalogData.company}\n📦 ${catalogData.products} produits\n📄 ${catalogData.pages} pages\n💾 Taille: ${catalogData.size}\n\n✅ Téléchargement en cours...`);
+                  }}
+                />
                 Télécharger catalogue
               </Button>
             </div>
@@ -469,56 +489,20 @@ export const ExhibitorDetailPage: React.FC = () => {
                         <Clock className="h-4 w-4 mr-1" />
                         {formatDate(article.date)}
                       </span>
-                    </div>
-                    
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                      {article.title}
-                    </h3>
-                    
-                    <p className="text-gray-600 mb-4">
-                      {article.excerpt}
-                    </p>
-                    
-                    <Button variant="outline" size="sm">
-                      onClick={() => {
-                        const articleData = {
-                          title: article.title,
-                          category: article.category,
-                          date: article.date,
-                          company: selectedExhibitor?.companyName
-                        };
-                        
-                        alert(`📰 ARTICLE COMPLET\n\n📝 ${articleData.title}\n🏷️ ${articleData.category}\n📅 ${formatDate(articleData.date)}\n🏢 ${articleData.company}\n\n📖 Article affiché en mode lecture !`);
-                      }}
-                      <Download 
-                        className="h-4 w-4 mr-2" 
-                        onClick={() => {
-                          const catalogData = {
-                            company: selectedExhibitor?.companyName,
-                            products: selectedExhibitor?.products.length || 0,
-                            pages: 24,
-                            size: '2.4 MB'
-                          };
-                          
-                          // Simulation du téléchargement
-                          const link = document.createElement('a');
-                          link.href = 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKMiAwIG9iago8PAovVHlwZSAvUGFnZXMKL0tpZHMgWzMgMCBSXQovQ291bnQgMQo+PgplbmRvYmoKMyAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCi9NZWRpYUJveCBbMCAwIDYxMiA3OTJdCj4+CmVuZG9iago=';
-                          link.download = `catalogue-${catalogData.company?.toLowerCase().replace(/\s+/g, '-')}.pdf`;
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                          
-                          alert(`📥 TÉLÉCHARGEMENT DÉMARRÉ\n\n📋 Catalogue: ${catalogData.company}\n📦 ${catalogData.products} produits\n📄 ${catalogData.pages} pages\n💾 Taille: ${catalogData.size}\n\n✅ Téléchargement en cours...`);
-                        }}
-                      />
                       onClick={(e) => {
                         e.preventDefault();
-                        const formData = new FormData(e.target.closest('form'));
+                        const form = e.currentTarget.closest('form');
+                        if (!form) {
+                          alert('❌ Formulaire non trouvé');
+                          return;
+                        }
+                        
+                        const formData = new FormData(form);
                         const messageData = {
-                          nom: formData.get('nom'),
-                          email: formData.get('email'),
-                          sujet: formData.get('sujet'),
-                          message: formData.get('message'),
+                          nom: formData.get('nom') as string,
+                          email: formData.get('email') as string,
+                          sujet: formData.get('sujet') as string,
+                          message: formData.get('message') as string,
                           company: selectedExhibitor?.companyName
                         };
                         
@@ -530,9 +514,9 @@ export const ExhibitorDetailPage: React.FC = () => {
                         alert(`📧 MESSAGE ENVOYÉ\n\n👤 De: ${messageData.nom}\n📧 Email: ${messageData.email}\n📝 Sujet: ${messageData.sujet}\n🏢 À: ${messageData.company}\n\n✅ Message transmis au service commercial\n⏱️ Réponse sous 24h !`);
                         
                         // Reset form
-                        e.target.closest('form').reset();
+                        form.reset();
                       }}
-                      Télécharger catalogue
+                      Lire la suite
                     </Button>
                   </div>
                 </Card>
