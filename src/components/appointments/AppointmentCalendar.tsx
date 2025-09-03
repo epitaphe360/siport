@@ -334,45 +334,11 @@ export const AppointmentCalendar: React.FC = () => {
               Calendrier des Rendez-vous
             </h2>
             <p className="text-gray-600 mt-1">
-              Gérez vos créneaux et rendez-vous - Port Solutions Inc.
+              Gérez vos créneaux et rendez-vous - Exposant #{exhibitorId}
             </p>
-            <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
-              <div className="flex items-center space-x-1">
-                <Calendar className="h-4 w-4" />
-                <span>{timeSlots.length} créneaux créés</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Users className="h-4 w-4" />
-                <span>{timeSlots.filter(s => !s.available).length} réservés</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <CheckCircle className="h-4 w-4" />
-                <span>{timeSlots.filter(s => s.available).length} disponibles</span>
-              </div>
-            </div>
           </div>
           
-          <div className="flex-shrink-0 space-x-3">
-            <Button 
-              variant="outline"
-              onClick={() => {
-                const calendarStats = {
-                  totalSlots: timeSlots.length,
-                  availableSlots: timeSlots.filter(s => s.available).length,
-                  bookedSlots: timeSlots.filter(s => !s.available).length,
-                  utilizationRate: Math.round((timeSlots.filter(s => !s.available).length / timeSlots.length) * 100) || 0,
-                  nextAvailable: timeSlots.find(s => s.available)?.date.toLocaleDateString('fr-FR') || 'Aucun',
-                  popularTimeSlot: '14h-14h30',
-                  averageDuration: '30 minutes'
-                };
-                
-                alert(`📊 STATISTIQUES CALENDRIER\n\n📅 ${calendarStats.totalSlots} créneaux créés\n✅ ${calendarStats.availableSlots} disponibles\n📝 ${calendarStats.bookedSlots} réservés\n📈 Taux d'occupation: ${calendarStats.utilizationRate}%\n\n⏰ Prochain créneau: ${calendarStats.nextAvailable}\n🕐 Horaire populaire: ${calendarStats.popularTimeSlot}\n⏱️ Durée moyenne: ${calendarStats.averageDuration}\n\n📋 Calendrier optimisé !`);
-              }}
-            >
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Statistiques
-            </Button>
-            
+          <div className="flex-shrink-0">
             <Button onClick={() => setShowCreateSlotModal(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Nouveau Créneau
@@ -742,6 +708,11 @@ export const AppointmentCalendar: React.FC = () => {
                       <option value="virtual">Virtuel</option>
                       <option value="hybrid">Hybride</option>
                     </select>
+                    <div className="mt-2 text-xs text-gray-500">
+                      <p><strong>Présentiel:</strong> Rencontre sur votre stand</p>
+                      <p><strong>Virtuel:</strong> Visioconférence en ligne</p>
+                      <p><strong>Hybride:</strong> Stand + diffusion en ligne</p>
+                    </div>
                   </div>
                   
                   <div>
@@ -752,9 +723,18 @@ export const AppointmentCalendar: React.FC = () => {
                       type="text"
                       value={newSlotData.location}
                       onChange={(e) => setNewSlotData({...newSlotData, location: e.target.value})}
-                      placeholder="Ex: Stand A-12, Salle de réunion B-5"
+                      placeholder={
+                        newSlotData.type === 'virtual' ? 'Lien de visioconférence' :
+                        newSlotData.type === 'hybrid' ? 'Stand A-12 + Lien visio' :
+                        'Stand A-12, Salle de réunion B-5'
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+                    {newSlotData.type === 'virtual' && (
+                      <p className="mt-1 text-xs text-blue-600">
+                        💡 Le lien de visioconférence sera généré automatiquement si laissé vide
+                      </p>
+                    )}
                   </div>
                   
                   <div>
@@ -769,6 +749,27 @@ export const AppointmentCalendar: React.FC = () => {
                       onChange={(e) => setNewSlotData({...newSlotData, maxBookings: parseInt(e.target.value)})}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+                    <p className="mt-1 text-xs text-gray-500">
+                      Recommandé: 1 pour les RDV individuels, 2-5 pour les présentations de groupe
+                    </p>
+                  </div>
+                  
+                  {/* Aperçu du Créneau */}
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h4 className="font-medium text-blue-900 mb-2">Aperçu du créneau</h4>
+                    <div className="text-sm text-blue-800 space-y-1">
+                      <p><strong>Date:</strong> {new Date(newSlotData.date).toLocaleDateString('fr-FR')}</p>
+                      <p><strong>Horaire:</strong> {newSlotData.startTime} - {newSlotData.endTime}</p>
+                      <p><strong>Durée:</strong> {newSlotData.duration} minutes</p>
+                      <p><strong>Type:</strong> {
+                        newSlotData.type === 'in-person' ? 'Présentiel' :
+                        newSlotData.type === 'virtual' ? 'Virtuel' : 'Hybride'
+                      }</p>
+                      <p><strong>Capacité:</strong> {newSlotData.maxBookings} personne(s)</p>
+                      {newSlotData.location && (
+                        <p><strong>Lieu:</strong> {newSlotData.location}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
                 
