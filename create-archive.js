@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 // Créer un script simple pour télécharger les fichiers
 const downloadScript = `
