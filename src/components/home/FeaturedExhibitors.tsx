@@ -82,7 +82,7 @@ export const FeaturedExhibitors: React.FC = () => {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
           {featuredExhibitors.map((exhibitor, index) => (
             <motion.div
               key={exhibitor.id}
@@ -92,24 +92,25 @@ export const FeaturedExhibitors: React.FC = () => {
               viewport={{ once: true }}
             >
               <Card hover className="h-full">
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full p-6">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
                       <img
                         src={exhibitor.logo}
                         alt={exhibitor.companyName}
-                        className="h-12 w-12 rounded-lg object-cover"
+                        className="h-14 w-14 rounded-xl object-cover border-2 border-gray-100"
                       />
                       <div>
                         <h3 className="font-semibold text-gray-900 text-lg">
                           {exhibitor.companyName}
                         </h3>
-                        <p className="text-sm text-gray-500">{exhibitor.sector}</p>
+                        <p className="text-sm text-gray-600 font-medium">{exhibitor.sector}</p>
                       </div>
                     </div>
                     {exhibitor.verified && (
-                      <Badge variant="success" size="sm">
+                      <Badge variant="success" size="sm" className="flex items-center">
+                        <CheckCircle className="h-3 w-3 mr-1" />
                         Vérifié
                       </Badge>
                     )}
@@ -120,49 +121,69 @@ export const FeaturedExhibitors: React.FC = () => {
                     <Badge 
                       variant={getCategoryColor(exhibitor.category) as any}
                       size="sm"
+                      className="font-medium"
                     >
                       {getCategoryLabel(exhibitor.category)}
                     </Badge>
                   </div>
 
                   {/* Description */}
-                  <p className="text-gray-600 text-sm mb-6 flex-grow line-clamp-3">
+                  <p className="text-gray-700 text-sm mb-6 flex-grow line-clamp-3 leading-relaxed">
                     {exhibitor.description}
                   </p>
 
                   {/* Stats */}
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                  <div className="flex items-center justify-between text-sm text-gray-600 mb-6 bg-gray-50 p-3 rounded-lg">
                     <div className="flex items-center space-x-1">
-                      <Users className="h-4 w-4" />
+                      <Users className="h-4 w-4 text-blue-500" />
                       <span>{exhibitor.miniSite.views} vues</span>
                     </div>
                     <div className="flex items-center space-x-1">
-                      <MapPin className="h-4 w-4" />
+                      <MapPin className="h-4 w-4 text-green-500" />
                       <span>{exhibitor.products.length} produits</span>
                     </div>
                   </div>
 
                   {/* Actions */}
-                  <div className="flex space-x-3">
+                  <div className="flex flex-col space-y-2">
                     <Link to={`/exhibitors/${exhibitor.id}`} className="flex-1">
-                      <Button variant="outline" size="sm" className="w-full">
+                      <Button variant="outline" size="sm" className="w-full justify-center">
+                        <Eye className="h-4 w-4 mr-2" />
                         Voir le Profil
                       </Button>
                     </Link>
-                    <Link to={`/appointments?exhibitor=${exhibitor.id}`}>
+                    <div className="flex space-x-2">
+                      <Link to={`/appointments?exhibitor=${exhibitor.id}`} className="flex-1">
+                        <Button 
+                          size="sm" 
+                          className="w-full justify-center"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            window.location.href = `/networking?action=connect&exhibitor=${exhibitor.id}&source=homepage`;
+                          }}
+                        >
+                          <Calendar className="h-4 w-4 mr-2" />
+                          Prendre RDV
+                        </Button>
+                      </Link>
                       <Button 
-                        size="sm" 
-                        className="ml-2"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // Rediriger vers réseautage pour connexion selon forfait
-                          window.location.href = `/networking?action=connect&exhibitor=${exhibitor.id}&source=homepage`;
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          const contactData = {
+                            company: exhibitor.companyName,
+                            sector: exhibitor.sector,
+                            products: exhibitor.products.length,
+                            contact: 'contact@' + exhibitor.companyName.toLowerCase().replace(/\s+/g, '') + '.com'
+                          };
+                          
+                          alert(`💬 CONTACT DIRECT\n\n🏢 ${contactData.company}\n🏭 Secteur: ${contactData.sector}\n📦 ${contactData.products} produits\n📧 ${contactData.contact}\n\n✅ Messagerie ouverte !`);
                         }}
+                        title="Contacter directement"
                       >
-                        <Calendar className="h-4 w-4 mr-1" />
-                        RDV
+                        <MessageCircle className="h-4 w-4" />
                       </Button>
-                    </Link>
+                    </div>
                   </div>
                 </div>
               </Card>
