@@ -202,15 +202,15 @@ export const HeroSection: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="absolute -bottom-6 -left-6 bg-white text-gray-900 p-6 rounded-xl shadow-xl"
+                className="absolute -bottom-8 -left-8 bg-white text-siports-dark p-6 rounded-2xl shadow-2xl border border-siports-gray-200"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="bg-green-100 p-3 rounded-lg">
-                    <Users className="h-6 w-6 text-green-600" />
+                  <div className="bg-siports-primary/10 p-3 rounded-xl">
+                    <Users className="h-6 w-6 text-siports-primary" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-green-600">40</p>
-                    <p className="text-sm text-gray-600">Pays représentés</p>
+                    <p className="text-3xl font-bold text-siports-primary">40</p>
+                    <p className="text-sm text-siports-gray-600 font-medium">Pays représentés</p>
                   </div>
                 </div>
               </motion.div>
@@ -219,15 +219,15 @@ export const HeroSection: React.FC = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="absolute -top-6 -right-6 bg-white text-gray-900 p-6 rounded-xl shadow-xl"
+                className="absolute -top-8 -right-8 bg-white text-siports-dark p-6 rounded-2xl shadow-2xl border border-siports-gray-200"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="bg-blue-100 p-3 rounded-lg">
-                    <Calendar className="h-6 w-6 text-blue-600" />
+                  <div className="bg-siports-primary/10 p-3 rounded-xl">
+                    <Calendar className="h-6 w-6 text-siports-primary" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-blue-600">30+</p>
-                    <p className="text-sm text-gray-600">Conférences</p>
+                    <p className="text-3xl font-bold text-siports-primary">30+</p>
+                    <p className="text-sm text-siports-gray-600 font-medium">Conférences</p>
                   </div>
                 </div>
               </motion.div>

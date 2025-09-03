@@ -37,13 +37,13 @@ export const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="bg-blue-600 p-2 rounded-lg">
+          <Link to="/" className="flex items-center space-x-3">
+            <div className="bg-siports-primary p-2 rounded-xl">
               <Anchor className="h-6 w-6 text-white" />
             </div>
             <div>
-              <span className="text-xl font-bold text-gray-900">SIPORTS</span>
-              <span className="text-sm text-gray-500 block leading-none">2026</span>
+              <span className="text-2xl font-bold text-siports-primary font-heading">SIPORTS</span>
+              <span className="text-sm text-siports-accent block leading-none font-medium">2026</span>
             </div>
           </Link>
 
@@ -53,9 +53,10 @@ export const Header: React.FC = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                className="text-siports-gray-700 hover:text-siports-primary px-4 py-2 text-sm font-medium transition-colors relative group"
               >
                 {item.name}
+                <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-siports-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </Link>
             ))}
             
@@ -63,25 +64,26 @@ export const Header: React.FC = () => {
             <div className="relative">
               <button
                 onClick={() => setIsInfoMenuOpen(!isInfoMenuOpen)}
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors flex items-center space-x-1"
+                className="text-siports-gray-700 hover:text-siports-primary px-4 py-2 text-sm font-medium transition-colors flex items-center space-x-1 relative group"
               >
                 <span>Informations</span>
                 <svg className={`w-4 h-4 transition-transform ${isInfoMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
+                <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-siports-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </button>
 
               {isInfoMenuOpen && (
-                <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-2xl shadow-siports-lg border border-siports-gray-200 py-3 z-50">
                   {infoMenuItems.map((item) => (
                     <Link
                       key={item.name}
                       to={item.href}
                       onClick={() => setIsInfoMenuOpen(false)}
-                      className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                      className="block px-6 py-3 text-sm text-siports-gray-700 hover:bg-siports-gray-50 hover:text-siports-primary transition-colors border-l-4 border-transparent hover:border-siports-primary"
                     >
-                      <div className="font-medium">{item.name}</div>
-                      <div className="text-xs text-gray-500">{item.description}</div>
+                      <div className="font-semibold">{item.name}</div>
+                      <div className="text-xs text-siports-gray-500 mt-1">{item.description}</div>
                     </Link>
                   ))}
                   
@@ -345,12 +347,12 @@ export const Header: React.FC = () => {
             ) : (
               <div className="flex items-center space-x-3">
                 <Link to="/login">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="outline" size="sm" className="border-siports-primary text-siports-primary hover:bg-siports-primary hover:text-white">
                     Connexion
                   </Button>
                 </Link>
                 <Link to="/register">
-                  <Button size="sm">
+                  <Button size="sm" className="bg-siports-primary hover:bg-siports-dark text-white">
                     Inscription
                   </Button>
                 </Link>
