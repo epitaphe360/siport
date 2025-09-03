@@ -33,9 +33,18 @@ import { ExhibitorCreationSimulator } from './components/admin/ExhibitorCreation
 import { UserManagementPage } from './pages/UserManagementPage';
 import { ChatBot } from './components/chatbot/ChatBot';
 import { ChatBotToggle } from './components/chatbot/ChatBotToggle';
+import { useLanguageStore } from './store/languageStore';
 
 function App() {
   const [isChatBotOpen, setIsChatBotOpen] = React.useState(false);
+  const { currentLanguage, getCurrentLanguage } = useLanguageStore();
+  
+  // Appliquer la direction du texte selon la langue
+  React.useEffect(() => {
+    const currentLang = getCurrentLanguage();
+    document.documentElement.dir = currentLang.rtl ? 'rtl' : 'ltr';
+    document.documentElement.lang = currentLang.code;
+  }, [currentLanguage, getCurrentLanguage]);
 
   return (
     <Router>

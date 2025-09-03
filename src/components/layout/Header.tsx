@@ -8,29 +8,30 @@ import {
   Calendar, 
   MessageCircle, 
   Bell,
-  Search,
-  Globe
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useAuthStore } from '../../store/authStore';
+import { LanguageSelector } from '../ui/LanguageSelector';
+import { useTranslation } from '../../hooks/useTranslation';
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isInfoMenuOpen, setIsInfoMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuthStore();
+  const { t } = useTranslation();
 
   const navigation = [
-    { name: 'Accueil', href: '/' },
-    { name: 'Exposants', href: '/exhibitors' },
-    { name: 'Partenaires', href: '/partners' },
-    { name: 'Réseautage', href: '/networking' },
+    { name: t('nav.home'), href: '/' },
+    { name: t('nav.exhibitors'), href: '/exhibitors' },
+    { name: t('nav.partners'), href: '/partners' },
+    { name: t('nav.networking'), href: '/networking' },
   ];
 
   const infoMenuItems = [
-    { name: 'Pavillons', href: '/pavilions', description: 'Espaces thématiques' },
-    { name: 'Événements', href: '/events', description: 'Conférences & ateliers' },
-    { name: 'Actualités', href: '/news', description: 'Nouvelles du secteur' }
+    { name: t('nav.pavilions'), href: '/pavilions', description: 'Espaces thématiques' },
+    { name: t('nav.events'), href: '/events', description: 'Conférences & ateliers' },
+    { name: t('nav.news'), href: '/news', description: 'Nouvelles du secteur' }
   ];
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
@@ -66,7 +67,7 @@ export const Header: React.FC = () => {
                 onClick={() => setIsInfoMenuOpen(!isInfoMenuOpen)}
                 className="text-siports-gray-700 hover:text-siports-primary px-4 py-2 text-sm font-medium transition-colors flex items-center space-x-1 relative group"
               >
-                <span>Informations</span>
+                <span>{t('nav.information')}</span>
                 <svg className={`w-4 h-4 transition-transform ${isInfoMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -90,7 +91,7 @@ export const Header: React.FC = () => {
                   {/* Mobile Info Menu */}
                   <div className="border-t border-gray-200 pt-2 mt-2">
                     <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Informations
+                      {t('nav.information')}
                     </div>
                     {infoMenuItems.map((item) => (
                       <Link
@@ -122,35 +123,7 @@ export const Header: React.FC = () => {
           {/* Right side */}
           <div className="flex items-center space-x-4">
             {/* Language Selector */}
-            <div className="relative">
-              <button 
-                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                onClick={() => {
-                  const currentLang = localStorage.getItem('siports-language') || 'fr';
-                  const newLang = currentLang === 'fr' ? 'en' : currentLang === 'en' ? 'ar' : 'fr';
-                  
-                  const languages = {
-                    fr: { name: 'Français', flag: '🇫🇷', code: 'fr-FR' },
-                    en: { name: 'English', flag: '🇬🇧', code: 'en-US' },
-                    ar: { name: 'العربية', flag: '🇲🇦', code: 'ar-MA' }
-                  };
-                  
-                  localStorage.setItem('siports-language', newLang);
-                  localStorage.setItem('siports-language-changed', new Date().toISOString());
-                  
-                  const selectedLang = languages[newLang as keyof typeof languages];
-                  
-                  alert(`🌐 LANGUE MODIFIÉE\n\n${selectedLang.flag} Nouvelle langue: ${selectedLang.name}\n🔤 Code: ${selectedLang.code}\n📅 Changement: ${new Date().toLocaleTimeString('fr-FR')}\n\n🔄 Rechargement de l'interface...\n⚙️ Préférences sauvegardées\n\n✅ Interface mise à jour !`);
-                  
-                  setTimeout(() => {
-                    window.location.reload();
-                  }, 1500);
-                }}
-                title="Changer de langue"
-              >
-              <Globe className="h-5 w-5" />
-              </button>
-            </div>
+            <LanguageSelector />
 
             {isAuthenticated ? (
               <>
@@ -338,7 +311,7 @@ export const Header: React.FC = () => {
                         }}
                         className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                       >
-                        Déconnexion
+                        {t('nav.logout')}
                       </button>
                     </div>
                   )}
@@ -348,12 +321,12 @@ export const Header: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <Link to="/login">
                   <Button variant="outline" size="sm" className="border-siports-primary text-siports-primary hover:bg-siports-primary hover:text-white">
-                    Connexion
+                    {t('nav.login')}
                   </Button>
                 </Link>
                 <Link to="/register">
                   <Button size="sm" className="bg-siports-primary hover:bg-siports-dark text-white">
-                    Inscription
+                    {t('nav.register')}
                   </Button>
                 </Link>
               </div>

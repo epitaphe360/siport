@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Users, Building2, ArrowRight } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { motion } from 'framer-motion';
+import { useTranslation } from '../../hooks/useTranslation';
 
 export const HeroSection: React.FC = () => {
   const [timeLeft, setTimeLeft] = React.useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     const salonDate = new Date('2026-02-05T09:30:00');
@@ -38,6 +40,10 @@ export const HeroSection: React.FC = () => {
     return num.toString().padStart(2, '0');
   };
 
+  const getTimeUnit = (value: number, singularKey: string, pluralKey: string) => {
+    return value <= 1 ? t(singularKey) : t(pluralKey);
+  };
+
   return (
     <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white overflow-hidden">
       {/* Background Pattern */}
@@ -61,13 +67,10 @@ export const HeroSection: React.FC = () => {
                 5-7 Février 2026
               </span>
               <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-6">
-                Salon International des{' '}
-                <span className="text-blue-300">Ports</span>
+                {t('hero.title')}
               </h1>
               <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-                La plateforme de référence pour l'écosystème portuaire mondial. 
-                Connectez-vous avec plus de 6 000 professionnels de 40 pays et 
-                découvrez les innovations qui façonnent l'avenir des ports.
+                {t('hero.subtitle')}
               </p>
             </div>
 
@@ -80,10 +83,10 @@ export const HeroSection: React.FC = () => {
             >
               <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
                 <h3 className="text-2xl font-bold text-center mb-2 text-white">
-                  Ouverture dans :
+                  {t('hero.countdown.title')}
                 </h3>
                 <p className="text-center text-blue-200 mb-6 text-sm">
-                  Le plus grand salon portuaire international
+                  {t('hero.countdown.subtitle')}
                 </p>
                 
                 <div className="grid grid-cols-4 gap-4">
@@ -92,7 +95,7 @@ export const HeroSection: React.FC = () => {
                       {formatNumber(timeLeft.days)}
                     </div>
                     <div className="text-blue-100 text-xs font-medium uppercase tracking-wide">
-                      {timeLeft.days <= 1 ? 'Jour' : 'Jours'}
+                      {getTimeUnit(timeLeft.days, 'time.day', 'time.days')}
                     </div>
                   </div>
 
@@ -101,7 +104,7 @@ export const HeroSection: React.FC = () => {
                       {formatNumber(timeLeft.hours)}
                     </div>
                     <div className="text-purple-100 text-xs font-medium uppercase tracking-wide">
-                      {timeLeft.hours <= 1 ? 'Heure' : 'Heures'}
+                      {getTimeUnit(timeLeft.hours, 'time.hour', 'time.hours')}
                     </div>
                   </div>
 
@@ -110,7 +113,7 @@ export const HeroSection: React.FC = () => {
                       {formatNumber(timeLeft.minutes)}
                     </div>
                     <div className="text-green-100 text-xs font-medium uppercase tracking-wide">
-                      {timeLeft.minutes <= 1 ? 'Minute' : 'Minutes'}
+                      {getTimeUnit(timeLeft.minutes, 'time.minute', 'time.minutes')}
                     </div>
                   </div>
 
@@ -119,7 +122,7 @@ export const HeroSection: React.FC = () => {
                       {formatNumber(timeLeft.seconds)}
                     </div>
                     <div className="text-orange-100 text-xs font-medium uppercase tracking-wide">
-                      {timeLeft.seconds <= 1 ? 'Seconde' : 'Secondes'}
+                      {getTimeUnit(timeLeft.seconds, 'time.second', 'time.seconds')}
                     </div>
                   </div>
                 </div>
@@ -128,7 +131,7 @@ export const HeroSection: React.FC = () => {
                   <div className="inline-flex items-center space-x-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
                     <MapPin className="h-4 w-4 text-white" />
                     <span className="text-white text-sm font-medium">
-                      Mohammed VI Exhibition Center • El Jadida, Maroc
+                      Mohammed VI Exhibition Center • {t('hero.stats.location')}
                     </span>
                   </div>
                 </div>
@@ -142,8 +145,8 @@ export const HeroSection: React.FC = () => {
                   <MapPin className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-semibold">El Jadida</p>
-                  <p className="text-blue-200 text-sm">Maroc</p>
+                  <p className="font-semibold">{t('hero.stats.location')}</p>
+                  <p className="text-blue-200 text-sm">Morocco</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
@@ -152,7 +155,7 @@ export const HeroSection: React.FC = () => {
                 </div>
                 <div>
                   <p className="font-semibold">6 000+</p>
-                  <p className="text-blue-200 text-sm">Participants</p>
+                  <p className="text-blue-200 text-sm">{t('hero.stats.participants')}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
@@ -161,7 +164,7 @@ export const HeroSection: React.FC = () => {
                 </div>
                 <div>
                   <p className="font-semibold">300+</p>
-                  <p className="text-blue-200 text-sm">Exposants</p>
+                  <p className="text-blue-200 text-sm">{t('hero.stats.exhibitors')}</p>
                 </div>
               </div>
             </div>
@@ -170,13 +173,13 @@ export const HeroSection: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/register">
                 <Button size="lg" className="bg-white text-blue-900 hover:bg-blue-50 w-full sm:w-auto">
-                  Devenir Exposant
+                  {t('hero.cta.exhibitor')}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link to="/exhibitors">
                 <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-900 w-full sm:w-auto">
-                  Découvrir les Exposants
+                  {t('hero.cta.discover')}
                 </Button>
               </Link>
             </div>
