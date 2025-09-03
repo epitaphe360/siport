@@ -1,29 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { 
-  ArrowLeft,
-  Calendar,
-  Clock,
-  User,
-  Eye,
-  Share2,
-  Bookmark,
-  MessageCircle,
-  ThumbsUp,
-  Tag,
-  ExternalLink,
-  Download,
-  Print,
-  Globe,
-  TrendingUp,
-  BookOpen,
-  Heart,
-  Star,
-  ChevronRight,
-  Facebook,
-  Twitter,
-  Linkedin
-} from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, User, Eye, Share2, Bookmark, MessageCircle, ThumbsUp, Tag, ExternalLink, Download, Printer as Print, Globe, TrendingUp, BookOpen, Heart, Star, ChevronRight, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';

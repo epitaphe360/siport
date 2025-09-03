@@ -63,7 +63,7 @@ const mockNewsArticles: NewsArticle[] = [
     title: 'Innovation portuaire : Les technologies qui transforment les ports africains',
     excerpt: 'Découvrez les dernières innovations technologiques qui révolutionnent les opérations portuaires en Afrique et leur impact sur l\'efficacité.',
     content: 'L\'Afrique connaît une révolution technologique dans ses infrastructures portuaires. Des ports intelligents aux systèmes automatisés, les technologies émergentes transforment radicalement les opérations portuaires sur le continent...',
-    content: `L'Afrique connaît une révolution technologique dans ses infrastructures portuaires. Des ports intelligents aux systèmes automatisés, les technologies émergentes transforment radicalement les opérations portuaires sur le continent.
+    content: \`L'Afrique connaît une révolution technologique dans ses infrastructures portuaires. Des ports intelligents aux systèmes automatisés, les technologies émergentes transforment radicalement les opérations portuaires sur le continent.
     author: 'Dr. Ahmed El Mansouri',
     publishedAt: new Date('2024-01-18T14:30:00'),
     category: 'Innovation',
