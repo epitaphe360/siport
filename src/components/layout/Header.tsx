@@ -17,18 +17,21 @@ import { useAuthStore } from '../../store/authStore';
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isInfoMenuOpen, setIsInfoMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuthStore();
 
   const navigation = [
     { name: 'Accueil', href: '/' },
     { name: 'Exposants', href: '/exhibitors' },
     { name: 'Partenaires', href: '/partners' },
-    { name: 'Pavillons', href: '/pavilions' },
     { name: 'Réseautage', href: '/networking' },
-    { name: 'Événements', href: '/events' },
-    { name: 'Actualités', href: '/news' }
   ];
 
+  const infoMenuItems = [
+    { name: 'Pavillons', href: '/pavilions', description: 'Espaces thématiques' },
+    { name: 'Événements', href: '/events', description: 'Conférences & ateliers' },
+    { name: 'Actualités', href: '/news', description: 'Nouvelles du secteur' }
+  ];
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,6 +58,54 @@ export const Header: React.FC = () => {
                 {item.name}
               </Link>
             ))}
+            
+            {/* Info Menu Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsInfoMenuOpen(!isInfoMenuOpen)}
+                className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors flex items-center space-x-1"
+              >
+                <span>Informations</span>
+                <svg className={`w-4 h-4 transition-transform ${isInfoMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {isInfoMenuOpen && (
+                <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                  {infoMenuItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      onClick={() => setIsInfoMenuOpen(false)}
+                      className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                    >
+                      <div className="font-medium">{item.name}</div>
+                      <div className="text-xs text-gray-500">{item.description}</div>
+                    </Link>
+                  ))}
+                  
+                  {/* Mobile Info Menu */}
+                  <div className="border-t border-gray-200 pt-2 mt-2">
+                    <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Informations
+                    </div>
+                    {infoMenuItems.map((item) => (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        className="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <div>{item.name}</div>
+                        <div className="text-xs text-gray-500">{item.description}</div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            
             {/* Métriques uniquement pour les admins */}
             {user?.type === 'admin' && (
               <Link
