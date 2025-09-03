@@ -28,9 +28,15 @@ interface NewsState {
   // Actions
   fetchNews: () => Promise<void>;
   fetchFromOfficialSite: () => Promise<void>;
+  getArticleById: (id: string) => NewsArticle | null;
   setCategory: (category: string) => void;
   setSearchTerm: (term: string) => void;
   getFilteredArticles: () => NewsArticle[];
+
+  getArticleById: (id: string) => {
+    const { articles } = get();
+    return articles.find(article => article.id === id) || null;
+  },
 }
 
 // Mock data basé sur le style du site officiel SIPORTS
@@ -40,6 +46,7 @@ const mockNewsArticles: NewsArticle[] = [
     title: 'SIPORTS 2026 : El Jadida se prépare à accueillir le plus grand salon portuaire d\'Afrique',
     excerpt: 'La ville d\'El Jadida se mobilise pour accueillir SIPORTS 2026, événement majeur qui réunira plus de 6000 professionnels du secteur portuaire.',
     content: 'El Jadida, perle de la côte atlantique marocaine, se prépare à devenir le centre névralgique du secteur portuaire africain et international. Du 5 au 7 février 2026, la ville accueillera SIPORTS 2026, le Salon International des Ports, qui s\'annonce comme l\'événement de référence pour l\'écosystème portuaire mondial...',
+    content: `El Jadida, perle de la côte atlantique marocaine, se prépare à devenir le centre névralgique du secteur portuaire africain et international. Du 5 au 7 février 2026, la ville accueillera SIPORTS 2026, le Salon International des Ports, qui s'annonce comme l'événement de référence pour l'écosystème portuaire mondial.
     author: 'Équipe SIPORTS',
     publishedAt: new Date('2024-01-20T10:00:00'),
     category: 'Événement',
@@ -56,6 +63,7 @@ const mockNewsArticles: NewsArticle[] = [
     title: 'Innovation portuaire : Les technologies qui transforment les ports africains',
     excerpt: 'Découvrez les dernières innovations technologiques qui révolutionnent les opérations portuaires en Afrique et leur impact sur l\'efficacité.',
     content: 'L\'Afrique connaît une révolution technologique dans ses infrastructures portuaires. Des ports intelligents aux systèmes automatisés, les technologies émergentes transforment radicalement les opérations portuaires sur le continent...',
+    content: `L'Afrique connaît une révolution technologique dans ses infrastructures portuaires. Des ports intelligents aux systèmes automatisés, les technologies émergentes transforment radicalement les opérations portuaires sur le continent.
     author: 'Dr. Ahmed El Mansouri',
     publishedAt: new Date('2024-01-18T14:30:00'),
     category: 'Innovation',

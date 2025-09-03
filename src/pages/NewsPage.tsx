@@ -247,7 +247,9 @@ export const NewsPage: React.FC = () => {
                         <div className="flex space-x-2">
                           <Button size="sm">
                             <BookOpen className="h-4 w-4 mr-2" />
-                            Lire l'article
+                            <Link to={`/news/${article.id}`} className="flex items-center">
+                              Lire l'article
+                            </Link>
                           </Button>
                           <Button 
                             variant="outline" 
@@ -412,7 +414,9 @@ export const NewsPage: React.FC = () => {
                         <div className="flex space-x-2">
                           <Button size="sm" className="flex-1">
                             <BookOpen className="h-4 w-4 mr-2" />
-                            Lire l'article
+                            <Link to={`/news/${article.id}`} className="flex items-center">
+                              Lire l'article
+                            </Link>
                           </Button>
                           <Button variant="outline" size="sm">
                             <Share2 className="h-4 w-4" />

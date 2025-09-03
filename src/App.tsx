@@ -29,6 +29,7 @@ import { ExhibitorValidation } from './components/admin/ExhibitorValidation';
 import { ModerationPanel } from './components/admin/ModerationPanel';
 import { MiniSiteEditor } from './components/minisite/MiniSiteEditor';
 import { NewsPage } from './pages/NewsPage';
+import { ArticleDetailPage } from './pages/ArticleDetailPage';
 import { ExhibitorCreationSimulator } from './components/admin/ExhibitorCreationSimulator';
 import { UserManagementPage } from './pages/UserManagementPage';
 import { ChatBot } from './components/chatbot/ChatBot';
@@ -81,6 +82,7 @@ function App() {
             <Route path="/admin/validation" element={<ExhibitorValidation />} />
             <Route path="/admin/moderation" element={<ModerationPanel />} />
             <Route path="/news" element={<NewsPage />} />
+            <Route path="/news/:id" element={<ArticleDetailPage />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<UserManagementPage />} />
           </Routes>
