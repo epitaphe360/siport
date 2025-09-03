@@ -193,6 +193,8 @@ const mockPartnerData: Partner = {
 export const PartnerDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState<'overview' | 'projects' | 'partnership' | 'media' | 'contact'>('overview');
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [showProjectModal, setShowProjectModal] = useState(false);
 
   const partner = mockPartnerData; // En réalité, vous récupéreriez selon l'ID
 
@@ -604,7 +606,15 @@ export const PartnerDetailPage: React.FC = () => {
                       </p>
                     </div>
                     
-                    <Button variant="outline" size="sm" className="w-full">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full"
+                      onClick={() => {
+                        setSelectedProject(project);
+                        setShowProjectModal(true);
+                      }}
+                    >
                       <Eye className="h-4 w-4 mr-2" />
                       Voir les détails
                     </Button>
@@ -955,6 +965,411 @@ export const PartnerDetailPage: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Modal Détails Projet */}
+      {showProjectModal && selectedProject && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            {/* Header Modal */}
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-t-2xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-2xl font-bold">{selectedProject.title}</h3>
+                  <p className="text-purple-100 mt-1">Projet Partenaire SIPORTS</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowProjectModal(false);
+                    setSelectedProject(null);
+                  }}
+                  className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+              
+              <div className="mt-4">
+                <Badge 
+                  variant={getStatusColor(selectedProject.status) as any}
+                  className="bg-white text-purple-800"
+                >
+                  {getStatusLabel(selectedProject.status)}
+                </Badge>
+              </div>
+            </div>
+
+            {/* Contenu Modal */}
+            <div className="p-8">
+              {/* Image Projet */}
+              <div className="mb-8">
+                <img
+                  src={selectedProject.image}
+                  alt={selectedProject.title}
+                  className="w-full h-64 object-cover rounded-xl shadow-lg"
+                />
+              </div>
+
+              {/* Description Détaillée */}
+              <div className="mb-8">
+                <h4 className="text-xl font-bold text-gray-900 mb-4">
+                  Description du Projet
+                </h4>
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  {selectedProject.description}
+                </p>
+                
+                {/* Impact Détaillé */}
+                <div className="bg-green-50 p-6 rounded-xl border border-green-200">
+                  <h5 className="font-semibold text-green-900 mb-3 flex items-center">
+                    <TrendingUp className="h-5 w-5 mr-2" />
+                    Impact Mesuré
+                  </h5>
+                  <p className="text-green-800 font-medium text-lg">
+                    📈 {selectedProject.impact}
+                  </p>
+                </div>
+              </div>
+
+              {/* Détails Techniques */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                  <h5 className="font-semibold text-gray-900 mb-4">
+                    Informations Projet
+                  </h5>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Statut :</span>
+                      <Badge variant={getStatusColor(selectedProject.status) as any} size="sm">
+                        {getStatusLabel(selectedProject.status)}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Durée :</span>
+                      <span className="font-medium">
+                        {selectedProject.status === 'completed' ? '24 mois' : 
+                         selectedProject.status === 'ongoing' ? '18 mois (en cours)' : '36 mois (planifié)'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Budget :</span>
+                      <span className="font-medium text-green-600">
+                        {selectedProject.status === 'completed' ? '15M€' : 
+                         selectedProject.status === 'ongoing' ? '25M€' : '45M€'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Équipe :</span>
+                      <span className="font-medium">
+                <div>
+                  <h5 className="font-semibold text-gray-900 mb-4">
+                    Technologies Utilisées
+                  </h5>
+                  <div className="space-y-2">
+                    {selectedProject.id === '1' && [
+                      'Intelligence Artificielle',
+                      'IoT Maritime',
+                      'Automatisation des grues',
+                      'Analytics temps réel',
+                      'Blockchain logistique'
+                    ].map((tech, idx) => (
+                      <div key={idx} className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                        <span className="text-sm text-gray-700">{tech}</span>
+                      </div>
+                    ))}
+                    
+                    {selectedProject.id === '2' && [
+                      'Énergies renouvelables',
+                      'Panneaux solaires',
+                      'Éoliennes offshore',
+                      'Stockage d\'énergie',
+                      'Smart Grid portuaire'
+                    ].map((tech, idx) => (
+                      <div key={idx} className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                        <span className="text-sm text-gray-700">{tech}</span>
+                      </div>
+                    ))}
+                    
+                    {selectedProject.id === '3' && [
+                      'Simulateurs avancés',
+                      'Réalité virtuelle',
+                      'E-learning maritime',
+                      'Certification digitale',
+                      'Plateforme collaborative'
+                    ].map((tech, idx) => (
+                      <div key={idx} className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
+                        <span className="text-sm text-gray-700">{tech}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+                        {selectedProject.status === 'completed' ? '45 experts' : 
+              {/* Chronologie du Projet */}
+              <div className="mb-8">
+                <h5 className="font-semibold text-gray-900 mb-4">
+                  Chronologie du Projet
+                </h5>
+                <div className="space-y-4">
+                  {selectedProject.status === 'completed' && [
+                    { phase: 'Phase 1 - Étude', date: 'Jan 2022', status: 'completed' },
+                    { phase: 'Phase 2 - Développement', date: 'Jun 2022', status: 'completed' },
+                    { phase: 'Phase 3 - Tests', date: 'Jan 2023', status: 'completed' },
+                    { phase: 'Phase 4 - Déploiement', date: 'Jun 2023', status: 'completed' },
+                    { phase: 'Phase 5 - Optimisation', date: 'Dec 2023', status: 'completed' }
+                  ].map((phase, idx) => (
+                    <div key={idx} className="flex items-center space-x-4">
+                      <div className="w-4 h-4 bg-green-500 rounded-full flex-shrink-0"></div>
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{phase.phase}</p>
+                        <p className="text-sm text-gray-600">{phase.date}</p>
+                      </div>
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                    </div>
+                  ))}
+                  
+                  {selectedProject.status === 'ongoing' && [
+                    { phase: 'Phase 1 - Planification', date: 'Mar 2023', status: 'completed' },
+                    { phase: 'Phase 2 - Infrastructure', date: 'Sep 2023', status: 'completed' },
+                    { phase: 'Phase 3 - Équipements', date: 'Mar 2024', status: 'ongoing' },
+                    { phase: 'Phase 4 - Tests', date: 'Sep 2024', status: 'pending' },
+                    { phase: 'Phase 5 - Mise en service', date: 'Mar 2025', status: 'pending' }
+                  ].map((phase, idx) => (
+                    <div key={idx} className="flex items-center space-x-4">
+                      <div className={`w-4 h-4 rounded-full flex-shrink-0 ${
+                        phase.status === 'completed' ? 'bg-green-500' :
+                        phase.status === 'ongoing' ? 'bg-yellow-500' : 'bg-gray-300'
+                      }`}></div>
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{phase.phase}</p>
+                        <p className="text-sm text-gray-600">{phase.date}</p>
+                      </div>
+                      {phase.status === 'completed' && <CheckCircle className="h-5 w-5 text-green-500" />}
+                      {phase.status === 'ongoing' && <Clock className="h-5 w-5 text-yellow-500" />}
+                    </div>
+                  ))}
+                  
+                  {selectedProject.status === 'planned' && [
+                    { phase: 'Phase 1 - Études préliminaires', date: 'Jun 2024', status: 'pending' },
+                    { phase: 'Phase 2 - Financement', date: 'Dec 2024', status: 'pending' },
+                    { phase: 'Phase 3 - Construction', date: 'Jun 2025', status: 'pending' },
+                    { phase: 'Phase 4 - Formation', date: 'Dec 2025', status: 'pending' },
+                    { phase: 'Phase 5 - Inauguration', date: 'Jun 2026', status: 'pending' }
+                  ].map((phase, idx) => (
+                    <div key={idx} className="flex items-center space-x-4">
+                      <div className="w-4 h-4 bg-gray-300 rounded-full flex-shrink-0"></div>
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{phase.phase}</p>
+                        <p className="text-sm text-gray-600">{phase.date}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+                         selectedProject.status === 'ongoing' ? '67 experts' : '85 experts'}
+              {/* Partenaires du Projet */}
+              <div className="mb-8">
+                <h5 className="font-semibold text-gray-900 mb-4">
+                  Partenaires du Projet
+                </h5>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[
+                    { name: 'Autorité Portuaire Casablanca', role: 'Maître d\'ouvrage', logo: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=100' },
+                    { name: 'TechMarine Solutions', role: 'Intégrateur technique', logo: 'https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=100' },
+                    { name: 'Green Port Initiative', role: 'Consultant durabilité', logo: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=100' }
+                  ].map((partner, idx) => (
+                    <div key={idx} className="bg-gray-50 p-4 rounded-lg">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <img
+                          src={partner.logo}
+                          alt={partner.name}
+                          className="h-8 w-8 rounded-lg object-cover"
+                        />
+                        <div>
+                          <p className="font-medium text-gray-900 text-sm">{partner.name}</p>
+                          <p className="text-xs text-gray-600">{partner.role}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+                      </span>
+              {/* Métriques Détaillées */}
+              <div className="mb-8">
+                <h5 className="font-semibold text-gray-900 mb-4">
+                  Métriques & KPIs
+                </h5>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-blue-600 mb-1">
+                      {selectedProject.status === 'completed' ? '100%' : 
+                       selectedProject.status === 'ongoing' ? '65%' : '15%'}
+                    </div>
+                    <div className="text-sm text-blue-700">Avancement</div>
+                  </div>
+                  
+                  <div className="bg-green-50 p-4 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-green-600 mb-1">
+                      {selectedProject.status === 'completed' ? '98%' : 
+                       selectedProject.status === 'ongoing' ? '92%' : '95%'}
+                    </div>
+                    <div className="text-sm text-green-700">Satisfaction</div>
+                  </div>
+                  
+                  <div className="bg-purple-50 p-4 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-purple-600 mb-1">
+                      {selectedProject.status === 'completed' ? '285%' : 
+                       selectedProject.status === 'ongoing' ? '220%' : '350%'}
+                    </div>
+                    <div className="text-sm text-purple-700">ROI Prévu</div>
+                  </div>
+                  
+                  <div className="bg-orange-50 p-4 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-orange-600 mb-1">
+                      {selectedProject.status === 'completed' ? '2.5M€' : 
+                       selectedProject.status === 'ongoing' ? '1.8M€' : '3.2M€'}
+                    </div>
+                    <div className="text-sm text-orange-700">Valeur Générée</div>
+                  </div>
+                </div>
+              </div>
+                    </div>
+              {/* Galerie Photos */}
+              <div className="mb-8">
+                <h5 className="font-semibold text-gray-900 mb-4">
+                  Galerie du Projet
+                </h5>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=300',
+                    'https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=300',
+                    'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=300',
+                    'https://images.pexels.com/photos/906982/pexels-photo-906982.jpeg?auto=compress&cs=tinysrgb&w=300'
+                  ].map((image, idx) => (
+                    <div key={idx} className="aspect-square overflow-hidden rounded-lg cursor-pointer hover:scale-105 transition-transform">
+                      <img
+                        src={image}
+                        alt={`Projet ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+                  </div>
+              {/* Documents & Ressources */}
+              <div className="mb-8">
+                <h5 className="font-semibold text-gray-900 mb-4">
+                  Documents & Ressources
+                </h5>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    { name: 'Rapport technique complet', type: 'PDF', size: '2.4 MB', icon: FileText },
+                    { name: 'Présentation exécutive', type: 'PDF', size: '1.8 MB', icon: FileText },
+                    { name: 'Vidéo de démonstration', type: 'MP4', size: '45 MB', icon: Video },
+                    { name: 'Étude d\'impact', type: 'PDF', size: '3.1 MB', icon: FileText }
+                  ].map((doc, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-blue-100 p-2 rounded-lg">
+                          <doc.icon className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900 text-sm">{doc.name}</p>
+                          <p className="text-xs text-gray-600">{doc.type} • {doc.size}</p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          alert(`📄 TÉLÉCHARGEMENT\n\n📋 Document: ${doc.name}\n📁 Format: ${doc.type}\n💾 Taille: ${doc.size}\n\n⬇️ Téléchargement démarré !`);
+                        }}
+                      >
+                        <Download className="h-3 w-3 mr-1" />
+                        Télécharger
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+                </div>
+              {/* Actions */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button 
+                  className="flex-1 bg-purple-600 hover:bg-purple-700"
+                  onClick={() => {
+                    const contactData = {
+                      project: selectedProject.title,
+                      contact: 'Marie Dubois',
+                      email: 'marie.dubois@portcasablanca.ma',
+                      phone: '+212 522 123 457'
+                    };
+                    
+                    alert(`📞 CONTACT PROJET\n\n🏗️ Projet: ${contactData.project}\n👤 Responsable: ${contactData.contact}\n📧 Email: ${contactData.email}\n📱 Tél: ${contactData.phone}\n\n💬 Messagerie directe ouverte !`);
+                  }}
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Contacter l'Équipe Projet
+                </Button>
+                
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    const shareData = {
+                      title: `Projet SIPORTS: ${selectedProject.title}`,
+                      text: selectedProject.description,
+                      url: window.location.href + '#project-' + selectedProject.id
+                    };
+                    
+                    if (navigator.share) {
+                      navigator.share(shareData);
+                    } else {
+                      navigator.clipboard.writeText(shareData.url);
+                      alert('🔗 Lien du projet copié !');
+                    }
+                  }}
+                >
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Partager le Projet
+                </Button>
+                
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    const reportData = {
+                      project: selectedProject.title,
+                      pages: 24,
+                      format: 'PDF Haute Qualité',
+                      size: '4.2 MB'
+                    };
+                    
+                    // Simulation téléchargement rapport
+                    const link = document.createElement('a');
+                    link.href = 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEK';
+                    link.download = `rapport-${selectedProject.title.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    alert(`📊 RAPPORT DÉTAILLÉ\n\n🏗️ ${reportData.project}\n📄 ${reportData.pages} pages\n📁 ${reportData.format}\n💾 ${reportData.size}\n\n⬇️ Téléchargement démarré !`);
+                  }}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Rapport Complet
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       {/* Floating Action Button */}
       <div className="fixed bottom-6 right-6 z-50">
