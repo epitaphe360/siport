@@ -334,11 +334,45 @@ export const AppointmentCalendar: React.FC = () => {
               Calendrier des Rendez-vous
             </h2>
             <p className="text-gray-600 mt-1">
-              Gérez vos créneaux et rendez-vous - Exposant #{exhibitorId}
+              Gérez vos créneaux et rendez-vous - Port Solutions Inc.
             </p>
+            <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+              <div className="flex items-center space-x-1">
+                <Calendar className="h-4 w-4" />
+                <span>{timeSlots.length} créneaux créés</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Users className="h-4 w-4" />
+                <span>{timeSlots.filter(s => !s.available).length} réservés</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <CheckCircle className="h-4 w-4" />
+                <span>{timeSlots.filter(s => s.available).length} disponibles</span>
+              </div>
+            </div>
           </div>
           
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 space-x-3">
+            <Button 
+              variant="outline"
+              onClick={() => {
+                const calendarStats = {
+                  totalSlots: timeSlots.length,
+                  availableSlots: timeSlots.filter(s => s.available).length,
+                  bookedSlots: timeSlots.filter(s => !s.available).length,
+                  utilizationRate: Math.round((timeSlots.filter(s => !s.available).length / timeSlots.length) * 100) || 0,
+                  nextAvailable: timeSlots.find(s => s.available)?.date.toLocaleDateString('fr-FR') || 'Aucun',
+                  popularTimeSlot: '14h-14h30',
+                  averageDuration: '30 minutes'
+                };
+                
+                alert(`📊 STATISTIQUES CALENDRIER\n\n📅 ${calendarStats.totalSlots} créneaux créés\n✅ ${calendarStats.availableSlots} disponibles\n📝 ${calendarStats.bookedSlots} réservés\n📈 Taux d'occupation: ${calendarStats.utilizationRate}%\n\n⏰ Prochain créneau: ${calendarStats.nextAvailable}\n🕐 Horaire populaire: ${calendarStats.popularTimeSlot}\n⏱️ Durée moyenne: ${calendarStats.averageDuration}\n\n📋 Calendrier optimisé !`);
+              }}
+            >
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Statistiques
+            </Button>
+            
             <Button onClick={() => setShowCreateSlotModal(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Nouveau Créneau
