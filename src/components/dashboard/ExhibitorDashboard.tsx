@@ -271,7 +271,7 @@ export const ExhibitorDashboard: React.FC = () => {
                   <Link to="/calendar" className="block">
                     <Button className="w-full justify-start" variant="outline">
                       <Calendar className="h-4 w-4 mr-3" />
-                      Gérer mes Créneaux RDV
+                      Gérer mes Créneaux RDV (8 actifs)
                     </Button>
                   </Link>
                   

@@ -121,6 +121,44 @@ const mockExhibitors: Exhibitor[] = [
     verified: true,
     featured: true
   }
+  ,
+  {
+    id: '4',
+    userId: '4',
+    companyName: 'EcoPort Technologies',
+    category: 'port-operations',
+    sector: 'Green Technology',
+    description: 'Pionnier des solutions portuaires durables et des technologies vertes pour la transition énergétique des ports.',
+    logo: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=200',
+    website: 'https://ecoport-tech.com',
+    products: [
+      {
+        id: '4',
+        name: 'Green Port Energy System',
+        description: 'Système énergétique durable pour ports avec panneaux solaires et éoliennes',
+        category: 'Green Technology',
+        images: ['https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=400'],
+        specifications: 'Capacité: 50MW, Réduction CO2: 80%, Autonomie énergétique: 95%',
+        featured: true
+      }
+    ],
+    availability: [],
+    miniSite: {
+      id: '4',
+      exhibitorId: '4',
+      theme: 'eco',
+      customColors: {
+        primary: '#059669',
+        secondary: '#10b981',
+        accent: '#34d399'
+      },
+      sections: [],
+      published: true,
+      views: 1680
+    },
+    verified: true,
+    featured: true
+  }
 ];
 
 export const useExhibitorStore = create<ExhibitorState>((set, get) => ({

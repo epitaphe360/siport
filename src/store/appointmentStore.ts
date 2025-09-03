@@ -173,9 +173,75 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
     // Simulation d'appel API
     await new Promise(resolve => setTimeout(resolve, 500));
     
+    // Mise à jour du store
     set({ timeSlots: [newSlot, ...timeSlots] });
+    
+    // Synchronisation avec le mini-site
+    await syncWithMiniSite(newSlot);
+    
+    // Notification aux visiteurs intéressés
+    await notifyInterestedVisitors(newSlot);
   },
 
+  syncWithMiniSite: async (slot: TimeSlot) => {
+    try {
+      // Simulation de mise à jour du mini-site
+      const miniSiteData = {
+        exhibitorId: 'exhibitor-1',
+        availabilityUpdated: true,
+        newSlotAdded: {
+          date: slot.date.toLocaleDateString('fr-FR'),
+          time: `${slot.startTime} - ${slot.endTime}`,
+          type: slot.type,
+          location: slot.location
+        },
+        totalAvailableSlots: get().timeSlots.filter(s => s.available).length,
+        lastSync: new Date().toISOString()
+      };
+      
+      console.log('Mini-site synchronisé:', miniSiteData);
+      
+      // En production, appel API pour mettre à jour le mini-site
+      // await fetch(`/api/exhibitors/${exhibitorId}/minisite/availability`, {
+      //   method: 'PUT',
+      //   body: JSON.stringify(miniSiteData)
+      // });
+      
+    } catch (error) {
+      console.error('Erreur synchronisation mini-site:', error);
+    }
+  },
+  
+  notifyInterestedVisitors: async (slot: TimeSlot) => {
+    try {
+      // Simulation de notification aux visiteurs
+      const notificationData = {
+        exhibitorName: 'Port Solutions Inc.',
+        newSlot: {
+          date: slot.date.toLocaleDateString('fr-FR'),
+          time: `${slot.startTime} - ${slot.endTime}`,
+          type: slot.type
+        },
+        notifiedVisitors: 23,
+        interestedProfiles: [
+          'Marie Dubois - Maritime Consulting',
+          'Jean Martin - Port Authority',
+          'Sarah Johnson - Tech Solutions'
+        ]
+      };
+      
+      console.log('Visiteurs notifiés:', notificationData);
+      
+      // En production, envoi de notifications push/email
+      // await fetch('/api/notifications/new-slot', {
+      //   method: 'POST',
+      //   body: JSON.stringify(notificationData)
+      // });
+      
+    } catch (error) {
+      console.error('Erreur notifications visiteurs:', error);
+    }
+  },
   updateTimeSlot: async (slotId, updates) => {
     const { timeSlots } = get();
     const updatedTimeSlots = timeSlots.map(slot =>

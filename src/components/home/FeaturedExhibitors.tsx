@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 
 export const FeaturedExhibitors: React.FC = () => {
   const { exhibitors, fetchExhibitors, isLoading } = useExhibitorStore();
-  const featuredExhibitors = exhibitors.filter(e => e.featured).slice(0, 3);
+  const featuredExhibitors = exhibitors.filter(e => e.featured).slice(0, 4);
 
   useEffect(() => {
     if (exhibitors.length === 0) {
@@ -47,7 +47,7 @@ export const FeaturedExhibitors: React.FC = () => {
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3, 4].map((i) => (
               <div key={i} className="animate-pulse">
                 <div className="bg-white rounded-lg p-6 h-80">
                   <div className="h-4 bg-gray-200 rounded mb-4"></div>
@@ -83,6 +83,7 @@ export const FeaturedExhibitors: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {featuredExhibitors.map((exhibitor, index) => (
             <motion.div
               key={exhibitor.id}
