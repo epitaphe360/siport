@@ -194,8 +194,8 @@ export const HeroSection: React.FC = () => {
           >
             <div className="relative">
               <img
-                src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=800"
-                alt="Port moderne avec grues et conteneurs"
+                src="https://images.pexels.com/photos/906982/pexels-photo-906982.jpeg?auto=compress&cs=tinysrgb&w=800"
+                alt="Port maritime moderne avec grues portuaires et navires cargo"
                 className="rounded-2xl shadow-2xl"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent rounded-2xl" />
