@@ -230,7 +230,6 @@ export const HeroSection: React.FC = () => {
                     <p className="text-sm text-gray-600">Conférences</p>
                   </div>
                 </div>
-              </div>
             </div>
           </motion.div>
         </div>
