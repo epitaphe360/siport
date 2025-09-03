@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ExternalLink, MapPin, Users, ArrowRight, Calendar } from 'lucide-react';
+import { ExternalLink, MapPin, Users, ArrowRight, Calendar, CheckCircle, Eye, MessageCircle } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
