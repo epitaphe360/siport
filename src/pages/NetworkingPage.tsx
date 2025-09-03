@@ -211,7 +211,65 @@ export const NetworkingPage: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center max-w-md">
+        <div className="text-center max-w-2xl px-4">
+          {/* Description du Réseautage */}
+          <div className="mb-8">
+            <div className="bg-blue-100 p-6 rounded-full w-24 h-24 mx-auto mb-6">
+              <Network className="h-12 w-12 text-blue-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Réseautage Intelligent SIPORTS
+            </h2>
+            <p className="text-gray-600 mb-6 leading-relaxed">
+              Notre plateforme de réseautage utilise l'intelligence artificielle pour vous connecter 
+              avec les professionnels les plus pertinents selon vos objectifs et votre secteur d'activité.
+            </p>
+            
+            {/* Fonctionnalités Clés */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <div className="bg-purple-100 p-2 rounded-lg w-10 h-10 mx-auto mb-3">
+                  <Brain className="h-6 w-6 text-purple-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">IA de Matching</h3>
+                <p className="text-sm text-gray-600">
+                  Recommandations personnalisées basées sur vos objectifs
+                </p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <div className="bg-green-100 p-2 rounded-lg w-10 h-10 mx-auto mb-3">
+                  <MessageCircle className="h-6 w-6 text-green-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Chat Assisté</h3>
+                <p className="text-sm text-gray-600">
+                  Messagerie avec chatbot IA pour faciliter les échanges
+                </p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <div className="bg-blue-100 p-2 rounded-lg w-10 h-10 mx-auto mb-3">
+                  <Calendar className="h-6 w-6 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">RDV Intelligents</h3>
+                <p className="text-sm text-gray-600">
+                  Planification automatique avec suggestions optimales
+                </p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <div className="bg-orange-100 p-2 rounded-lg w-10 h-10 mx-auto mb-3">
+                  <Globe className="h-6 w-6 text-orange-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Réseau Global</h3>
+                <p className="text-sm text-gray-600">
+                  6000+ professionnels de 40 pays connectés
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Connexion Requise */}
           <div className="bg-blue-100 p-6 rounded-full w-24 h-24 mx-auto mb-6">
             <Network className="h-12 w-12 text-blue-600" />
           </div>
@@ -219,8 +277,8 @@ export const NetworkingPage: React.FC = () => {
             Connexion Requise
           </h3>
           <p className="text-gray-600 mb-6">
-            Connectez-vous pour accéder au réseautage intelligent SIPORTS et découvrir 
-            les professionnels qui correspondent à vos objectifs.
+            Connectez-vous maintenant pour accéder à toutes ces fonctionnalités 
+            et commencer à développer votre réseau professionnel.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/login">
@@ -231,9 +289,28 @@ export const NetworkingPage: React.FC = () => {
             </Link>
             <Link to="/register">
               <Button variant="outline" size="lg">
+                <Plus className="h-4 w-4 mr-2" />
                 Créer un Compte
               </Button>
             </Link>
+          </div>
+          
+          {/* Statistiques Réseautage */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="grid grid-cols-3 gap-6 text-center">
+              <div>
+                <div className="text-2xl font-bold text-blue-600">6,000+</div>
+                <div className="text-sm text-gray-600">Professionnels</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-green-600">40</div>
+                <div className="text-sm text-gray-600">Pays</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-purple-600">95%</div>
+                <div className="text-sm text-gray-600">Satisfaction</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
