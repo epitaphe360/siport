@@ -202,7 +202,6 @@ export const ExhibitorValidation: React.FC = () => {
       setValidatingAccounts(prev => prev.filter(id => id !== exhibitor.id));
       alert('❌ Erreur lors de l\'activation du compte. Veuillez réessayer.');
     }
-  };
 
   const handleRejectExhibitor = async (exhibitor: PendingExhibitor) => {
     const reason = prompt(`Motif de refus pour ${exhibitor.companyName}:`);
