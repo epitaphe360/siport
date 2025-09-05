@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { User } from '../types';
 import GoogleAuthService from '../services/googleAuth';
 
@@ -7,24 +8,57 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   isGoogleLoading: boolean;
+  registeredUsers: User[];
   login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   logout: () => void;
   register: (userData: any) => Promise<void>;
   updateProfile: (profileData: any) => Promise<void>;
+  activateUser: (userId: string) => Promise<void>;
+  getPendingUsers: () => User[];
+  getUserById: (userId: string) => User | null;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
   user: null,
   isAuthenticated: false,
   isLoading: false,
   isGoogleLoading: false,
+  registeredUsers: [],
 
   login: async (email: string, password: string) => {
     set({ isLoading: true });
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // D'abord, vérifier dans les utilisateurs enregistrés
+      const { registeredUsers } = get();
+      const registeredUser = registeredUsers.find(u => u.email === email);
+      
+      if (registeredUser) {
+        // Vérifier le statut du compte
+        if (registeredUser.status === 'pending') {
+          set({ isLoading: false });
+          throw new Error('Votre compte est en attente de validation par l\'administrateur');
+        }
+        
+        if (registeredUser.status === 'suspended') {
+          set({ isLoading: false });
+          throw new Error('Votre compte a été suspendu. Contactez l\'administrateur');
+        }
+        
+        if (registeredUser.status === 'rejected') {
+          set({ isLoading: false });
+          throw new Error('Votre demande d\'inscription a été rejetée');
+        }
+        
+        // Compte actif - connexion réussie
+        set({ user: registeredUser, isAuthenticated: true, isLoading: false });
+        return;
+      }
       
       // Mock user data
       let mockUser: User;
@@ -36,6 +70,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           email,
           name: 'Admin SIPORTS',
           type: 'admin',
+          status: 'active',
           profile: {
             firstName: 'Admin',
             lastName: 'SIPORTS',
@@ -56,6 +91,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           email,
           name: 'Partenaire SIPORTS',
           type: 'partner',
+          status: 'active',
           profile: {
             firstName: 'Marie',
             lastName: 'Dubois',
@@ -76,6 +112,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           email,
           name: 'Visiteur SIPORTS',
           type: 'visitor',
+          status: 'active',
           profile: {
             firstName: 'Pierre',
             lastName: 'Martin',
@@ -97,6 +134,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           email,
           name: 'Exposant SIPORTS',
           type: 'exhibitor',
+          status: 'active',
           profile: {
             firstName: 'John',
             lastName: 'Doe',
@@ -166,16 +204,115 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      // Créer le nouvel utilisateur
+      const newUser: User = {
+        id: `user_${Date.now()}`,
+        email: userData.email,
+        name: `${userData.firstName} ${userData.lastName}`,
+        type: userData.accountType,
+        status: 'pending', // Nouveau compte en attente de validation
+        profile: {
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          company: userData.companyName,
+          position: userData.position,
+          country: userData.country,
+          phone: userData.phone,
+          linkedin: userData.linkedin,
+          website: userData.website,
+          bio: userData.description,
+          interests: [],
+          objectives: userData.objectives || [],
+          companyDescription: userData.description,
+          sectors: [userData.sector],
+          products: [],
+          videos: [],
+          images: [],
+          participationObjectives: userData.objectives || [],
+          thematicInterests: [],
+          companySize: userData.employeeCount,
+          geographicLocation: userData.country,
+          collaborationTypes: userData.partnershipTypes || [],
+          expertise: []
+        },
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      // Ajouter à la liste des utilisateurs enregistrés
+      const { registeredUsers } = get();
+      set({ 
+        registeredUsers: [...registeredUsers, newUser],
+        isLoading: false 
+      });
+      
+      // Simulation d'envoi d'email
+      console.log('📧 Email de confirmation envoyé à:', userData.email);
+      
       const updatedUser = {
         ...user,
         profile: { ...user.profile, ...profileData },
         updatedAt: new Date()
       };
 
+      // Mettre à jour dans la liste des utilisateurs enregistrés
+      const { registeredUsers } = get();
+      const updatedRegisteredUsers = registeredUsers.map(u => 
+        u.id === user.id ? updatedUser : u
+      );
+      
+      set({ 
+        user: updatedUser, 
+        registeredUsers: updatedRegisteredUsers,
+        isLoading: false 
+      });
       set({ user: updatedUser, isLoading: false });
     } catch (error) {
       set({ isLoading: false });
       throw error;
     }
+  },
+
+  activateUser: async (userId: string) => {
+    const { registeredUsers } = get();
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const updatedUsers = registeredUsers.map(user => 
+        user.id === userId 
+          ? { ...user, status: 'active' as const, updatedAt: new Date() }
+          : user
+      );
+      
+      set({ registeredUsers: updatedUsers });
+      
+      // Simulation d'envoi d'email d'activation
+      const activatedUser = updatedUsers.find(u => u.id === userId);
+      if (activatedUser) {
+        console.log('📧 Email d\'activation envoyé à:', activatedUser.email);
+      }
+      
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getPendingUsers: () => {
+    const { registeredUsers } = get();
+    return registeredUsers.filter(user => user.status === 'pending');
+  },
+
+  getUserById: (userId: string) => {
+    const { registeredUsers } = get();
+    return registeredUsers.find(user => user.id === userId) || null;
   }
-}));
+}),
+{
+  name: 'siports-auth-storage',
+  partialize: (state) => ({ 
+    registeredUsers: state.registeredUsers 
+  })
+}
+)

@@ -24,6 +24,7 @@ import {
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
+import { useAuthStore } from '../../store/authStore';
 import { motion } from 'framer-motion';
 
 interface PendingExhibitor {
@@ -129,10 +130,11 @@ const mockPendingExhibitors: PendingExhibitor[] = [
 ];
 
 export const ExhibitorValidation: React.FC = () => {
+  const { getPendingUsers, activateUser } = useAuthStore();
   const [pendingExhibitors, setPendingExhibitors] = useState<PendingExhibitor[]>(mockPendingExhibitors);
+  const [pendingUsers, setPendingUsers] = useState<any[]>([]);
   const [validatingAccounts, setValidatingAccounts] = useState<string[]>([]);
   const [selectedExhibitor, setSelectedExhibitor] = useState<PendingExhibitor | null>(null);
-  const [showValidationModal, setShowValidationModal] = useState(false);
 
   const getStatusColor = (status: string) => {
     switch (status) {

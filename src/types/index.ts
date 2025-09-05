@@ -4,6 +4,7 @@ export interface User {
   name: string;
   type: 'exhibitor' | 'partner' | 'visitor' | 'admin';
   profile: UserProfile;
+  status: 'pending' | 'active' | 'suspended' | 'rejected';
   createdAt: Date;
   updatedAt: Date;
 }
