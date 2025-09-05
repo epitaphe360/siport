@@ -27,6 +27,9 @@ import { Badge } from '../ui/Badge';
 import { useAuthStore } from '../../store/authStore';
 import { motion } from 'framer-motion';
 
+// Import manquant
+import { useEffect } from 'react';
+
 interface PendingExhibitor {
   id: string;
   companyName: string;
@@ -202,6 +205,7 @@ export const ExhibitorValidation: React.FC = () => {
       setValidatingAccounts(prev => prev.filter(id => id !== exhibitor.id));
       alert('❌ Erreur lors de l\'activation du compte. Veuillez réessayer.');
     }
+  };
 
   const handleRejectExhibitor = async (exhibitor: PendingExhibitor) => {
     const reason = prompt(`Motif de refus pour ${exhibitor.companyName}:`);
