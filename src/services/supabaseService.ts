@@ -5,15 +5,15 @@ import { User, Exhibitor, Product, Appointment, Event, ChatMessage, ChatConversa
 export class SupabaseService {
   
   private static checkSupabaseConnection() {
-    if (!isSupabaseReady() || !supabase) {
-      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
-    }
+    return isSupabaseReady() && supabase;
   }
   
   // ==================== USERS ====================
   
   static async createUser(userData: Partial<User>): Promise<User> {
-    this.checkSupabaseConnection();
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
     
     const { data, error } = await supabase
       .from('users')
@@ -46,6 +46,10 @@ export class SupabaseService {
   }
 
   static async getUserByEmail(email: string): Promise<User | null> {
+    if (!this.checkSupabaseConnection()) {
+      return null;
+    }
+    
     const { data, error } = await supabase
       .from('users')
       .select('*')
@@ -61,6 +65,10 @@ export class SupabaseService {
   }
 
   static async updateUser(id: string, updates: Partial<User>): Promise<User> {
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+    
     const { data, error } = await supabase
       .from('users')
       .update({
@@ -79,6 +87,11 @@ export class SupabaseService {
   // ==================== EXHIBITORS ====================
   
   static async getExhibitors(): Promise<Exhibitor[]> {
+    if (!this.checkSupabaseConnection()) {
+      // Retourner des données de démonstration si Supabase n'est pas configuré
+      return this.getMockExhibitors();
+    }
+    
     const { data, error } = await supabase
       .from('exhibitors')
       .select(`
@@ -96,6 +109,11 @@ export class SupabaseService {
   }
 
   static async getExhibitorById(id: string): Promise<Exhibitor | null> {
+    if (!this.checkSupabaseConnection()) {
+      const mockExhibitors = this.getMockExhibitors();
+      return mockExhibitors.find(e => e.id === id) || null;
+    }
+    
     const { data, error } = await supabase
       .from('exhibitors')
       .select(`
@@ -116,6 +134,10 @@ export class SupabaseService {
   }
 
   static async createExhibitor(exhibitorData: Partial<Exhibitor>): Promise<Exhibitor> {
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+    
     const { data, error } = await supabase
       .from('exhibitors')
       .insert([{
@@ -141,6 +163,10 @@ export class SupabaseService {
   }
 
   static async updateExhibitor(id: string, updates: Partial<Exhibitor>): Promise<Exhibitor> {
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+    
     const { data, error } = await supabase
       .from('exhibitors')
       .update({
@@ -167,9 +193,213 @@ export class SupabaseService {
     return this.mapExhibitorFromDB(data);
   }
 
+  // ==================== MOCK DATA ====================
+  
+  private static getMockExhibitors(): Exhibitor[] {
+    return [
+      {
+        id: '1',
+        userId: '1',
+        companyName: 'Port Solutions Inc.',
+        category: 'port-operations',
+        sector: 'Port Management',
+        description: 'Leading provider of integrated port management solutions, specializing in digital transformation and operational efficiency.',
+        logo: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=200',
+        website: 'https://portsolutions.com',
+        products: [
+          {
+            id: '1',
+            name: 'SmartPort Management System',
+            description: 'Comprehensive port management platform with real-time analytics',
+            category: 'Software',
+            images: ['https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=400'],
+            specifications: 'Cloud-based, API integration, Multi-language support',
+            featured: true,
+            technicalSpecs: []
+          }
+        ],
+        availability: [],
+        miniSite: {
+          id: '1',
+          exhibitorId: '1',
+          theme: 'modern',
+          customColors: {
+            primary: '#1e40af',
+            secondary: '#3b82f6',
+            accent: '#60a5fa'
+          },
+          sections: [],
+          published: true,
+          views: 1250,
+          lastUpdated: new Date()
+        },
+        verified: true,
+        featured: true,
+        contactInfo: {
+          email: 'contact@portsolutions.com',
+          phone: '+31 20 123 4567',
+          address: '123 Port Avenue',
+          city: 'Amsterdam',
+          country: 'Netherlands'
+        },
+        certifications: [],
+        establishedYear: 2004,
+        employeeCount: '100-500',
+        revenue: '50M€',
+        markets: ['Europe', 'Africa', 'Asia']
+      },
+      {
+        id: '2',
+        userId: '2',
+        companyName: 'Maritime Tech Solutions',
+        category: 'port-industry',
+        sector: 'Equipment Manufacturing',
+        description: 'Innovative manufacturer of port equipment and automation systems for modern maritime facilities.',
+        logo: 'https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=200',
+        website: 'https://maritimetech.com',
+        products: [
+          {
+            id: '2',
+            name: 'Automated Crane System',
+            description: 'Next-generation automated container handling cranes',
+            category: 'Equipment',
+            images: ['https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=400'],
+            specifications: 'Load capacity: 65 tons, Reach: 22 containers, Automation level: Level 4',
+            featured: true,
+            technicalSpecs: []
+          }
+        ],
+        availability: [],
+        miniSite: {
+          id: '2',
+          exhibitorId: '2',
+          theme: 'industrial',
+          customColors: {
+            primary: '#dc2626',
+            secondary: '#ef4444',
+            accent: '#f87171'
+          },
+          sections: [],
+          published: true,
+          views: 890,
+          lastUpdated: new Date()
+        },
+        verified: true,
+        featured: false,
+        contactInfo: {
+          email: 'contact@maritimetech.com',
+          phone: '+44 20 7946 0958',
+          address: '456 Maritime Street',
+          city: 'London',
+          country: 'United Kingdom'
+        },
+        certifications: [],
+        establishedYear: 1998,
+        employeeCount: '200-1000',
+        revenue: '75M€',
+        markets: ['Europe', 'Americas']
+      },
+      {
+        id: '3',
+        userId: '3',
+        companyName: 'Global Port Authority',
+        category: 'institutional',
+        sector: 'Government',
+        description: 'International organization promoting sustainable port development and maritime cooperation.',
+        logo: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=200',
+        website: 'https://globalportauthority.org',
+        products: [],
+        availability: [],
+        miniSite: {
+          id: '3',
+          exhibitorId: '3',
+          theme: 'official',
+          customColors: {
+            primary: '#059669',
+            secondary: '#10b981',
+            accent: '#34d399'
+          },
+          sections: [],
+          published: true,
+          views: 2100,
+          lastUpdated: new Date()
+        },
+        verified: true,
+        featured: true,
+        contactInfo: {
+          email: 'contact@globalportauthority.org',
+          phone: '+1 555 123 4567',
+          address: '789 International Plaza',
+          city: 'New York',
+          country: 'United States'
+        },
+        certifications: [],
+        establishedYear: 1985,
+        employeeCount: '1000+',
+        revenue: 'Non-profit',
+        markets: ['Global']
+      },
+      {
+        id: '4',
+        userId: '4',
+        companyName: 'EcoPort Technologies',
+        category: 'port-operations',
+        sector: 'Green Technology',
+        description: 'Pionnier des solutions portuaires durables et des technologies vertes pour la transition énergétique des ports.',
+        logo: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=200',
+        website: 'https://ecoport-tech.com',
+        products: [
+          {
+            id: '4',
+            name: 'Green Port Energy System',
+            description: 'Système énergétique durable pour ports avec panneaux solaires et éoliennes',
+            category: 'Green Technology',
+            images: ['https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=400'],
+            specifications: 'Capacité: 50MW, Réduction CO2: 80%, Autonomie énergétique: 95%',
+            featured: true,
+            technicalSpecs: []
+          }
+        ],
+        availability: [],
+        miniSite: {
+          id: '4',
+          exhibitorId: '4',
+          theme: 'eco',
+          customColors: {
+            primary: '#059669',
+            secondary: '#10b981',
+            accent: '#34d399'
+          },
+          sections: [],
+          published: true,
+          views: 1680,
+          lastUpdated: new Date()
+        },
+        verified: true,
+        featured: true,
+        contactInfo: {
+          email: 'contact@ecoport-tech.com',
+          phone: '+33 4 91 14 29 30',
+          address: '321 Green Harbor',
+          city: 'Marseille',
+          country: 'France'
+        },
+        certifications: [],
+        establishedYear: 2010,
+        employeeCount: '50-200',
+        revenue: '25M€',
+        markets: ['Europe', 'Africa']
+      }
+    ];
+  }
+
   // ==================== MINI SITES ====================
   
   static async getMiniSite(exhibitorId: string): Promise<any> {
+    if (!this.checkSupabaseConnection()) {
+      return null;
+    }
+    
     const { data, error } = await supabase
       .from('mini_sites')
       .select('*')
@@ -185,6 +415,10 @@ export class SupabaseService {
   }
 
   static async updateMiniSite(exhibitorId: string, siteData: any): Promise<any> {
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+    
     const { data, error } = await supabase
       .from('mini_sites')
       .upsert({
@@ -202,6 +436,10 @@ export class SupabaseService {
   }
 
   static async incrementMiniSiteViews(exhibitorId: string): Promise<void> {
+    if (!this.checkSupabaseConnection()) {
+      return;
+    }
+    
     const { error } = await supabase
       .from('mini_sites')
       .update({ 
@@ -216,6 +454,12 @@ export class SupabaseService {
   // ==================== PRODUCTS ====================
   
   static async getProductsByExhibitor(exhibitorId: string): Promise<Product[]> {
+    if (!this.checkSupabaseConnection()) {
+      const mockExhibitors = this.getMockExhibitors();
+      const exhibitor = mockExhibitors.find(e => e.id === exhibitorId);
+      return exhibitor?.products || [];
+    }
+    
     const { data, error } = await supabase
       .from('products')
       .select('*')
@@ -228,6 +472,10 @@ export class SupabaseService {
   }
 
   static async createProduct(productData: Partial<Product>): Promise<Product> {
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+    
     const { data, error } = await supabase
       .from('products')
       .insert([{
@@ -248,6 +496,10 @@ export class SupabaseService {
   }
 
   static async updateProduct(id: string, updates: Partial<Product>): Promise<Product> {
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+    
     const { data, error } = await supabase
       .from('products')
       .update({
@@ -268,6 +520,10 @@ export class SupabaseService {
   }
 
   static async deleteProduct(id: string): Promise<void> {
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+    
     const { error } = await supabase
       .from('products')
       .delete()
@@ -279,6 +535,10 @@ export class SupabaseService {
   // ==================== APPOINTMENTS ====================
   
   static async getAppointmentsByUser(userId: string): Promise<Appointment[]> {
+    if (!this.checkSupabaseConnection()) {
+      return [];
+    }
+    
     const { data, error } = await supabase
       .from('appointments')
       .select(`
@@ -295,6 +555,10 @@ export class SupabaseService {
   }
 
   static async createAppointment(appointmentData: Partial<Appointment>): Promise<Appointment> {
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+    
     const { data, error } = await supabase
       .from('appointments')
       .insert([{
@@ -317,6 +581,10 @@ export class SupabaseService {
   }
 
   static async updateAppointmentStatus(id: string, status: string): Promise<void> {
+    if (!this.checkSupabaseConnection()) {
+      return;
+    }
+    
     const { error } = await supabase
       .from('appointments')
       .update({ status })
@@ -328,6 +596,10 @@ export class SupabaseService {
   // ==================== EVENTS ====================
   
   static async getEvents(): Promise<Event[]> {
+    if (!this.checkSupabaseConnection()) {
+      return [];
+    }
+    
     const { data, error } = await supabase
       .from('events')
       .select('*')
@@ -339,6 +611,10 @@ export class SupabaseService {
   }
 
   static async registerForEvent(eventId: string, userId: string): Promise<void> {
+    if (!this.checkSupabaseConnection()) {
+      return;
+    }
+    
     // Increment registered count
     const { error } = await supabase
       .from('events')
@@ -353,6 +629,10 @@ export class SupabaseService {
   // ==================== CHAT ====================
   
   static async getConversationsByUser(userId: string): Promise<ChatConversation[]> {
+    if (!this.checkSupabaseConnection()) {
+      return [];
+    }
+    
     const { data, error } = await supabase
       .from('conversations')
       .select(`
@@ -367,6 +647,10 @@ export class SupabaseService {
   }
 
   static async sendMessage(conversationId: string, senderId: string, content: string): Promise<ChatMessage> {
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+    
     const { data, error } = await supabase
       .from('messages')
       .insert([{
@@ -406,6 +690,10 @@ export class SupabaseService {
   // ==================== NEWS ARTICLES ====================
   
   static async getNewsArticles(): Promise<any[]> {
+    if (!this.checkSupabaseConnection()) {
+      return [];
+    }
+    
     const { data, error } = await supabase
       .from('news_articles')
       .select('*')
@@ -417,6 +705,10 @@ export class SupabaseService {
   }
 
   static async createNewsArticle(articleData: any): Promise<any> {
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+    
     const { data, error } = await supabase
       .from('news_articles')
       .insert([{
@@ -441,6 +733,10 @@ export class SupabaseService {
   }
 
   static async updateNewsArticle(id: string, updates: any): Promise<any> {
+    if (!this.checkSupabaseConnection()) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+    
     const { data, error } = await supabase
       .from('news_articles')
       .update({
@@ -464,6 +760,10 @@ export class SupabaseService {
   }
 
   static async deleteNewsArticle(id: string): Promise<void> {
+    if (!this.checkSupabaseConnection()) {
+      return;
+    }
+    
     const { error } = await supabase
       .from('news_articles')
       .delete()
@@ -473,6 +773,10 @@ export class SupabaseService {
   }
 
   static async incrementArticleViews(id: string): Promise<void> {
+    if (!this.checkSupabaseConnection()) {
+      return;
+    }
+    
     const { error } = await supabase
       .from('news_articles')
       .update({ 
