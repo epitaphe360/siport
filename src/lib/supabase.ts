@@ -1,12 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-anon-key';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Vérifier si Supabase est configuré avec de vraies valeurs
-const isSupabaseConfigured = supabaseUrl !== 'https://placeholder.supabase.co' && 
-                             supabaseAnonKey !== 'placeholder-anon-key' &&
-                             supabaseUrl.includes('supabase.co');
+const isSupabaseConfigured = supabaseUrl && 
+                             supabaseAnonKey &&
+                             supabaseUrl.includes('supabase.co') &&
+                             supabaseUrl !== 'https://placeholder.supabase.co' &&
+                             supabaseAnonKey !== 'placeholder-anon-key';
 
 if (!isSupabaseConfigured) {
   console.warn('⚠️ Supabase non configuré - Mode démo activé');
@@ -14,7 +16,7 @@ if (!isSupabaseConfigured) {
 }
 
 // Créer le client Supabase seulement si configuré
-export const supabase = isSupabaseConfigured 
+export const supabase = isSupabaseConfigured && supabaseUrl && supabaseAnonKey
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
 

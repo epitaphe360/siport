@@ -177,8 +177,15 @@ export const useExhibitorStore = create<ExhibitorState>((set, get) => ({
   fetchExhibitors: async () => {
     set({ isLoading: true });
     try {
-      // Récupérer les exposants depuis Supabase
-      const exhibitors = await SupabaseService.getExhibitors();
+      // Essayer de récupérer les exposants depuis Supabase, sinon utiliser les données mock
+      let exhibitors;
+      try {
+        exhibitors = await SupabaseService.getExhibitors();
+      } catch (error) {
+        console.warn('Supabase non disponible, utilisation des données de démonstration');
+        exhibitors = mockExhibitors;
+      }
+      
       set({ 
         exhibitors, 
         filteredExhibitors: exhibitors,
@@ -186,7 +193,12 @@ export const useExhibitorStore = create<ExhibitorState>((set, get) => ({
       });
     } catch (error) {
       console.error('Erreur chargement exposants:', error);
-      set({ isLoading: false });
+      // En cas d'erreur, utiliser les données mock
+      set({ 
+        exhibitors: mockExhibitors, 
+        filteredExhibitors: mockExhibitors,
+        isLoading: false 
+      });
     }
   },
 
