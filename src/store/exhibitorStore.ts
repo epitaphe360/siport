@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Exhibitor, Product, TimeSlot } from '../types';
+import { SupabaseService } from '../services/supabaseService';
 
 interface ExhibitorState {
   exhibitors: Exhibitor[];
