@@ -10,7 +10,7 @@ import {
   Bell,
 } from 'lucide-react';
 import { Button } from '../ui/Button';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 import { LanguageSelector } from '../ui/LanguageSelector';
 import { useTranslation } from '../../hooks/useTranslation';
 

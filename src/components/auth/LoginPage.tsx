@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 import GoogleAuthService from '../../services/googleAuth';
 import { motion } from 'framer-motion';
 

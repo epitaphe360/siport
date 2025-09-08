@@ -21,7 +21,7 @@ import {
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 import { motion } from 'framer-motion';
 
 export const ProfilePage: React.FC = () => {

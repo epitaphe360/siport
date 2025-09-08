@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { User as FirebaseUser } from 'firebase/auth';
 import GoogleAuthService from '../services/googleAuth';
-import { useAuthStore } from '../store/authStore';
+import useAuthStore from '../store/authStore';
 
 interface UseGoogleAuthReturn {
   isInitialized: boolean;

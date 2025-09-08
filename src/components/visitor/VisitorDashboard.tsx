@@ -32,7 +32,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { useVisitorStore } from '../../store/visitorStore';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 

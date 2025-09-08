@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 import { AdminDashboard } from './AdminDashboard';
 import { ExhibitorDashboard } from './ExhibitorDashboard';
 import { PartnerDashboard } from './PartnerDashboard';

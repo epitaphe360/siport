@@ -23,7 +23,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { GoogleAuthButton } from './GoogleAuthButton';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 import { motion } from 'framer-motion';
 
 const registrationSchema = z.object({

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Loader } from 'lucide-react';
 import { Button } from '../ui/Button';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 import { useNavigate } from 'react-router-dom';
 
 interface GoogleAuthButtonProps {

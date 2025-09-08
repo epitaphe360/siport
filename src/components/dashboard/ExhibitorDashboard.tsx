@@ -26,7 +26,7 @@ import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { useDashboardStore } from '../../store/dashboardStore';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
