@@ -762,7 +762,6 @@ export const RegisterPage: React.FC = () => {
                 </div>
               </div>
             )}
-            )}
           </Card>
         </motion.div>
       </div>
