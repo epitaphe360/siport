@@ -1,13 +1,25 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-anon-key';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
+// Vérifier si Supabase est configuré avec de vraies valeurs
+const isSupabaseConfigured = supabaseUrl !== 'https://placeholder.supabase.co' && 
+                             supabaseAnonKey !== 'placeholder-anon-key' &&
+                             supabaseUrl.includes('supabase.co');
+
+if (!isSupabaseConfigured) {
+  console.warn('⚠️ Supabase non configuré - Mode démo activé');
+  console.warn('Pour activer Supabase, configurez VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY dans .env');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Créer le client Supabase seulement si configuré
+export const supabase = isSupabaseConfigured 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
+
+// Export de la fonction de vérification
+export const isSupabaseReady = () => isSupabaseConfigured;
 
 // Types pour TypeScript
 export type Database = {

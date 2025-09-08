@@ -1,11 +1,20 @@
 import { supabase } from '../lib/supabase';
+import { isSupabaseReady } from '../lib/supabase';
 import { User, Exhibitor, Product, Appointment, Event, ChatMessage, ChatConversation } from '../types';
 
 export class SupabaseService {
   
+  private static checkSupabaseConnection() {
+    if (!isSupabaseReady() || !supabase) {
+      throw new Error('Supabase non configuré. Veuillez configurer vos variables d\'environnement Supabase.');
+    }
+  }
+  
   // ==================== USERS ====================
   
   static async createUser(userData: Partial<User>): Promise<User> {
+    this.checkSupabaseConnection();
+    
     const { data, error } = await supabase
       .from('users')
       .insert([{
