@@ -20,7 +20,7 @@ import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { motion } from 'framer-motion';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 
 interface MetricCard {
   title: string;

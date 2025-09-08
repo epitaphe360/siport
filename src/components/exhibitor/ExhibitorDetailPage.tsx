@@ -30,7 +30,7 @@ import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { useExhibitorStore } from '../../store/exhibitorStore';
 import { motion } from 'framer-motion';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 
 export const ExhibitorDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
