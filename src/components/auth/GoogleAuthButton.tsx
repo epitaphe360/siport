@@ -24,6 +24,11 @@ export const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({
 
   const handleGoogleLogin = async () => {
     try {
+      // Vérifier si Firebase est configuré
+      if (!import.meta.env.VITE_FIREBASE_API_KEY) {
+        throw new Error('L\'authentification Google n\'est pas configurée. Utilisez l\'authentification par email.');
+      }
+      
       await loginWithGoogle();
       
       if (onSuccess) {

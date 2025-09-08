@@ -11,25 +11,37 @@ import { User } from '../types';
 
 // Configuration Firebase (remplacez par vos vraies clés)
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || '',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || '',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || ''
 };
 
-// Initialiser Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
+// Vérifier si Firebase est configuré
+const isFirebaseConfigured = firebaseConfig.apiKey && 
+                             firebaseConfig.authDomain && 
+                             firebaseConfig.projectId;
 
-// Configuration du provider Google
-googleProvider.addScope('email');
-googleProvider.addScope('profile');
-googleProvider.setCustomParameters({
-  prompt: 'select_account'
-});
+// Initialiser Firebase seulement si configuré
+let app: any = null;
+let auth: any = null;
+let googleProvider: GoogleAuthProvider | null = null;
+
+if (isFirebaseConfigured) {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  googleProvider = new GoogleAuthProvider();
+  
+  // Configuration du provider Google
+  googleProvider.addScope('email');
+  googleProvider.addScope('profile');
+  googleProvider.setCustomParameters({
+    prompt: 'select_account'
+  });
+}
+
 
 export class GoogleAuthService {
   
@@ -37,6 +49,10 @@ export class GoogleAuthService {
    * Connexion avec Google
    */
   static async signInWithGoogle(): Promise<User> {
+    if (!isFirebaseConfigured || !auth || !googleProvider) {
+      throw new Error('Firebase n\'est pas configuré. Veuillez configurer vos clés Firebase dans le fichier .env');
+    }
+    
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const firebaseUser = result.user;
@@ -75,6 +91,10 @@ export class GoogleAuthService {
    * Déconnexion
    */
   static async signOut(): Promise<void> {
+    if (!auth) {
+      throw new Error('Firebase n\'est pas configuré');
+    }
+    
     try {
       await firebaseSignOut(auth);
     } catch (error) {
@@ -87,6 +107,11 @@ export class GoogleAuthService {
    * Écouter les changements d'état d'authentification
    */
   static onAuthStateChanged(callback: (user: FirebaseUser | null) => void) {
+    if (!auth) {
+      callback(null);
+      return () => {};
+    }
+    
     return onAuthStateChanged(auth, callback);
   }
 
@@ -203,6 +228,7 @@ export class GoogleAuthService {
    * Obtenir l'utilisateur actuellement connecté
    */
   static getCurrentUser(): FirebaseUser | null {
+    if (!auth) return null;
     return auth.currentUser;
   }
 
@@ -210,6 +236,7 @@ export class GoogleAuthService {
    * Vérifier si l'utilisateur est connecté
    */
   static isAuthenticated(): boolean {
+    if (!auth) return false;
     return !!auth.currentUser;
   }
 
@@ -217,6 +244,7 @@ export class GoogleAuthService {
    * Obtenir le token d'authentification
    */
   static async getAuthToken(): Promise<string | null> {
+    if (!auth) return null;
     const user = auth.currentUser;
     if (user) {
       return await user.getIdToken();
@@ -228,6 +256,7 @@ export class GoogleAuthService {
    * Rafraîchir le token d'authentification
    */
   static async refreshToken(): Promise<string | null> {
+    if (!auth) return null;
     const user = auth.currentUser;
     if (user) {
       return await user.getIdToken(true);
