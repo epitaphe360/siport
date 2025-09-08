@@ -94,6 +94,8 @@ const mockUsers: User[] = [
     updatedAt: new Date()
   }
 ];
+
+const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: null,
   isAuthenticated: false,
@@ -216,6 +218,5 @@ const mockUsers: User[] = [
   }
 }));
 
-const useAuthStore = create<AuthState>((set, get) => ({
 export { useAuthStore };
 export default useAuthStore;
