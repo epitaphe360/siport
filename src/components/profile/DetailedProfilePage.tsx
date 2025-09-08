@@ -16,7 +16,7 @@ interface UserProfile {
   createdAt: string;
 }
 
-const DetailedProfilePage: React.FC = () => {
+export const DetailedProfilePage: React.FC = () => {
   const { user } = useAuthStore();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -268,5 +268,3 @@ const DetailedProfilePage: React.FC = () => {
     </div>
   );
 };
-
-export default DetailedProfilePage;
