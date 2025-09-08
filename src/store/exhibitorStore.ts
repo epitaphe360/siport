@@ -176,14 +176,15 @@ export const useExhibitorStore = create<ExhibitorState>((set, get) => ({
   fetchExhibitors: async () => {
     set({ isLoading: true });
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Récupérer les exposants depuis Supabase
+      const exhibitors = await SupabaseService.getExhibitors();
       set({ 
-        exhibitors: mockExhibitors, 
-        filteredExhibitors: mockExhibitors,
+        exhibitors, 
+        filteredExhibitors: exhibitors,
         isLoading: false 
       });
     } catch (error) {
+      console.error('Erreur chargement exposants:', error);
       set({ isLoading: false });
     }
   },

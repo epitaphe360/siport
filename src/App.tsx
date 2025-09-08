@@ -31,6 +31,8 @@ import { MiniSiteEditor } from './components/minisite/MiniSiteEditor';
 import { NewsPage } from './pages/NewsPage';
 import { ArticleDetailPage } from './pages/ArticleDetailPage';
 import { ExhibitorCreationSimulator } from './components/admin/ExhibitorCreationSimulator';
+import { PartnerCreationForm } from './components/admin/PartnerCreationForm';
+import { NewsArticleCreationForm } from './components/admin/NewsArticleCreationForm';
 import { UserManagementPage } from './pages/UserManagementPage';
 import { ChatBot } from './components/chatbot/ChatBot';
 import { ChatBotToggle } from './components/chatbot/ChatBotToggle';
@@ -78,6 +80,8 @@ function App() {
             <Route path="/minisite" element={<MiniSiteBuilder />} />
             <Route path="/minisite/editor" element={<MiniSiteEditor />} />
             <Route path="/admin/create-exhibitor" element={<ExhibitorCreationSimulator />} />
+            <Route path="/admin/create-partner" element={<PartnerCreationForm />} />
+            <Route path="/admin/create-news" element={<NewsArticleCreationForm />} />
             <Route path="/minisite/:exhibitorId" element={<MiniSitePreview />} />
             <Route path="/admin/validation" element={<ExhibitorValidation />} />
             <Route path="/admin/moderation" element={<ModerationPanel />} />

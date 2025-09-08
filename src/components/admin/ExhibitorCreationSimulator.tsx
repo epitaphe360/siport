@@ -23,6 +23,9 @@ import {
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
+import { SupabaseService } from '../../services/supabaseService';
+import useAuthStore from '../../store/authStore';
+import { useExhibitorStore } from '../../store/exhibitorStore';
 import { motion } from 'framer-motion';
 
 interface NewExhibitorForm {
@@ -56,6 +59,8 @@ interface NewExhibitorForm {
 export const ExhibitorCreationSimulator: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuthStore();
+  const { fetchExhibitors } = useExhibitorStore();
   const [formData, setFormData] = useState<NewExhibitorForm>({
     companyName: '',
     sector: '',
@@ -132,19 +137,69 @@ export const ExhibitorCreationSimulator: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Simulation de création du dossier exposant
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      if (!user) {
+        throw new Error('Utilisateur non connecté');
+      }
+
+      // 1. Créer d'abord l'utilisateur pour l'exposant
+      const userData = {
+        email: formData.email,
+        name: formData.contactName,
+        type: 'exhibitor' as const,
+        profile: {
+          firstName: formData.contactName.split(' ')[0] || '',
+          lastName: formData.contactName.split(' ').slice(1).join(' ') || '',
+          company: formData.companyName,
+          position: formData.position,
+          phone: formData.phone,
+          country: formData.country,
+          website: formData.website,
+          bio: formData.description,
+          interests: [],
+          objectives: []
+        }
+      };
+
+      const newUser = await SupabaseService.createUser(userData);
+
+      // 2. Créer l'exposant
+      const exhibitorData = {
+        userId: newUser.id,
+        companyName: formData.companyName,
+        category: 'port-industry' as const, // Valeur par défaut
+        sector: formData.sector,
+        description: formData.description,
+        logo: undefined,
+        website: formData.website,
+        contactInfo: {
+          email: formData.email,
+          phone: formData.phone,
+          address: '',
+          city: '',
+          country: formData.country
+        }
+      };
+
+      const newExhibitor = await SupabaseService.createExhibitor(exhibitorData);
+
+      // 3. Créer les produits associés
+      for (const product of formData.products) {
+        if (product.name && product.category && product.description) {
+          await SupabaseService.createProduct({
+            exhibitorId: newExhibitor.id,
+            name: product.name,
+            description: product.description,
+            category: product.category,
+            images: [],
+            featured: false
+          });
+        }
+      }
+
+      // 4. Rafraîchir la liste des exposants
+      await fetchExhibitors();
       
-      const submissionSteps = [
-        '✅ Dossier exposant créé',
-        '✅ Documents uploadés',
-        '✅ Informations commerciales enregistrées',
-        '✅ Catalogue produits intégré',
-        '✅ Dossier envoyé en validation',
-        '✅ Email de confirmation envoyé'
-      ];
-      
-      alert(`🎉 DOSSIER EXPOSANT CRÉÉ AVEC SUCCÈS\n\n${submissionSteps.join('\n')}\n\n📧 Email envoyé à: ${formData.email}\n⏱️ Délai de validation: 24-48h\n🔄 Statut: En attente de validation admin`);
+      alert(`🎉 EXPOSANT CRÉÉ AVEC SUCCÈS\n\n✅ Utilisateur créé: ${newUser.email}\n✅ Exposant enregistré: ${newExhibitor.companyName}\n✅ ${formData.products.length} produits ajoutés\n✅ Mini-site initialisé\n\n📧 Compte activé pour: ${formData.email}\n🏢 ID Exposant: ${newExhibitor.id}\n🎯 Prêt à utiliser la plateforme !`);
       
       // Reset form
       setFormData({
@@ -168,8 +223,9 @@ export const ExhibitorCreationSimulator: React.FC = () => {
       setIsSubmitting(false);
       
     } catch (error) {
+      console.error('Erreur création exposant:', error);
       setIsSubmitting(false);
-      alert('❌ Erreur lors de la création du dossier');
+      alert(`❌ ERREUR CRÉATION EXPOSANT\n\n${error instanceof Error ? error.message : 'Erreur inconnue'}\n\nVeuillez vérifier :\n• Connexion à la base de données\n• Email non déjà utilisé\n• Tous les champs requis remplis`);
     }
   };
 

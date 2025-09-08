@@ -373,6 +373,107 @@ export class SupabaseService {
     return this.mapMessageFromDB(data);
   }
 
+  private static mapNewsArticleFromDB(data: any): any {
+    return {
+      id: data.id,
+      title: data.title,
+      excerpt: data.excerpt,
+      content: data.content,
+      author: data.author,
+      publishedAt: new Date(data.published_at),
+      category: data.category,
+      tags: data.tags || [],
+      featured: data.featured,
+      image: data.image,
+      readTime: data.read_time,
+      source: data.source,
+      sourceUrl: data.source_url,
+      views: data.views,
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at)
+    };
+  }
+
+  // ==================== NEWS ARTICLES ====================
+  
+  static async getNewsArticles(): Promise<any[]> {
+    const { data, error } = await supabase
+      .from('news_articles')
+      .select('*')
+      .order('featured', { ascending: false })
+      .order('published_at', { ascending: false });
+
+    if (error) throw error;
+    return data.map(this.mapNewsArticleFromDB);
+  }
+
+  static async createNewsArticle(articleData: any): Promise<any> {
+    const { data, error } = await supabase
+      .from('news_articles')
+      .insert([{
+        title: articleData.title,
+        excerpt: articleData.excerpt,
+        content: articleData.content,
+        author: articleData.author,
+        published_at: articleData.publishedAt || new Date().toISOString(),
+        category: articleData.category,
+        tags: articleData.tags || [],
+        featured: articleData.featured || false,
+        image: articleData.image,
+        read_time: articleData.readTime || 5,
+        source: articleData.source || 'siports',
+        source_url: articleData.sourceUrl
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return this.mapNewsArticleFromDB(data);
+  }
+
+  static async updateNewsArticle(id: string, updates: any): Promise<any> {
+    const { data, error } = await supabase
+      .from('news_articles')
+      .update({
+        title: updates.title,
+        excerpt: updates.excerpt,
+        content: updates.content,
+        author: updates.author,
+        category: updates.category,
+        tags: updates.tags,
+        featured: updates.featured,
+        image: updates.image,
+        read_time: updates.readTime,
+        source_url: updates.sourceUrl
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return this.mapNewsArticleFromDB(data);
+  }
+
+  static async deleteNewsArticle(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('news_articles')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  static async incrementArticleViews(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('news_articles')
+      .update({ 
+        views: supabase.sql`views + 1`
+      })
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
   // ==================== MAPPING FUNCTIONS ====================
   
   private static mapUserFromDB(data: any): User {

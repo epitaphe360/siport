@@ -351,6 +351,20 @@ export const AdminDashboard: React.FC = () => {
                     </Button>
                   </Link>
                   
+                  <Link to="/admin/create-partner" className="block">
+                    <Button className="w-full justify-start bg-purple-600 hover:bg-purple-700">
+                      <Plus className="h-4 w-4 mr-3" />
+                      Créer Nouveau Partenaire
+                    </Button>
+                  </Link>
+                  
+                  <Link to="/admin/create-news" className="block">
+                    <Button className="w-full justify-start bg-indigo-600 hover:bg-indigo-700">
+                      <Plus className="h-4 w-4 mr-3" />
+                      Créer Nouvel Article
+                    </Button>
+                  </Link>
+                  
                   <Link to="/admin/validation" className="block">
                     <Button className="w-full justify-start bg-red-600 hover:bg-red-700">
                       <UserCheck className="h-4 w-4 mr-3" />
