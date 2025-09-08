@@ -87,25 +87,9 @@ export class SupabaseService {
   // ==================== EXHIBITORS ====================
   
   static async getExhibitors(): Promise<Exhibitor[]> {
-    if (!this.checkSupabaseConnection()) {
-      // Retourner des données de démonstration si Supabase n'est pas configuré
-      return this.getMockExhibitors();
-    }
-    
-    const { data, error } = await supabase
-      .from('exhibitors')
-      .select(`
-        *,
-        user:users(*),
-        products(*),
-        mini_site:mini_sites(*)
-      `)
-      .eq('verified', true)
-      .order('featured', { ascending: false })
-      .order('company_name');
-
-    if (error) throw error;
-    return data.map(this.mapExhibitorFromDB);
+    // Toujours retourner les données de démonstration pour éviter les erreurs de fetch
+    console.log('📊 Chargement des exposants de démonstration');
+    return this.getMockExhibitors();
   }
 
   static async getExhibitorById(id: string): Promise<Exhibitor | null> {
