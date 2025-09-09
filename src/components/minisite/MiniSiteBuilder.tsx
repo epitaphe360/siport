@@ -106,8 +106,7 @@ export const MiniSiteBuilder: React.FC = () => {
     { type: 'about', title: 'À propos', icon: FileText, description: 'Présentation de votre entreprise' },
     { type: 'products', title: 'Produits', icon: Image, description: 'Catalogue de vos produits et services' },
     { type: 'gallery', title: 'Galerie', icon: Image, description: 'Photos et vidéos de votre entreprise' },
-    { type: 'news', title: 'Actualités', icon: FileText, description: 'Dernières nouvelles et annonces' },
-    { type: 'contact', title: 'Contact', icon: Mail, description: 'Informations de contact et formulaire' }
+    { type: 'news', title: 'Actualités', icon: FileText, description: 'Dernières nouvelles et annonces' }
   ];
 
   const addSection = (type: Section['type']) => {
@@ -152,14 +151,6 @@ export const MiniSiteBuilder: React.FC = () => {
         return {
           title: 'Actualités',
           articles: []
-        };
-      case 'contact':
-        return {
-          title: 'Contactez-nous',
-          address: '',
-          phone: '',
-          email: '',
-          showForm: true
         };
       default:
         return {};

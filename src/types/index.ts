@@ -110,7 +110,7 @@ export interface MiniSite {
 
 export interface MiniSiteSection {
   id: string;
-  type: 'hero' | 'about' | 'products' | 'news' | 'contact' | 'gallery' | 'team' | 'certifications';
+  type: 'hero' | 'about' | 'products' | 'news' | 'gallery' | 'team' | 'certifications';
   title: string;
   content: any;
   order: number;
