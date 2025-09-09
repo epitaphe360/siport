@@ -744,10 +744,9 @@ export const ExhibitorDetailPage: React.FC = () => {
           <Button 
             className="rounded-full w-12 h-12 shadow-lg"
             onClick={() => {
-              const contactSection = document.getElementById('contact');
-              contactSection?.scrollIntoView({ behavior: 'smooth' });
+              alert(`📞 CONTACT DIRECT\n\n🏢 ${selectedExhibitor.companyName}\n📧 contact@portsolutions.com\n📞 +212 6 12 34 56 78\n🌐 ${selectedExhibitor.website}\n\n✅ Informations de contact !`);
             }}
-            title="Aller à la section contact"
+            title="Informations de contact"
           >
             <MessageCircle className="h-5 w-5" />
           </Button>
