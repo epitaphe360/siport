@@ -5,13 +5,19 @@ export default {
     extend: {
       colors: {
         siports: {
-          primary: '#1B365D',
-          secondary: '#2E5984',
-          accent: '#4A90A4',
-          light: '#87CEEB',
-          dark: '#0F2A44',
-          gold: '#D4AF37',
-          orange: '#FF6B35',
+          primary: '#1B365D',    // Bleu marine profond (conservé)
+          secondary: '#2E5984',  // Bleu océan (conservé)
+          accent: '#4A90A4',     // Bleu turquoise (conservé)
+          light: '#87CEEB',      // Bleu ciel (conservé)
+          dark: '#0F2A44',       // Bleu nuit (conservé)
+          gold: '#D4AF37',       // Or maritime (conservé)
+          orange: '#FF6B35',     // Orange énergique (conservé)
+          // Nouvelles couleurs inspirées du site SIPORTS
+          'navy': '#0A1929',     // Bleu marine très foncé
+          'teal': '#006D77',     // Bleu-vert océan
+          'coral': '#FF7F50',    // Corail pour les accents
+          'sand': '#F4E4BC',     // Sable pour les fonds clairs
+          'maritime': '#2C5F5D', // Vert maritime
           gray: {
             50: '#F8FAFC',
             100: '#F1F5F9',
